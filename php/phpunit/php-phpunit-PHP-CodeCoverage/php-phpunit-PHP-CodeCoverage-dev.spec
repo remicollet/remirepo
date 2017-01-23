@@ -36,7 +36,6 @@ URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 Patch0:         %{name}-upstream.patch
-Patch1:         %{name}-pr503.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -102,7 +101,6 @@ for PHP code coverage information.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 %patch0 -p1
-%patch1 -p1
 
 
 %build
@@ -190,9 +188,10 @@ fi
 
 %changelog
 * Sun Jan 22 2017 Remi Collet <remi@fedoraproject.org> - 4.0.5-2
+- Update to 4.0.5
 - add upstream patch for test suite to fix
   https://github.com/sebastianbergmann/php-code-coverage/issues/495
-- open https://github.com/sebastianbergmann/php-code-coverage/pull/503
+- open https://github.com/sebastianbergmann/php-code-coverage/pull/504
 
 * Fri Jan 20 2017 Remi Collet <remi@fedoraproject.org> - 4.0.5-1
 - Update to 4.0.5

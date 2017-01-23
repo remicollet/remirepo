@@ -1,0 +1,367 @@
+From 9b8320af4f14eb187a4bde8d2652bc4a7a034a02 Mon Sep 17 00:00:00 2001
+From: Sebastian Bergmann <sb@sebastian-bergmann.de>
+Date: Sun, 22 Jan 2017 09:35:22 +0100
+Subject: [PATCH] Closes #495
+
+---
+ .../dashboard.html                                 |   2 +-
+ .../CoverageForFileWithIgnoredLines/index.html     |  44 +++------
+ .../source_with_ignore.php.html                    | 109 ++++++---------------
+ .../XML/CoverageForFileWithIgnoredLines/index.xml  |   4 +-
+ .../source_with_ignore.php.xml                     |   2 +-
+ tests/_files/ignored-lines-clover.xml              |   4 +-
+ tests/_files/ignored-lines-text.txt                |  12 +--
+ 7 files changed, 56 insertions(+), 121 deletions(-)
+
+diff --git a/tests/_files/Report/HTML/CoverageForClassWithAnonymousFunction/dashboard.html b/tests/_files/Report/HTML/CoverageForClassWithAnonymousFunction/dashboard.html
+index a0b1d94..2db00c7 100644
+--- a/tests/_files/Report/HTML/CoverageForClassWithAnonymousFunction/dashboard.html
++++ b/tests/_files/Report/HTML/CoverageForClassWithAnonymousFunction/dashboard.html
+@@ -251,7 +251,7 @@
+     chart.yAxis.axisLabel('Method Complexity');
+ 
+     d3.select('#methodComplexity svg')
+-      .datum(getComplexityData([[66.666666666667,1,"<a href=\"source_with_class_and_anonymous_function.php.html#5\">CoveredClassWithAnonymousFunctionInStaticMethod::runAnonymous<\/a>"],[100,1,"<a href=\"source_with_class_and_anonymous_function.php.html#11\">CoveredClassWithAnonymousFunctionInStaticMethod::anonymous function<\/a>"]], 'Method Complexity'))
++      .datum(getComplexityData([[66.666666666666657,1,"<a href=\"source_with_class_and_anonymous_function.php.html#5\">CoveredClassWithAnonymousFunctionInStaticMethod::runAnonymous<\/a>"],[100,1,"<a href=\"source_with_class_and_anonymous_function.php.html#11\">CoveredClassWithAnonymousFunctionInStaticMethod::anonymous function<\/a>"]], 'Method Complexity'))
+       .transition()
+       .duration(500)
+       .call(chart);
+diff --git a/tests/_files/Report/HTML/CoverageForFileWithIgnoredLines/index.html b/tests/_files/Report/HTML/CoverageForFileWithIgnoredLines/index.html
+index 247ee0c..a9be55d 100644
+--- a/tests/_files/Report/HTML/CoverageForFileWithIgnoredLines/index.html
++++ b/tests/_files/Report/HTML/CoverageForFileWithIgnoredLines/index.html
+@@ -50,22 +50,12 @@
+ </td>
+       <td class="danger small"><div align="right">50.00%</div></td>
+       <td class="danger small"><div align="right">1&nbsp;/&nbsp;2</div></td>
+-      <td class="success big">       <div class="progress">
+-         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+-           <span class="sr-only">100.00% covered (success)</span>
+-         </div>
+-       </div>
+-</td>
+-      <td class="success small"><div align="right">100.00%</div></td>
+-      <td class="success small"><div align="right">0&nbsp;/&nbsp;0</div></td>
+-      <td class="success big">       <div class="progress">
+-         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+-           <span class="sr-only">100.00% covered (success)</span>
+-         </div>
+-       </div>
+-</td>
+-      <td class="success small"><div align="right">100.00%</div></td>
+-      <td class="success small"><div align="right">2&nbsp;/&nbsp;2</div></td>
++      <td class=" big"></td>
++      <td class=" small"><div align="right">n/a</div></td>
++      <td class=" small"><div align="right">0&nbsp;/&nbsp;0</div></td>
++      <td class=" big"></td>
++      <td class=" small"><div align="right">n/a</div></td>
++      <td class=" small"><div align="right">0&nbsp;/&nbsp;0</div></td>
+      </tr>
+ 
+      <tr>
+@@ -78,22 +68,12 @@
+ </td>
+       <td class="danger small"><div align="right">50.00%</div></td>
+       <td class="danger small"><div align="right">1&nbsp;/&nbsp;2</div></td>
+-      <td class="success big">       <div class="progress">
+-         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+-           <span class="sr-only">100.00% covered (success)</span>
+-         </div>
+-       </div>
+-</td>
+-      <td class="success small"><div align="right">100.00%</div></td>
+-      <td class="success small"><div align="right">0&nbsp;/&nbsp;0</div></td>
+-      <td class="success big">       <div class="progress">
+-         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+-           <span class="sr-only">100.00% covered (success)</span>
+-         </div>
+-       </div>
+-</td>
+-      <td class="success small"><div align="right">100.00%</div></td>
+-      <td class="success small"><div align="right">2&nbsp;/&nbsp;2</div></td>
++      <td class=" big"></td>
++      <td class=" small"><div align="right">n/a</div></td>
++      <td class=" small"><div align="right">0&nbsp;/&nbsp;0</div></td>
++      <td class=" big"></td>
++      <td class=" small"><div align="right">n/a</div></td>
++      <td class=" small"><div align="right">0&nbsp;/&nbsp;0</div></td>
+      </tr>
+ 
+ 
+diff --git a/tests/_files/Report/HTML/CoverageForFileWithIgnoredLines/source_with_ignore.php.html b/tests/_files/Report/HTML/CoverageForFileWithIgnoredLines/source_with_ignore.php.html
+index be814c1..dafd7fa 100644
+--- a/tests/_files/Report/HTML/CoverageForFileWithIgnoredLines/source_with_ignore.php.html
++++ b/tests/_files/Report/HTML/CoverageForFileWithIgnoredLines/source_with_ignore.php.html
+@@ -2,7 +2,7 @@
+ <html lang="en">
+  <head>
+   <meta charset="UTF-8">
+-  <title>Code Coverage for %s/source_with_ignore.php</title>
++  <title>Code Coverage for %s</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link href="css/bootstrap.min.css" rel="stylesheet">
+   <link href="css/style.css" rel="stylesheet">
+@@ -41,24 +41,14 @@
+     </thead>
+     <tbody>
+      <tr>
+-      <td class="success">Total</td>
+-      <td class="success big">       <div class="progress">
+-         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+-           <span class="sr-only">100.00% covered (success)</span>
+-         </div>
+-       </div>
+-</td>
+-      <td class="success small"><div align="right">100.00%</div></td>
+-      <td class="success small"><div align="right">2&nbsp;/&nbsp;2</div></td>
+-      <td class="success big">       <div class="progress">
+-         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+-           <span class="sr-only">100.00% covered (success)</span>
+-         </div>
+-       </div>
+-</td>
+-      <td class="success small"><div align="right">100.00%</div></td>
+-      <td class="success small"><div align="right">0&nbsp;/&nbsp;0</div></td>
+-      <td class="success small"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></td>
++      <td class="">Total</td>
++      <td class=" big"></td>
++      <td class=" small"><div align="right">n/a</div></td>
++      <td class=" small"><div align="right">0&nbsp;/&nbsp;0</div></td>
++      <td class=" big"></td>
++      <td class=" small"><div align="right">n/a</div></td>
++      <td class=" small"><div align="right">0&nbsp;/&nbsp;0</div></td>
++      <td class=" small"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></td>
+       <td class="danger big">       <div class="progress">
+          <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="50.00" aria-valuemin="0" aria-valuemax="100" style="width: 50.00%">
+            <span class="sr-only">50.00% covered (danger)</span>
+@@ -80,26 +70,16 @@
+       <td class="success small"><div align="right">100.00%</div></td>
+       <td class="success small"><div align="right">1&nbsp;/&nbsp;1</div></td>
+       <td class="success small">0</td>
+-      <td class="success big">       <div class="progress">
+-         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+-           <span class="sr-only">100.00% covered (success)</span>
+-         </div>
+-       </div>
+-</td>
+-      <td class="success small"><div align="right">100.00%</div></td>
+-      <td class="success small"><div align="right">0&nbsp;/&nbsp;0</div></td>
++      <td class=" big"></td>
++      <td class=" small"><div align="right">n/a</div></td>
++      <td class=" small"><div align="right">0&nbsp;/&nbsp;0</div></td>
+      </tr>
+ 
+      <tr>
+-      <td class="success">Foo</td>
+-      <td class="success big">       <div class="progress">
+-         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+-           <span class="sr-only">100.00% covered (success)</span>
+-         </div>
+-       </div>
+-</td>
+-      <td class="success small"><div align="right">100.00%</div></td>
+-      <td class="success small"><div align="right">1&nbsp;/&nbsp;1</div></td>
++      <td class="">Foo</td>
++      <td class=" big"></td>
++      <td class=" small"><div align="right">n/a</div></td>
++      <td class=" small"><div align="right">0&nbsp;/&nbsp;0</div></td>
+       <td class="success big">       <div class="progress">
+          <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+            <span class="sr-only">100.00% covered (success)</span>
+@@ -109,14 +89,9 @@
+       <td class="success small"><div align="right">100.00%</div></td>
+       <td class="success small"><div align="right">1&nbsp;/&nbsp;1</div></td>
+       <td class="success small">1</td>
+-      <td class="success big">       <div class="progress">
+-         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+-           <span class="sr-only">100.00% covered (success)</span>
+-         </div>
+-       </div>
+-</td>
+-      <td class="success small"><div align="right">100.00%</div></td>
+-      <td class="success small"><div align="right">0&nbsp;/&nbsp;0</div></td>
++      <td class=" big"></td>
++      <td class=" small"><div align="right">n/a</div></td>
++      <td class=" small"><div align="right">0&nbsp;/&nbsp;0</div></td>
+      </tr>
+ 
+      <tr>
+@@ -130,26 +105,16 @@
+       <td class="success small"><div align="right">100.00%</div></td>
+       <td class="success small"><div align="right">1&nbsp;/&nbsp;1</div></td>
+       <td class="success small">1</td>
+-      <td class="success big">       <div class="progress">
+-         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+-           <span class="sr-only">100.00% covered (success)</span>
+-         </div>
+-       </div>
+-</td>
+-      <td class="success small"><div align="right">100.00%</div></td>
+-      <td class="success small"><div align="right">0&nbsp;/&nbsp;0</div></td>
++      <td class=" big"></td>
++      <td class=" small"><div align="right">n/a</div></td>
++      <td class=" small"><div align="right">0&nbsp;/&nbsp;0</div></td>
+      </tr>
+ 
+      <tr>
+-      <td class="success">Bar</td>
+-      <td class="success big">       <div class="progress">
+-         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+-           <span class="sr-only">100.00% covered (success)</span>
+-         </div>
+-       </div>
+-</td>
+-      <td class="success small"><div align="right">100.00%</div></td>
+-      <td class="success small"><div align="right">1&nbsp;/&nbsp;1</div></td>
++      <td class="">Bar</td>
++      <td class=" big"></td>
++      <td class=" small"><div align="right">n/a</div></td>
++      <td class=" small"><div align="right">0&nbsp;/&nbsp;0</div></td>
+       <td class="success big">       <div class="progress">
+          <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+            <span class="sr-only">100.00% covered (success)</span>
+@@ -159,14 +124,9 @@
+       <td class="success small"><div align="right">100.00%</div></td>
+       <td class="success small"><div align="right">1&nbsp;/&nbsp;1</div></td>
+       <td class="success small">1</td>
+-      <td class="success big">       <div class="progress">
+-         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+-           <span class="sr-only">100.00% covered (success)</span>
+-         </div>
+-       </div>
+-</td>
+-      <td class="success small"><div align="right">100.00%</div></td>
+-      <td class="success small"><div align="right">0&nbsp;/&nbsp;0</div></td>
++      <td class=" big"></td>
++      <td class=" small"><div align="right">n/a</div></td>
++      <td class=" small"><div align="right">0&nbsp;/&nbsp;0</div></td>
+      </tr>
+ 
+      <tr>
+@@ -180,14 +140,9 @@
+       <td class="success small"><div align="right">100.00%</div></td>
+       <td class="success small"><div align="right">1&nbsp;/&nbsp;1</div></td>
+       <td class="success small">1</td>
+-      <td class="success big">       <div class="progress">
+-         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100.00" aria-valuemin="0" aria-valuemax="100" style="width: 100.00%">
+-           <span class="sr-only">100.00% covered (success)</span>
+-         </div>
+-       </div>
+-</td>
+-      <td class="success small"><div align="right">100.00%</div></td>
+-      <td class="success small"><div align="right">0&nbsp;/&nbsp;0</div></td>
++      <td class=" big"></td>
++      <td class=" small"><div align="right">n/a</div></td>
++      <td class=" small"><div align="right">0&nbsp;/&nbsp;0</div></td>
+      </tr>
+ 
+ 
+diff --git a/tests/_files/Report/XML/CoverageForFileWithIgnoredLines/index.xml b/tests/_files/Report/XML/CoverageForFileWithIgnoredLines/index.xml
+index 35c0745..436081a 100644
+--- a/tests/_files/Report/XML/CoverageForFileWithIgnoredLines/index.xml
++++ b/tests/_files/Report/XML/CoverageForFileWithIgnoredLines/index.xml
+@@ -9,7 +9,7 @@
+         <lines total="37" comments="12" code="25" executable="2" executed="1" percent="50.00%"/>
+         <methods count="0" tested="0" percent=""/>
+         <functions count="1" tested="0" percent="0.00%"/>
+-        <classes count="2" tested="2" percent="100.00%"/>
++        <classes count="0" tested="0" percent=""/>
+         <traits count="0" tested="0" percent=""/>
+       </totals>
+       <file name="source_with_ignore.php" href="source_with_ignore.php.xml">
+@@ -17,7 +17,7 @@
+           <lines total="37" comments="12" code="25" executable="2" executed="1" percent="50.00%"/>
+           <methods count="0" tested="0" percent=""/>
+           <functions count="1" tested="0" percent="0.00%"/>
+-          <classes count="2" tested="2" percent="100.00%"/>
++          <classes count="0" tested="0" percent=""/>
+           <traits count="0" tested="0" percent=""/>
+         </totals>
+       </file>
+diff --git a/tests/_files/Report/XML/CoverageForFileWithIgnoredLines/source_with_ignore.php.xml b/tests/_files/Report/XML/CoverageForFileWithIgnoredLines/source_with_ignore.php.xml
+index 509990f..f5eec7d 100644
+--- a/tests/_files/Report/XML/CoverageForFileWithIgnoredLines/source_with_ignore.php.xml
++++ b/tests/_files/Report/XML/CoverageForFileWithIgnoredLines/source_with_ignore.php.xml
+@@ -5,7 +5,7 @@
+       <lines total="37" comments="12" code="25" executable="2" executed="1" percent="50.00%"/>
+       <methods count="0" tested="0" percent=""/>
+       <functions count="1" tested="0" percent="0.00%"/>
+-      <classes count="2" tested="2" percent="100.00%"/>
++      <classes count="0" tested="0" percent=""/>
+       <traits count="0" tested="0" percent=""/>
+     </totals>
+     <class name="Foo" start="11" executable="0" executed="0" crap="1">
+diff --git a/tests/_files/ignored-lines-clover.xml b/tests/_files/ignored-lines-clover.xml
+index 81a9aaa..a35cc4b 100644
+--- a/tests/_files/ignored-lines-clover.xml
++++ b/tests/_files/ignored-lines-clover.xml
+@@ -10,8 +10,8 @@
+       </class>
+       <line num="2" type="stmt" count="1"/>
+       <line num="6" type="stmt" count="0"/>
+-      <metrics loc="37" ncloc="25" classes="2" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="1" elements="2" coveredelements="1"/>
++      <metrics loc="37" ncloc="25" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="1" elements="2" coveredelements="1"/>
+     </file>
+-    <metrics files="1" loc="37" ncloc="25" classes="2" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="1" elements="2" coveredelements="1"/>
++    <metrics files="1" loc="37" ncloc="25" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="1" elements="2" coveredelements="1"/>
+   </project>
+ </coverage>
+diff --git a/tests/_files/ignored-lines-text.txt b/tests/_files/ignored-lines-text.txt
+index 4283038..6e8e149 100644
+--- a/tests/_files/ignored-lines-text.txt
++++ b/tests/_files/ignored-lines-text.txt
+@@ -1,10 +1,10 @@
+ 
+ 
+-Code Coverage Report:   
++Code Coverage Report:%w
+   %s
+-                        
+- Summary:               
+-  Classes: 100.00% (2/2)
+-  Methods:        (0/0) 
+-  Lines:   50.00% (1/2) 
++%w
++ Summary:%w
++  Classes:        (0/0)
++  Methods:        (0/0)
++  Lines:   50.00% (1/2)
+ 
+From f12ad0185b5f06ef9871af867f14d936278e1ce0 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sun, 22 Jan 2017 10:07:33 +0100
+Subject: [PATCH] force serialize_precision to ensure test pass with 5.6, 7.0
+ and 7.1
+
+---
+ phpunit.xml                                                           | 4 ++++
+ .../Report/HTML/CoverageForClassWithAnonymousFunction/dashboard.html  | 2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/phpunit.xml b/phpunit.xml
+index c8f28de..55822f0 100644
+--- a/phpunit.xml
++++ b/phpunit.xml
+@@ -13,5 +13,9 @@
+             <directory suffix=".php">src</directory>
+         </whitelist>
+     </filter>
++
++    <php>
++        <ini name="serialize_precision" value="14"/>
++    </php>
+ </phpunit>
+ 
+diff --git a/tests/_files/Report/HTML/CoverageForClassWithAnonymousFunction/dashboard.html b/tests/_files/Report/HTML/CoverageForClassWithAnonymousFunction/dashboard.html
+index 2db00c7..a0b1d94 100644
+--- a/tests/_files/Report/HTML/CoverageForClassWithAnonymousFunction/dashboard.html
++++ b/tests/_files/Report/HTML/CoverageForClassWithAnonymousFunction/dashboard.html
+@@ -251,7 +251,7 @@
+     chart.yAxis.axisLabel('Method Complexity');
+ 
+     d3.select('#methodComplexity svg')
+-      .datum(getComplexityData([[66.666666666666657,1,"<a href=\"source_with_class_and_anonymous_function.php.html#5\">CoveredClassWithAnonymousFunctionInStaticMethod::runAnonymous<\/a>"],[100,1,"<a href=\"source_with_class_and_anonymous_function.php.html#11\">CoveredClassWithAnonymousFunctionInStaticMethod::anonymous function<\/a>"]], 'Method Complexity'))
++      .datum(getComplexityData([[66.666666666667,1,"<a href=\"source_with_class_and_anonymous_function.php.html#5\">CoveredClassWithAnonymousFunctionInStaticMethod::runAnonymous<\/a>"],[100,1,"<a href=\"source_with_class_and_anonymous_function.php.html#11\">CoveredClassWithAnonymousFunctionInStaticMethod::anonymous function<\/a>"]], 'Method Complexity'))
+       .transition()
+       .duration(500)
+       .call(chart);
