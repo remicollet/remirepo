@@ -5,6 +5,7 @@
     "php-pimple1": 1,
     "php-robrichards-xmlseclibs1": 1,
     "php-robrichards-xmlseclibs": 2,
-    "php-symfony": 2
+    "php-symfony": 2,
+	"php-udan11-sql-parser": 3
 }
 
