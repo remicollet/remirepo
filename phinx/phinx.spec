@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    6943cb4bb78bf9d3964967a032220b7c793b97b7
+%global gh_commit    cc97b79f62c2180caba0be1d3744a335a296a678
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     robmorgan
 #global gh_date      20150820
@@ -20,16 +20,16 @@
 %endif
 
 Name:           %{gh_project}
-Version:        0.6.5
+Version:        0.6.6
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        Manage the database migrations for your PHP app
 
 Group:          Development/Libraries
 License:        MIT
 URL:            https://phinx.org
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{?gh_short}.tar.gz
-
+Source0:        %{name}-%{version}-%{?gh_short}.tgz
 Source1:        %{name}-autoload.php
+Source2:        makesrc.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -167,6 +167,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan 23 2017 Remi Collet <remi@remirepo.net> - 0.6.6-1
+- update to 0.6.6
+- use a git snashop to retrieve test suite
+
 * Thu Oct 27 2016 Remi Collet <remi@fedoraproject.org> - 0.6.5-1
 - update to 0.6.5
 - switch from symfony/class-loader to fedora/autoloader
