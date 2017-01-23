@@ -89,6 +89,8 @@ BuildRequires:  php-composer(phpmailer/phpmailer)       >= 5.2
 BuildRequires:  php-composer(tecnickcom/tcpdf)          >= 6.2.13
 BuildRequires:  php-mysqli
 BuildRequires:  php-xmlrpc
+#Missing in mariadb
+BuildRequires:  hostname
 # remirepo:1
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildRequires:  php-composer(zetacomponents/graph)
@@ -468,6 +470,7 @@ fi
 %changelog
 * Mon Jan 23 2017 Johan Cwiklinski <jcwiklinski AT teclib DOT com> - 9.1.2-1
 - update to 9.1.2
+- add missing hostname BR from MariaDB package
 
 * Mon Jan  9 2017 Remi Collet <remi@fedoraproject.org> - 9.1.1-3
 - use new tcpdf classmap autoloader
