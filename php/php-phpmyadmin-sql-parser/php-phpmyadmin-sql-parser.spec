@@ -139,7 +139,7 @@ exit $ret
 %{_bindir}/%{gh_project}-highlight-query
 %{_bindir}/%{gh_project}-lint-query
 %endif
-%dir %{_datadir}/php/%{ns_vendor}
+%dir %{_datadir}/php/%{ns_vendor}/
      %{_datadir}/php/%{ns_vendor}/%{ns_project}
 
 

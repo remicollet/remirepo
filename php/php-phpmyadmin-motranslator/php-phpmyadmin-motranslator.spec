@@ -9,23 +9,23 @@
 
 ##TODO next version will have tests back
 
-%global gh_commit    7d31d1de8167f0824dcff046d2eb2abb3d8364dd
+%global gh_commit    b5d5f9a0c1f6ed1127e7b766b3b506766becbb89
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmyadmin
 %global gh_project   motranslator
 %global with_tests   0%{!?_without_tests:1}
-%global psr0         MoTranslator
+%global ns_vendor    PhpMyAdmin
+%global ns_project   MoTranslator
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.2
+Version:        3.0
 Release:        1%{?dist}
 Summary:        Translation API for PHP using Gettext MO files
 
 Group:          Development/Libraries
 License:        GPLv2+
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        %{name}-%{version}-%{gh_short}.tgz
-Source1:        makesrc.sh
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{name}-%{version}-%{?gh_short}.tar.gz
 
 BuildArch:      noarch
 %if %{with_tests}
@@ -71,7 +71,7 @@ Limitations
 * Not suitable for huge MO files which you don't want to store in memory
 * Input and output encoding has to match (preferably UTF-8)
 
-Autoloader: %{_datadir}/php/%{psr0}/autoload.php
+Autoloader: %{_datadir}/php/%{ns_vendor}/%{ns_project}/autoload.php
 
 
 %prep
@@ -85,7 +85,7 @@ cat <<'AUTOLOAD' | tee src/autoload.php
 /* Autoloader for %{name} and its dependencies */
 require_once '%{_datadir}/php/Fedora/Autoloader/autoload.php';
 
-\Fedora\Autoloader\Autoload::addPsr4('%{psr0}\\', __DIR__);
+\Fedora\Autoloader\Autoload::addPsr4('%{ns_vendor}\\%{ns_project}\\', __DIR__);
 \Fedora\Autoloader\Dependencies::required(array(
     '%{_datadir}/php/Symfony/Component/ExpressionLanguage/autoload.php'
 ));
@@ -94,8 +94,8 @@ AUTOLOAD
 
 %install
 : Library
-mkdir -p   %{buildroot}%{_datadir}/php
-cp -pr src %{buildroot}%{_datadir}/php/%{psr0}
+mkdir -p   %{buildroot}%{_datadir}/php/%{ns_vendor}
+cp -pr src %{buildroot}%{_datadir}/php/%{ns_vendor}/%{ns_project}
 
 
 %check
@@ -103,7 +103,7 @@ cp -pr src %{buildroot}%{_datadir}/php/%{psr0}
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
-require '%{buildroot}%{_datadir}/php/%{psr0}/autoload.php';
+require '%{buildroot}%{_datadir}/php/%{ns_vendor}/%{ns_project}/autoload.php';
 EOF
 
 # remirepo:11
@@ -132,10 +132,14 @@ exit $ret
 %license LICENSE
 %doc composer.json
 %doc *.md
-%{_datadir}/php/%{psr0}
+%dir %{_datadir}/php/%{ns_vendor}/
+     %{_datadir}/php/%{ns_vendor}/%{ns_project}
 
 
 %changelog
+* Mon Jan 23 2017 Remi Collet <remi@remirepo.net> - 3.0-1
+- update to 3.0 with vendor namespace
+
 * Sat Jan 21 2017 Remi Collet <remi@remirepo.net> - 2.2-1
 - initial package
 
