@@ -9,23 +9,23 @@
 
 ##TODO next version will have tests back
 
-%global gh_commit    cb650f2900c69c1f864715c29f40ef912e112f7e
+%global gh_commit    ee3413bda4cfc5683f088c2f232aab5b27339781
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmyadmin
 %global gh_project   shapefile
 %global with_tests   0%{!?_without_tests:1}
-%global psr0         ShapeFile
+%global ns_vendor    PhpMyAdmin
+%global ns_project   ShapeFile
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.2
+Version:        2.0
 Release:        1%{?dist}
 Summary:        ESRI ShapeFile library for PHP
 
 Group:          Development/Libraries
 License:        GPLv2+
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        %{name}-%{version}-%{gh_short}.tgz
-Source1:        makesrc.sh
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{name}-%{version}-%{?gh_short}.tar.gz
 
 BuildArch:      noarch
 %if %{with_tests}
@@ -65,7 +65,7 @@ documentation, making translations or offering new ideas please contact us.
 
 [1] https://www.esri.com/library/whitepapers/pdfs/shapefile.pdf
 
-Autoloader: %{_datadir}/php/%{psr0}/autoload.php
+Autoloader: %{_datadir}/php/%{ns_vendor}/%{ns_project}/autoload.php
 
 
 %prep
@@ -79,14 +79,14 @@ cat <<'AUTOLOAD' | tee src/autoload.php
 /* Autoloader for %{name} and its dependencies */
 require_once '%{_datadir}/php/Fedora/Autoloader/autoload.php';
 
-\Fedora\Autoloader\Autoload::addPsr4('%{psr0}\\', __DIR__);
+\Fedora\Autoloader\Autoload::addPsr4('%{ns_vendor}\\%{ns_project}\\', __DIR__);
 AUTOLOAD
 
 
 %install
 : Library
-mkdir -p   %{buildroot}%{_datadir}/php
-cp -pr src %{buildroot}%{_datadir}/php/%{psr0}
+mkdir -p   %{buildroot}%{_datadir}/php/%{ns_vendor}
+cp -pr src %{buildroot}%{_datadir}/php/%{ns_vendor}/%{ns_project}
 
 
 %check
@@ -94,7 +94,7 @@ cp -pr src %{buildroot}%{_datadir}/php/%{psr0}
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
-require '%{buildroot}%{_datadir}/php/%{psr0}/autoload.php';
+require '%{buildroot}%{_datadir}/php/%{ns_vendor}/%{ns_project}/autoload.php';
 EOF
 
 # remirepo:11
@@ -123,10 +123,14 @@ exit $ret
 %license LICENSE
 %doc composer.json
 %doc *.md
-%{_datadir}/php/%{psr0}
+%dir %{_datadir}/php/%{ns_vendor}/
+     %{_datadir}/php/%{ns_vendor}/%{ns_project}
 
 
 %changelog
+* Mon Jan 23 2017 Remi Collet <remi@remirepo.net> - 2.0-1
+- update to 3.0 with vendor namespace
+
 * Sat Jan 21 2017 Remi Collet <remi@remirepo.net> - 1.2-1
 - initial package
 

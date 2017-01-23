@@ -26,7 +26,7 @@
     },
     "autoload": {
         "psr-4": {
-            "ShapeFile\\": "src"
+            "PhpMyAdmin\\ShapeFile\\": "src"
         }
     }
 }
