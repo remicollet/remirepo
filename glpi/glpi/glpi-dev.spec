@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 
-%global gh_commit  80328baf38e2d6fe6cf269b43ed0edc80c64d89d
+%global gh_commit  3dedf3453ae2f4b3e0e26772e7ce00182aeb4e5d
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date    20160923
 %global gh_owner   glpi-project
@@ -42,9 +42,9 @@
 %endif
 
 Name:           %{gh_project}
-Version:        9.1.1
+Version:        9.1.2
 %global schema  9.1.1
-Release:        3%{?dist}
+Release:        1%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -89,6 +89,8 @@ BuildRequires:  php-composer(phpmailer/phpmailer)       >= 5.2
 BuildRequires:  php-composer(tecnickcom/tcpdf)          >= 6.2.13
 BuildRequires:  php-mysqli
 BuildRequires:  php-xmlrpc
+#Missing in mariadb
+BuildRequires:  hostname
 # remirepo:1
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildRequires:  php-composer(zetacomponents/graph)
@@ -367,7 +369,7 @@ done
 cp %{SOURCE12} config/config_path.php
 
 : Run upstream test suite
-php tools/cliinstall.php --host=127.0.0.1:3308 --db=glpitest --user=root --tests --force --lang=en_US || RET=1
+php tools/cliinstall.php --host=127.0.0.1:3308 --db=glpitest --user=root --tests --force --lang=en_GB || RET=1
 
 %{_bindir}/phpunit --verbose || RET=1
 
@@ -466,6 +468,10 @@ fi
 
 
 %changelog
+* Mon Jan 23 2017 Johan Cwiklinski <jcwiklinski AT teclib DOT com> - 9.1.2-1
+- update to 9.1.2
+- add missing hostname BR from MariaDB package
+
 * Mon Jan  9 2017 Remi Collet <remi@fedoraproject.org> - 9.1.1-3
 - use new tcpdf classmap autoloader
 
