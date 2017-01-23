@@ -1,4 +1,4 @@
-# remirepo/fedora spec file for php-udan11-sql-parser
+# remirepo/fedora spec file for php-phpmyadmin-sql-parser
 #
 # Copyright (c) 2015-2017 Remi Collet
 # License: CC-BY-SA
@@ -7,36 +7,33 @@
 # Please, preserve the changelog entries
 #
 
-##TODO next version will have tests back
-
-%global gh_commit    2b59d9e19432a385d952bcc94b3ffe6b11f22cbf
+%global gh_commit    d070a5263f16128cb777c084981c7061a9a2dda3
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmyadmin
 #global gh_date      20150820
 %global gh_project   sql-parser
 %global with_tests   0%{!?_without_tests:1}
-%global psr0         SqlParser
+%global ns_vendor    PhpMyAdmin
+%global ns_project   SqlParser
 %if 0%{?fedora} >= 26
-%global with_cmd     0
-%else
 %global with_cmd     1
+%else
+%global with_cmd     0
 %endif
 
-Name:           php-udan11-%{gh_project}
-Version:        3.4.17
-Release:        2%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
+Name:           php-%{gh_owner}-%{gh_project}
+Version:        4.0.0
+Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A validating SQL lexer and parser with a focus on MySQL dialect
 
 Group:          Development/Libraries
 License:        GPLv2+
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        %{name}-%{version}-%{gh_short}.tgz
-Source1:        makesrc.sh
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{name}-%{version}-%{?gh_short}.tar.gz
 
 # Use our autoloader
 Patch0:         %{name}-autoload.patch
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 BuildRequires:  php(language) >= 5.3.0
@@ -62,12 +59,7 @@ Requires:       php-composer(fedora/autoloader)
 Requires:       php-cli
 %endif
 
-# Rename
-Obsoletes:      php-dmitry-php-sql-parser < 0-0.2
-Provides:       php-dmitry-php-sql-parser = %{version}-%{release}
-
 # Composer
-Provides:       php-composer(udan11/%{gh_project})      = %{version}
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
@@ -77,7 +69,7 @@ A validating SQL lexer and parser with a focus on MySQL dialect.
 This library was originally developed for phpMyAdmin during
 the Google Summer of Code 2015.
 
-Autoloader: %{_datadir}/php/%{psr0}/autoload.php
+Autoloader: %{_datadir}/php/%{ns_vendor}/%{ns_project}/autoload.php
 
 
 %prep
@@ -92,16 +84,14 @@ cat <<'AUTOLOAD' | tee src/autoload.php
 /* Autoloader for %{name} and its dependencies */
 require_once '%{_datadir}/php/Fedora/Autoloader/autoload.php';
 
-\Fedora\Autoloader\Autoload::addPsr4('%{psr0}\\', __DIR__);
+\Fedora\Autoloader\Autoload::addPsr4('%{ns_vendor}\\%{ns_project}\\', __DIR__);
 AUTOLOAD
 
 
 %install
-rm -rf     %{buildroot}
-
 : Library
-mkdir -p   %{buildroot}%{_datadir}/php
-cp -pr src %{buildroot}%{_datadir}/php/%{psr0}
+mkdir -p   %{buildroot}%{_datadir}/php/%{ns_vendor}
+cp -pr src %{buildroot}%{_datadir}/php/%{ns_vendor}/%{ns_project}
 
 %if %{with_cmd}
 : Commands
@@ -115,8 +105,8 @@ install -Dpm 0755 bin/lint-query      %{buildroot}%{_bindir}/%{gh_project}-lint-
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
-require '%{buildroot}%{_datadir}/php/%{psr0}/autoload.php';
-\Fedora\Autoloader\Autoload::addPsr4('%{psr0}\\Tests\\', dirname(__DIR__).'/tests');
+require '%{buildroot}%{_datadir}/php/%{ns_vendor}/%{ns_project}/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('%{ns_vendor}\\%{ns_project}\\Tests\\', dirname(__DIR__).'/tests');
 EOF
 
 # remirepo:11
@@ -131,9 +121,7 @@ if which php71; then
    run=1
 fi
 if [ $run -eq 0 ]; then
-if %{_bindir}/phpunit --atleast-version 4.8; then
-   %{_bindir}/phpunit --no-coverage --verbose
-fi
+%{_bindir}/phpunit --no-coverage --verbose
 # remirepo:2
 fi
 exit $ret
@@ -142,26 +130,23 @@ exit $ret
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.txt
 %doc composer.json
 %doc README.md
-%{_datadir}/php/%{psr0}
 %if %{with_cmd}
 %{_bindir}/%{gh_project}-highlight-query
 %{_bindir}/%{gh_project}-lint-query
 %endif
+%dir %{_datadir}/php/%{ns_vendor}
+     %{_datadir}/php/%{ns_vendor}/%{ns_project}
 
 
 %changelog
-* Mon Jan 23 2017 Remi Collet <remi@fedoraproject.org> - 3.4.17-2
-- drop commands on F26
+* Mon Jan 23 2017 Remi Collet <remi@fedoraproject.org> - 4.0.0-1
+- update to 4.0.0
+- rename to php-phpmyadmin-sql-parser
 
 * Fri Jan 20 2017 Remi Collet <remi@fedoraproject.org> - 3.4.17-1
 - update to 3.4.17
