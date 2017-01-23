@@ -18,8 +18,8 @@
 
 Summary:        PHP extension for interfacing with Apache ZooKeeper
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.3.0
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.3.1
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://github.com/andreiz/php-zookeeper
@@ -113,6 +113,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -134,6 +136,7 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
+%{?dtsenable}
 
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
@@ -212,6 +215,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan 23 2017 Remi Collet <remi@fedoraproject.org> - 0.3.1-1
+- Update to 0.3.1 (alpha)
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 0.3.0-2
 - rebuild with PHP 7.1.0 GA
 

@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #146 zookeeper version 0.3.0 ] {
+Extension [ <persistent> extension #156 zookeeper version 0.3.1 ] {
 
   - INI {
     Entry [ zookeeper.recv_timeout <ALL> ]
