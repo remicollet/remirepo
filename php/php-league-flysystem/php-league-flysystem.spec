@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github
-%global gh_commit    1b5c4a0031697f46e779a9d1b309c2e1b24daeab
+%global gh_commit    5c7f98498b12d47f9de90ec9186a90000125777c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     thephpleague
 %global gh_project   flysystem
@@ -19,7 +19,7 @@
 %global ns_project   Flysystem
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        1.0.32
+Version:        1.0.33
 Release:        1%{?dist}
 Summary:        Filesystem abstraction: Many filesystems, one API
 
@@ -29,8 +29,6 @@ URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        %{name}-%{version}-%{gh_short}.tgz
 # Create git snapshot as tests are excluded from official tarball
 Source1:        makesrc.sh
-# Autoloader
-Source2:        %{name}-autoload.php
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -50,7 +48,7 @@ BuildRequires:  php-composer(phpunit/phpunit) >= 4.0
 BuildRequires:  php-composer(mockery/mockery) >= 0.9
 BuildRequires:  php-composer(phpspec/phpspec) >= 2.2
 # Autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 
 # From composer.json, "require": {
 Requires:       php(language) >= 5.5.9
@@ -63,7 +61,7 @@ Requires:       php-mbstring
 Requires:       php-pcre
 Requires:       php-spl
 # Autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(%{pk_vendor}/%{pk_name}) = %{version}
 
@@ -78,11 +76,16 @@ Autoloader: %{_datadir}/php/%{ns_vendor}/%{ns_project}/autoload.php
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-install -pm 644 %{SOURCE2} src/autoload.php
-
 
 %build
-# Nothing
+: Create autoloader
+cat <<'AUTOLOAD' | tee src/autoload.php
+<?php
+/* Autoloader for %{name} and its dependencies */
+require_once '%{_datadir}/php/Fedora/Autoloader/autoload.php';
+
+\Fedora\Autoloader\Autoload::addPsr4('%{ns_vendor}\\%{ns_project}\\', __DIR__);
+AUTOLOAD
 
 
 %install
@@ -105,10 +108,7 @@ require '%{buildroot}%{_datadir}/php/%{ns_vendor}/%{ns_project}/autoload.php';
 require_once '%{_datadir}/php/Mockery/autoload.php';
 
 // Test suite
-require_once '%{_datadir}/php/Symfony/Component/ClassLoader/Psr4ClassLoader.php';
-$Loader = new \Symfony\Component\ClassLoader\Psr4ClassLoader();
-$Loader->addPrefix("League\\Flysystem\\Stub\\", dirname(__DIR__).'/stub');
-$Loader->register();
+\Fedora\Autoloader\Autoload::addPsr4('%{ns_vendor}\\%{ns_project}\\Stub\\', dirname(__DIR__).'/stub');
 EOF
 
 : Fix bootstraping
@@ -159,7 +159,11 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Oct 20 2016 Remi Collet <remi@fedoraproject.org> - 1.0.30-1
+* Mon Jan 23 2017 Remi Collet <remi@fedoraproject.org> - 1.0.33-1
+- update to 1.0.33 (windows only)
+- switch to fedora/autoloader
+
+* Thu Oct 20 2016 Remi Collet <remi@fedoraproject.org> - 1.0.32-1
 - update to 1.0.32 (windows only)
 
 * Wed Oct 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.31-1
