@@ -1,3 +1,12 @@
+# remirepo spec file for php-echonest-api, from:
+#
+# Fedora spec file for php-echonest-api
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 %global commit 662d62a7df1247515572bf517e14b795714e0824
 %global short_commit %(echo %{commit} | cut -c 1-8)
 
@@ -48,16 +57,35 @@ install -p -m 0644 %{S:1} %{buildroot}/%{_datadir}/php/EchoNest
 
 
 %check
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap %{buildroot}/%{_datadir}/php/EchoNest/autoload.php || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap %{buildroot}/%{_datadir}/php/EchoNest/autoload.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 phpunit --bootstrap=%{buildroot}/%{_datadir}/php/EchoNest/autoload.php
+# remirepo:2
+fi
+exit $ret
 
 
 %files
+%{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc README.md
 %{_datadir}/php/EchoNest
 
 
 %changelog
+* Tue Jan 24 2017 Remi Collet <remi@remirepo.net> - 0-0.3.20131228git.662d62a7
+- backport for remi repo
+
 * Sat Jan 21 2017 Randy Barlow <bowlofeggs@fedoraproject.org> - 0-0.3.20131228git.662d62a7
 - Add the commit date into the release.
 - Remove the execute bit on php files.
