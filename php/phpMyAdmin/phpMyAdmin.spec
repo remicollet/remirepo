@@ -22,8 +22,8 @@
 %endif
 
 Name: phpMyAdmin
-Version: 4.6.5.2
-Release: 2%{?dist}
+Version: 4.6.6
+Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -78,7 +78,7 @@ Requires:  php-tcpdf
 Requires:  php-tcpdf-dejavu-sans-fonts
 Requires:  php-composer(phpseclib/phpseclib) >= 2.0.0
 Requires:  php-composer(phpmyadmin/sql-parser) <  4
-Requires:  php-composer(phpmyadmin/sql-parser) >= 3.4.13
+Requires:  php-composer(phpmyadmin/sql-parser) >= 3.4.17
 # optional and ignored php-gmp (as bcmath is enough)
 
 Provides:  phpmyadmin = %{version}-%{release}
@@ -222,6 +222,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 
 
 %changelog
+* Tue Jan 24 2017 Remi Collet <remi@remirepo.net> 4.6.6-1
+- update to 4.6.6 (2017-01-23, bug and security fixes)
+
 * Mon Jan 23 2017 Remi Collet <remi@remirepo.net> 4.6.5.2-2
 - ensure phpmyadmin/sql-parser v3 is used
 
