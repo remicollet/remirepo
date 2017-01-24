@@ -30,7 +30,7 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.9.4
+Version:        1.9.5
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
@@ -159,6 +159,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 peclbuild() {
 %configure \
     --with-swoole \
@@ -187,6 +189,8 @@ peclbuild %{_bindir}/zts-php-config
 
 
 %install
+%{?dtsenable}
+
 make -C NTS \
      install INSTALL_ROOT=%{buildroot}
 
@@ -264,6 +268,9 @@ cd ../ZTS
 
 
 %changelog
+* Tue Jan 24 2017 Remi Collet <remi@fedoraproject.org> - 1.9.5-1
+- Update to 1.9.5 (stable)
+
 * Mon Jan  9 2017 Remi Collet <remi@fedoraproject.org> - 1.9.4-1
 - Update to 1.9.4
 

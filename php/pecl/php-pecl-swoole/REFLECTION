@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #80 swoole version 1.9.4 ] {
+Extension [ <persistent> extension #80 swoole version 1.9.5 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -63,7 +63,7 @@ Extension [ <persistent> extension #80 swoole version 1.9.4 ] {
     Constant [ integer SWOOLE_DTLSv1_CLIENT_METHOD ] { 17 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.9.4 }
+    Constant [ string SWOOLE_VERSION ] { 1.9.5 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 1 }
     Constant [ integer SWOOLE_FILELOCK ] { 2 }
@@ -87,11 +87,6 @@ Extension [ <persistent> extension #80 swoole version 1.9.4 ] {
       }
     }
     Function [ <internal:swoole> function swoole_cpu_num ] {
-
-      - Parameters [0] {
-      }
-    }
-    Function [ <internal:swoole> function swoole_clear_dns_cache ] {
 
       - Parameters [0] {
       }
@@ -286,7 +281,7 @@ Extension [ <persistent> extension #80 swoole version 1.9.4 ] {
 
           - Parameters [4] {
             Parameter #0 [ <required> $host ]
-            Parameter #1 [ <required> $port ]
+            Parameter #1 [ <optional> $port ]
             Parameter #2 [ <optional> $mode ]
             Parameter #3 [ <optional> $sock_type ]
           }
@@ -1729,7 +1724,7 @@ Extension [ <persistent> extension #80 swoole version 1.9.4 ] {
 
           - Parameters [4] {
             Parameter #0 [ <required> $host ]
-            Parameter #1 [ <required> $port ]
+            Parameter #1 [ <optional> $port ]
             Parameter #2 [ <optional> $mode ]
             Parameter #3 [ <optional> $sock_type ]
           }
@@ -2282,7 +2277,7 @@ Extension [ <persistent> extension #80 swoole version 1.9.4 ] {
 
           - Parameters [4] {
             Parameter #0 [ <required> $host ]
-            Parameter #1 [ <required> $port ]
+            Parameter #1 [ <optional> $port ]
             Parameter #2 [ <optional> $mode ]
             Parameter #3 [ <optional> $sock_type ]
           }
@@ -2886,7 +2881,7 @@ Extension [ <persistent> extension #80 swoole version 1.9.4 ] {
 
           - Parameters [4] {
             Parameter #0 [ <required> $host ]
-            Parameter #1 [ <required> $port ]
+            Parameter #1 [ <optional> $port ]
             Parameter #2 [ <optional> $mode ]
             Parameter #3 [ <optional> $sock_type ]
           }
