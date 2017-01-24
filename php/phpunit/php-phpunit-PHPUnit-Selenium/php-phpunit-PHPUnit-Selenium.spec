@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    d3aa8984c31efcff7c8829b9bd9ad7ab4c94709c
+%global gh_commit    343ba4e389ad97046c78fb2c7111e199795e7a80
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     giorgiosironi
 %global gh_project   phpunit-selenium
@@ -16,7 +16,7 @@
 # No test, as test suite requires a Selenium server
 
 Name:           php-phpunit-PHPUnit-Selenium
-Version:        3.0.2
+Version:        3.0.3
 Release:        1%{?dist}
 Summary:        Selenium RC integration for PHPUnit
 
@@ -28,7 +28,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.6
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-fedora-autoloader-devel
 
 # From composer.json
 #        "php": ">=5.6",
@@ -50,6 +50,8 @@ Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-zip
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(phpunit/phpunit-selenium) = %{version}
 
@@ -75,8 +77,10 @@ rm PHPUnit/Extensions/SeleniumCommon/Autoload.php.in
 %build
 # Regenerate Autoloader as upstream one is outdated
 %{_bindir}/phpab \
+  --template fedora \
   --output   PHPUnit/Extensions/SeleniumCommon/Autoload.php \
   PHPUnit
+
 cat << 'EOF' >>PHPUnit/Extensions/SeleniumCommon/Autoload.php
 // Dependency
 require_once 'File/Iterator/Autoload.php';
@@ -110,6 +114,10 @@ fi
 
 
 %changelog
+* Tue Jan 24 2017 Remi Collet <remi@fedoraproject.org> - 3.0.3-1
+- update to 3.0.3
+- switch to fedora/autoloader
+
 * Fri Apr 22 2016 Remi Collet <remi@fedoraproject.org> - 3.0.2-1
 - update to 3.0.2
 
