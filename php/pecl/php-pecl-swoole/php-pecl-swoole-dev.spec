@@ -30,14 +30,12 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        2.0.5
+Version:        2.0.6
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-Patch0:         %{pecl_name}-pr992.patch
 
 BuildRequires:  %{?scl_prefix}php-devel >= 5.5
 BuildRequires:  %{?scl_prefix}php-pear
@@ -133,7 +131,6 @@ sed -e 's/role="test"/role="src"/' \
 
 
 cd NTS
-%patch0 -p1 -b .pr992
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_SWOOLE_VERSION/{s/.* "//;s/".*$//;p}' php_swoole.h)
@@ -163,6 +160,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 peclbuild() {
 %configure \
     --with-swoole \
@@ -192,6 +191,8 @@ peclbuild %{_bindir}/zts-php-config
 
 
 %install
+%{?dtsenable}
+
 make -C NTS \
      install INSTALL_ROOT=%{buildroot}
 
@@ -269,6 +270,9 @@ cd ../ZTS
 
 
 %changelog
+* Tue Jan 24 2017 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
+- Update to 2.0.6 (beta)
+
 * Fri Dec 30 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5 (beta)
 - raise dependency on PHP 5.5

@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #127 swoole version 2.0.5 ] {
+Extension [ <persistent> extension #128 swoole version 2.0.6 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -63,7 +63,7 @@ Extension [ <persistent> extension #127 swoole version 2.0.5 ] {
     Constant [ integer SWOOLE_DTLSv1_CLIENT_METHOD ] { 17 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 2.0.5 }
+    Constant [ string SWOOLE_VERSION ] { 2.0.6 }
     Constant [ integer SWOOLE_REDIS_MODE_MULTI ] { 0 }
     Constant [ integer SWOOLE_REDIS_MODE_PIPELINE ] { 1 }
     Constant [ integer SWOOLE_REDIS_TYPE_NOT_FOUND ] { 0 }
@@ -95,11 +95,6 @@ Extension [ <persistent> extension #127 swoole version 2.0.5 ] {
       }
     }
     Function [ <internal:swoole> function swoole_cpu_num ] {
-
-      - Parameters [0] {
-      }
-    }
-    Function [ <internal:swoole> function swoole_clear_dns_cache ] {
 
       - Parameters [0] {
       }
@@ -294,7 +289,7 @@ Extension [ <persistent> extension #127 swoole version 2.0.5 ] {
 
           - Parameters [4] {
             Parameter #0 [ <required> $host ]
-            Parameter #1 [ <required> $port ]
+            Parameter #1 [ <optional> $port ]
             Parameter #2 [ <optional> $mode ]
             Parameter #3 [ <optional> $sock_type ]
           }
@@ -2474,7 +2469,7 @@ Extension [ <persistent> extension #127 swoole version 2.0.5 ] {
 
           - Parameters [4] {
             Parameter #0 [ <required> $host ]
-            Parameter #1 [ <required> $port ]
+            Parameter #1 [ <optional> $port ]
             Parameter #2 [ <optional> $mode ]
             Parameter #3 [ <optional> $sock_type ]
           }
@@ -2888,7 +2883,7 @@ Extension [ <persistent> extension #127 swoole version 2.0.5 ] {
       - Properties [0] {
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -2944,6 +2939,12 @@ Extension [ <persistent> extension #127 swoole version 2.0.5 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $size ]
+          }
+        }
+
+        Method [ <internal:swoole> public method recycle ] {
+
+          - Parameters [0] {
           }
         }
 
@@ -3021,7 +3022,7 @@ Extension [ <persistent> extension #127 swoole version 2.0.5 ] {
 
           - Parameters [4] {
             Parameter #0 [ <required> $host ]
-            Parameter #1 [ <required> $port ]
+            Parameter #1 [ <optional> $port ]
             Parameter #2 [ <optional> $mode ]
             Parameter #3 [ <optional> $sock_type ]
           }
@@ -3625,7 +3626,7 @@ Extension [ <persistent> extension #127 swoole version 2.0.5 ] {
 
           - Parameters [4] {
             Parameter #0 [ <required> $host ]
-            Parameter #1 [ <required> $port ]
+            Parameter #1 [ <optional> $port ]
             Parameter #2 [ <optional> $mode ]
             Parameter #3 [ <optional> $sock_type ]
           }
