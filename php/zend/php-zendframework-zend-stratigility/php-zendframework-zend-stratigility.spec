@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    ffbf29ceb92a9223b8383ea2b021b242591141d2
+%global gh_commit    2c4120d2af215c8261a36e0bc3aa8e179e05e148
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-stratigility
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.3.2
+Version:        1.3.3
 Release:        1%{?dist}
 Summary:        Middleware for PHP
 
@@ -171,6 +171,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 24 2017 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
+- update to 1.3.3
+
 * Fri Jan  6 2017 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
 - update to 1.3.2
 
