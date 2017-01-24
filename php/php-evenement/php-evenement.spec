@@ -1,3 +1,12 @@
+# remirepo spec file for php-evenement, from:
+#
+# Fedora spec file for php-evenement
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 Name:       php-evenement
 Version:    2.0.0
 Release:    3%{?dist}
@@ -63,16 +72,35 @@ require_once '%{buildroot}%{_datadir}/php/Evenement/autoload.php';
 \Fedora\Autoloader\Autoload::addPsr4('Evenement\\Tests\\', __DIR__.'/tests/Evenement/Tests');
 AUTOLOAD
 
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap autoload.php || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap autoload.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 phpunit --bootstrap autoload.php
+# remirepo:2
+fi
+exit $ret
 
 
 %files
+%{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc CHANGELOG.md composer.json README.md
 %{_datadir}/php/Evenement
 
 
 %changelog
+* Tue Jan 24 2017 Remi Collet <remi@remirepo.net> - 2.0.0-3
+- backport for remi repo
+
 * Tue Jan 24 2017 Randy Barlow <bowlofeggs@fedoraproject.org> - 2.0.0-3
 - Update the patch to work for PHP 5 and PHP 7.
 
