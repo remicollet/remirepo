@@ -1,3 +1,4 @@
+# remirepo spec file for php-react-promise-timer, from:
 #
 # Fedora spec file for php-react-promise-timer
 #
@@ -141,6 +142,9 @@ exit $SCL_RETURN_CODE
 
 
 %changelog
+* Tue Jan 24 2017 Remi Collet <remi@remirepo.net> - 0.4.2-2
+- backport for remi repo
+
 * Tue Jan 24 2017 Shawn Iwinski <shawn@iwin.ski> - 1.1.1-2
 - Retrict react/promise dependency to one major version
 - Minor update to SCL tests (only php54 and php55 if rhel)

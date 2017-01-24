@@ -1,0 +1,25 @@
+{
+    "name": "react/promise-timer",
+    "description": "Trivial timeout implementation for Promises",
+    "keywords": ["Promise", "timeout", "timer", "event-loop", "ReactPHP", "async"],
+    "homepage": "https://github.com/react/promise-timer",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Christian Lück",
+            "email": "christian@lueck.tv"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "React\\Promise\\Timer\\": "src/" },
+        "files": [ "src/functions.php" ]
+    },
+    "autoload-dev": {
+        "psr-4": { "React\\Tests\\Promise\\Timer\\": "tests/" }
+    },
+    "require": {
+        "php": ">=5.3",
+        "react/event-loop": "~0.4.0|~0.3.0",
+        "react/promise": "~2.1|~1.2"
+    }
+}
