@@ -1,3 +1,4 @@
+# remirepo spec file for php-react-event-loop, from:
 #
 # Fedora spec file for php-react-event-loop
 #
@@ -148,6 +149,9 @@ exit $SCL_RETURN_CODE
 
 
 %changelog
+* Tue Jan 24 2017 Remi Collet <remi@remirepo.net> - 0.4.2-2
+- backport for remi repo
+
 * Mon Jan 23 2017 Shawn Iwinski <shawn@iwin.ski> - 0.4.2-2
 - Minor update to SCL tests (only php55 if rhel)
 
