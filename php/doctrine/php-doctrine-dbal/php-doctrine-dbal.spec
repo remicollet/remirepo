@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-doctrine-dbal
 #
-# Copyright (c) 2013-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2017 Shawn Iwinski <shawn.iwinski@gmail.com>
 #                         Adam Williamson <awilliam@redhat.com>
 #
 # License: MIT
@@ -13,8 +13,8 @@
 
 %global github_owner     doctrine
 %global github_name      dbal
-%global github_version   2.5.9
-%global github_commit    0d2f8187d4b4c7b72d8e2acba359e25c36feaf5e
+%global github_version   2.5.10
+%global github_commit    fc376f7a61498e18520cd6fa083752a4ca08072b
 
 %global composer_vendor  doctrine
 %global composer_project dbal
@@ -223,6 +223,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 24 2017 Remi Collet <remi@remirepo.net> - 2.5.10-1
+- update to 2.5.10
+
 * Fri Jan 20 2017 Remi Collet <remi@remirepo.net> - 2.5.9-1
 - update to 2.5.9
 
