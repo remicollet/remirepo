@@ -1,3 +1,4 @@
+# remirepo spec file for php-clue-stream-filter, from:
 #
 # Fedora spec file for php-clue-stream-filter
 #
@@ -123,6 +124,9 @@ exit $SCL_RETURN_CODE
 
 
 %changelog
+* Tue Jan 24 2017 Remi Collet <remi@remirepo.net> - 1.3.0-2
+- backport for remi repo
+
 * Mon Jan 23 2017 Shawn Iwinski <shawn@iwin.ski> - 1.3.0-2
 - Minor update to SCL tests (only php54 and php55 if rhel)
 
