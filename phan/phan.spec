@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    f34fd878924c8b46f96ce60560b2c1fe37e3150f
+%global gh_commit    685bb56bf88a1485bb76a3e3cc2469357d1bd8e4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     etsy
 #global gh_date      20150820
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           %{gh_project}
-Version:        0.7
+Version:        0.8.0
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A static analyzer for PHP
 
@@ -32,7 +32,6 @@ BuildArch:      noarch
 %if %{with_tests}
 BuildRequires:  php(language) >= 7.0
 BuildRequires:  php-ast
-BuildRequires:  php-sqlite3
 BuildRequires:  php-composer(symfony/console) >= 2.8
 BuildRequires:  php-reflection
 BuildRequires:  php-pcntl
@@ -42,29 +41,28 @@ BuildRequires:  php-spl
 BuildRequires:  php-sysvmsg
 BuildRequires:  php-sysvsem
 # For tests, from composer.json "require-dev": {
-#        "phpunit/phpunit": "5.4.8",
-#        "phpdocumentor/phpdocumentor": "dev-master",
-#        "squizlabs/php_codesniffer": "^2.5"
-BuildRequires:  php-composer(phpunit/phpunit) >= 5.4.8
+#        "phpdocumentor/phpdocumentor": "^2.9.0",
+#        "phpunit/phpunit": "^5.7.2",
+#        "squizlabs/php_codesniffer": "^2.7.1"
+BuildRequires:  php-composer(phpunit/phpunit) >= 5.7.2
 %endif
 # For autoloader
 BuildRequires:  php-composer(fedora/autoloader)
 
 # From composer.json, "require": {
-#        "php": ">=7.0",
+#        "php": "~7.0.0",
 #        "ext-ast": "*",
-#        "ext-sqlite3": "0.7-dev",
 #        "symfony/console": "~2.3|~3.0"
 Requires:       php(language) >= 7.0
 Requires:       php-ast
-Requires:       php-sqlite3
 Requires:       php-composer(symfony/console) >= 2.3
-# From phpcompatinfo report for 0.6
+# From phpcompatinfo report for 0.8.0
 Requires:       php-cli
 Requires:       php-reflection
 Requires:       php-pcntl
 Requires:       php-pcre
 Requires:       php-posix
+Requires:       php-readline
 Requires:       php-spl
 Requires:       php-sysvmsg
 Requires:       php-sysvsem
@@ -149,6 +147,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 25 2017 Remi Collet <remi@fedoraproject.org> - 0.8.0-1
+- update to 0.8.0
+
 * Fri Dec  9 2016 Remi Collet <remi@fedoraproject.org> - 0.7-1
 - update to 0.7
 
