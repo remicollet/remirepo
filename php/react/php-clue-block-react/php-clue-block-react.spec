@@ -1,3 +1,4 @@
+# remirepo spec file for php-clue-block-react, from:
 #
 # Fedora spec file for php-clue-block-react
 #
@@ -149,6 +150,9 @@ exit $SCL_RETURN_CODE
 
 
 %changelog
+* Wed Jan 25 2017 Remi Collet <remi@remirepo.net> - 1.1.0-2
+- backport for remi repo
+
 * Fri Jan 20 2017 Shawn Iwinski <shawn@iwin.ski> - 1.1.0-2
 - Add missing BuildRequires and Requires
 - Retrict react/promise dependency to one major version
