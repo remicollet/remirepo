@@ -168,7 +168,7 @@ exit $SCL_RETURN_CODE
 
 
 %changelog
-* Wed Jan 25 2017 Remi Collet <remi@remirepo.net> - 1.1.0-2
+* Wed Jan 25 2017 Remi Collet <remi@remirepo.net> - 0.4.1-2
 - backport for remi repo
 
 * Tue Jan 24 2017 Shawn Iwinski <shawn@iwin.ski> - 0.4.1-2
