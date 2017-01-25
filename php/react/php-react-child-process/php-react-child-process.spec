@@ -1,3 +1,4 @@
+# remirepo spec file for php-react-child-process, from:
 #
 # Fedora spec file for php-react-child-process
 #
@@ -29,7 +30,7 @@
 %global react_stream_min_ver 0.4.2
 %global react_stream_max_ver 0.5.0
 # "sebastian/environment": "~1.0"
-%if 0%{?el7}
+%if 0
 %global sebastian_environment_min_ver 1.0
 %global sebastian_environment_max_ver 2.0
 %else
@@ -167,6 +168,9 @@ exit $SCL_RETURN_CODE
 
 
 %changelog
+* Wed Jan 25 2017 Remi Collet <remi@remirepo.net> - 1.1.0-2
+- backport for remi repo
+
 * Tue Jan 24 2017 Shawn Iwinski <shawn@iwin.ski> - 0.4.1-2
 - Retrict sebastian/environment dependency to one major version
 - Minor update to SCL tests (only php55 if rhel)
