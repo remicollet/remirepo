@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    685bb56bf88a1485bb76a3e3cc2469357d1bd8e4
+%global gh_commit    7ef0efb7fdbcf29fdb6142344e4d362338161e8c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     etsy
 #global gh_date      20150820
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           %{gh_project}
-Version:        0.8.0
+Version:        0.8.2
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A static analyzer for PHP
 
@@ -147,6 +147,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 26 2017 Remi Collet <remi@remirepo.net> - 0.8.2-1
+- update to 0.8.2
+
 * Wed Jan 25 2017 Remi Collet <remi@fedoraproject.org> - 0.8.0-1
 - update to 0.8.0
 
