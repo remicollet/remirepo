@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    caf8141b89691498d91aaac6c82e9cd5f685ae86
+%global gh_commit    e52551bbc229c6cee26c7a00deef80c2108c5b15
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.7
-%global minor        6
+%global minor        7
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -47,7 +47,7 @@ BuildRequires:  php(language) >= 5.6
 BuildRequires:  %{_bindir}/phpab
 BuildRequires:  php-composer(phpunit/php-file-iterator) >= 1.4
 BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
-BuildRequires:  php-composer(phpunit/php-code-coverage) >= 4.0
+BuildRequires:  php-composer(phpunit/php-code-coverage) >= 4.0.4
 BuildRequires:  php-composer(phpunit/php-timer) >= 1.0.6
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 3.2
 BuildRequires:  php-composer(phpspec/prophecy) >= 1.6.2
@@ -71,7 +71,7 @@ BuildRequires:  php-composer(fedora/autoloader)
 #        "php": "^5.6 || ^7.0",
 #        "phpunit/php-file-iterator": "~1.4",
 #        "phpunit/php-text-template": "~1.2",
-#        "phpunit/php-code-coverage": "^4.0.3",
+#        "phpunit/php-code-coverage": "^4.0.4",
 #        "phpunit/php-timer": "^1.0.6",
 #        "phpunit/phpunit-mock-objects": "^3.2",
 #        "phpspec/prophecy": "^1.6.2",
@@ -96,7 +96,7 @@ Requires:       php-composer(phpunit/php-file-iterator) >= 1.4
 Requires:       php-composer(phpunit/php-file-iterator) <  2
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
-Requires:       php-composer(phpunit/php-code-coverage) >= 4.0.3
+Requires:       php-composer(phpunit/php-code-coverage) >= 4.0.4
 Requires:       php-composer(phpunit/php-code-coverage) <  5
 Requires:       php-composer(phpunit/php-timer) >= 1.0.6
 Requires:       php-composer(phpunit/php-timer) <  2
@@ -237,6 +237,9 @@ fi
 
 
 %changelog
+* Thu Jan 26 2017 Remi Collet <remi@fedoraproject.org> - 5.7.7-1
+- update to 5.7.7
+
 * Mon Jan 23 2017 Remi Collet <remi@fedoraproject.org> - 5.7.6-1
 - update to 5.7.6
 
