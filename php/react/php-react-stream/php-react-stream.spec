@@ -12,8 +12,8 @@
 
 %global github_owner     reactphp
 %global github_name      stream
-%global github_version   0.4.5
-%global github_commit    23389503012e1ab721ad498a5a1f4b39f7a43c00
+%global github_version   0.4.6
+%global github_commit    44dc7f51ea48624110136b535b9ba44fd7d0c1ee
 
 %global composer_vendor  react
 %global composer_project stream
@@ -43,7 +43,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       Basic readable and writable stream interfaces that support piping
 
 Group:         Development/Libraries
@@ -65,7 +65,7 @@ BuildRequires: php-composer(react/event-loop) <  %{react_event_loop_max_ver}
 BuildRequires: php-composer(react/event-loop) >= %{react_event_loop_min_ver}
 BuildRequires: php-composer(react/promise) <  %{react_promise_max_ver}
 BuildRequires: php-composer(react/promise) >= %{react_promise_min_ver}
-## phpcompatinfo (computed from version 0.4.5)
+## phpcompatinfo (computed from version 0.4.6)
 BuildRequires: php-spl
 ## Autoloader
 BuildRequires: php-composer(fedora/autoloader)
@@ -75,7 +75,7 @@ BuildRequires: php-composer(fedora/autoloader)
 Requires:      php(language) >= %{php_min_ver}
 Requires:      php-composer(evenement/evenement) <  %{evenement_max_ver}
 Requires:      php-composer(evenement/evenement) >= %{evenement_min_ver}
-# phpcompatinfo (computed from version 0.4.5)
+# phpcompatinfo (computed from version 0.4.6)
 Requires:      php-spl
 # Autoloader
 Requires:      php-composer(fedora/autoloader)
@@ -183,6 +183,10 @@ exit $SCL_RETURN_CODE
 
 
 %changelog
+%changelog
+* Thu Jan 26 2017 Shawn Iwinski <shawn@iwin.ski> - 0.4.6-1
+- Update to 0.4.6 (RHBZ #1416595)
+
 * Tue Jan 24 2017 Remi Collet <remi@remirepo.net> - 0.4.5-2
 - backport for remi repo
 
