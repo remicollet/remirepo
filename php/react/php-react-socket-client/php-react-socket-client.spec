@@ -1,3 +1,4 @@
+# remirepo spec file for php-react-socket-client, from:
 #
 # Fedora spec file for php-react-socket-client
 #
@@ -160,6 +161,9 @@ exit $SCL_RETURN_CODE
 
 
 %changelog
+* Thu Jan 26 2017 Remi Collet <remi@remirepo.net> - 0.4.6-3
+- backport
+
 * Wed Jan 25 2017 Shawn Iwinski <shawn@iwin.ski> - 0.4.6-3
 - Skip tests requiring network access
 
