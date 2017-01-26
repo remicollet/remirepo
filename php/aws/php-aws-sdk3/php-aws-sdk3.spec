@@ -12,8 +12,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   3.21.4
-%global github_commit    6408a4904a04eca44461a65ba4a0fae53f80417b
+%global github_version   3.21.5
+%global github_commit    adaabe1e1b2c29a8748e52146194ab42222df8b5
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -73,7 +73,7 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Library version value and autoloader check
 BuildRequires: php-cli                              >= %{php_min_ver}
-BuildRequires: php-composer(guzzlehttp/guzzle)      >= %{guzzle_min_ver}
+BuildRequires: php-composer(guzzlehttp/guzzle)      >= 6
 BuildRequires: php-composer(guzzlehttp/promises)    >= %{guzzle_promises_min_ver}
 BuildRequires: php-composer(guzzlehttp/psr7)        >= %{guzzle_psr7_min_ver}
 BuildRequires: php-composer(mtdowling/jmespath.php) >= %{jmespath_min_ver}
@@ -271,6 +271,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 26 2017 Remi Collet <remi@remirepo.net> - 3.21.5-1
+- update to 3.21.5
+
 * Wed Jan 25 2017 Remi Collet <remi@remirepo.net> - 3.21.4-1
 - update to 3.21.4
 
