@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #165 ionCube Loader version <no_version> ] {
+Extension [ <persistent> extension #15 ionCube Loader version <no_version> ] {
 
   - INI {
     Entry [ ic24.enable <SYSTEM> ]

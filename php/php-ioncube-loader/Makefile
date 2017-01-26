@@ -3,4 +3,4 @@ NAME := $(shell basename $(SRCDIR))
 include ../../common/Makefile
 
 refl:
-	php --re "ionCube loader"  > REFLECTION
+	php -n -d zend_extension=ioncube_loader.so --re "ionCube loader"  > REFLECTION
