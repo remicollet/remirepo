@@ -1,3 +1,4 @@
+# remirepo spec file for php-react-dns, from:
 #
 # Fedora spec file for php-react-dns
 #
@@ -161,6 +162,9 @@ exit $SCL_RETURN_CODE
 
 
 %changelog
+* Thu Jan 26 2017 Remi Collet <remi@remirepo.net> - 0.4.3-3
+- backport
+
 * Wed Jan 25 2017 Shawn Iwinski <shawn@iwin.ski> - 0.4.3-3
 - Skip test requiring network access
 
