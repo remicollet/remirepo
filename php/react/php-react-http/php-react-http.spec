@@ -1,3 +1,4 @@
+# remirepo spec file for php-react-http, from:
 #
 # Fedora spec file for php-react-http
 #
@@ -165,6 +166,9 @@ exit $SCL_RETURN_CODE
 
 
 %changelog
+* Thu Jan 26 2017 Remi Collet <remi@remirepo.net> - 0.4.2-2
+- backport
+
 * Tue Jan 24 2017 Shawn Iwinski <shawn@iwin.ski> - 0.4.2-2
 - Minor update to SCL tests (only php55 if rhel)
 
