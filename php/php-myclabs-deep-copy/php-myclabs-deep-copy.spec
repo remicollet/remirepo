@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    399c1f9781e222f6eb6cc238796f5200d1b7f108
+%global gh_commit    5a5a9fc8025a08d8919be87d6884d5a92520cefe
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     myclabs
 %global gh_project   DeepCopy
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-myclabs-deep-copy
-Version:        1.5.5
+Version:        1.6.0
 Release:        1%{?dist}
 Summary:        Create deep copies (clones) of your objects
 
@@ -126,6 +126,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 27 2017 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
+- update to 1.6.0
+
 * Tue Nov  1 2016 Remi Collet <remi@fedoraproject.org> - 1.5.5-1
 - update to 1.5.5
 - switch to fedora/autoloader
