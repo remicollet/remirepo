@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    7ef0efb7fdbcf29fdb6142344e4d362338161e8c
+%global gh_commit    5f12a3cfbae585618f5b02992c8810c7679457d0
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     etsy
 #global gh_date      20150820
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           %{gh_project}
-Version:        0.8.2
+Version:        0.8.3
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A static analyzer for PHP
 
@@ -147,6 +147,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 27 2017 Remi Collet <remi@remirepo.net> - 0.8.3-1
+- update to 0.8.3
+
 * Thu Jan 26 2017 Remi Collet <remi@remirepo.net> - 0.8.2-1
 - update to 0.8.2
 
