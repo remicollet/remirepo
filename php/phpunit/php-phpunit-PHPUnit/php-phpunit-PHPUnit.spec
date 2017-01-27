@@ -18,7 +18,7 @@
 %global pear_channel pear.phpunit.de
 %global major        5.7
 %global minor        8
-%global specrel      1
+%global specrel      2
 
 Name:           php-phpunit-PHPUnit
 Version:        %{major}.%{minor}
@@ -40,6 +40,7 @@ Source2:        %{gh_project}-5.4.0-Autoload.php.in
 
 # Fix command for autoload
 Patch0:         %{gh_project}-rpm.patch
+Patch1:         %{gh_project}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -170,6 +171,7 @@ for the creation, execution and analysis of Unit Tests.
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p0 -b .rpm
+%patch1 -p1
 
 # Restore PSR-0 tree
 mv src PHPUnit
@@ -242,6 +244,9 @@ fi
 
 
 %changelog
+* Fri Jan 27 2017 Remi Collet <remi@fedoraproject.org> - 5.7.8-2
+- add upstream patch
+
 * Thu Jan 26 2017 Remi Collet <remi@fedoraproject.org> - 5.7.8-1
 - update to 5.7.8
 - temporary ignore testNoTestCases
