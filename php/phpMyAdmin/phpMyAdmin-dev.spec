@@ -158,7 +158,7 @@ cat << 'EOF' | tee vendor/autoload.php
 <?php
 /* Autoloader for phpMyAdmin and its dependencies */
 
-require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
+require_once '%{_datadir}/php/Fedora/Autoloader/autoload.php';
 \Fedora\Autoloader\Autoload::addPsr4('PMA\\', dirname(__DIR__));
 \Fedora\Autoloader\Dependencies::required([
     '%{_datadir}/php/PhpMyAdmin/SqlParser/autoload.php',
