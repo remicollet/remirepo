@@ -9,7 +9,7 @@
 #
 # Please, preserve the changelog entries
 #
-#global prever rc2
+%global prever beta1
 %{!?_pkgdocdir: %global _pkgdocdir %{_datadir}/doc/%{name}-%{version}}
 %if 0%{?fedora} >= 21
 # nginx 1.6 with nginx-filesystem
@@ -22,8 +22,8 @@
 %endif
 
 Name: phpMyAdmin
-Version: 4.6.6
-Release: 1%{?dist}
+Version: 4.7.0
+Release: 0.1.%{prever}%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -39,7 +39,6 @@ Source3: phpMyAdmin.nginx
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
-BuildRequires: unzip
 
 Requires(post): coreutils sed
 Requires:  webserver
@@ -51,36 +50,72 @@ Requires:  httpd-filesystem
 Requires:  php(httpd)
 Suggests:  httpd
 %endif
+# From composer.json, "require": {
+#        "php": ">=5.5.0",
+#        "ext-mbstring": "*",
+#        "ext-mysqli": "*",
+#        "ext-xml": "*",
+#        "ext-pcre": "*",
+#        "ext-json": "*",
+#        "phpmyadmin/sql-parser": "^4.1",
+#        "phpmyadmin/motranslator": "^3.0",
+#        "phpmyadmin/shapefile": "^2.0",
+#        "tecnickcom/tcpdf": "^6.2",
+#        "phpseclib/phpseclib": "^2.0",
+#        "google/recaptcha": "^1.1"
 Requires:  php(language) >= 5.5
-Requires:  php-bcmath
-Requires:  php-bz2
-Requires:  php-ctype
-Requires:  php-curl
-Requires:  php-date
-Requires:  php-filter
-Requires:  php-gd
-Requires:  php-iconv
-Requires:  php-json
-Requires:  php-libxml
 Requires:  php-mbstring
 Requires:  php-mysqli
 Requires:  php-openssl
+Requires:  php-xml
 Requires:  php-pcre
+Requires:  php-json
+Requires:  php-composer(phpmyadmin/sql-parser)   <  5
+Requires:  php-composer(phpmyadmin/sql-parser)   >= 4.1
+Requires:  php-composer(phpmyadmin/motranslator) <  4
+Requires:  php-composer(phpmyadmin/motranslator) >= 3.0
+Requires:  php-composer(phpmyadmin/shapefile)    <  3
+Requires:  php-composer(phpmyadmin/shapefile)    >= 2.0
+Requires:  php-composer(tecnickcom/tcpdf)        <  7
+Requires:  php-composer(tecnickcom/tcpdf)        >= 6.2
+Requires:  php-tcpdf-dejavu-sans-fonts
+Requires:  php-composer(phpseclib/phpseclib)     <  3
+Requires:  php-composer(phpseclib/phpseclib)     >= 2.0
+Requires:  php-composer(google/recaptcha)        <  2
+Requires:  php-composer(google/recaptcha)        >= 1.1
+# Autoloader
+Requires:  php-composer(fedora/autoloader)
+# From composer.json, "suggest": {
+#        "ext-openssl": "Cookie encryption",
+#        "ext-curl": "Updates checking",
+#        "ext-opcache": "Better performance",
+#        "ext-zlib": "For gz import and export",
+#        "ext-bz2": "For bzip2 import and export",
+#        "ext-zip": "For zip import and export",
+#        "ext-gd2": "For image transformations",
+#        "tecnickcom/tcpdf": "For PDF support"
+Requires:  php-openssl
+Requires:  php-curl
+Requires:  php-zlib
+Requires:  php-bz2
+Requires:  php-zip
+Requires:  php-gd
+%if 0%{?fedora} >= 21
+Recommends: php-opcache
+%endif
+# From phpcompatinfo reports for 4.7.0
+Requires:  php-date
+Requires:  php-filter
+Requires:  php-hash
+Requires:  php-iconv
+Requires:  php-libxml
 Requires:  php-recode
 Requires:  php-session
 Requires:  php-simplexml
 Requires:  php-spl
 Requires:  php-xmlwriter
-Requires:  php-zip
-Requires:  php-zlib
-Requires:  php-php-gettext
-Requires:  php-tcpdf
-Requires:  php-tcpdf-dejavu-sans-fonts
-Requires:  php-composer(phpseclib/phpseclib) >= 2.0.0
-Requires:  php-composer(phpmyadmin/sql-parser) <  4
-Requires:  php-composer(phpmyadmin/sql-parser) >= 3.4.17
-# optional and ignored php-gmp (as bcmath is enough)
 
+Provides:  php-composer(phpmyadmin/phpmyadmin) = %{version}
 Provides:  phpmyadmin = %{version}-%{release}
 Obsoletes: phpMyAdmin3
 Obsoletes: phpMyAdmin4
@@ -109,10 +144,6 @@ sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
     -e "/'LICENSE_FILE'/s@./LICENSE@%{_pkgdocdir}/LICENSE@" \
     -e "/'CONFIG_DIR'/s@''@'%{_sysconfdir}/%{name}/'@" \
     -e "/'SETUP_CONFIG_FILE'/s@./config/config.inc.php@%{_localstatedir}/lib/%{name}/config/config.inc.php@" \
-    -e "/'GETTEXT_INC'/s@./libraries/php-gettext/gettext.inc@%{_datadir}/php/gettext/gettext.inc@" \
-    -e "/'TCPDF_INC'/s@./libraries/tcpdf/tcpdf.php@%{_datadir}/php/tcpdf/tcpdf.php@" \
-    -e "/'PHPSECLIB_INC_DIR'/s@./libraries/phpseclib@%{_datadir}/php/phpseclib@" \
-    -e "/'SQL_PARSER_AUTOLOAD'/s@./libraries/sql-parser@%{_datadir}/php/SqlParser@" \
 %if 0%{?_licensedir:1}
     -e '/LICENSE_FILE/s:%_defaultdocdir:%_defaultlicensedir:' \
 %endif
@@ -121,23 +152,23 @@ sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
 # For debug
 grep '^define' libraries/vendor_config.php
 
-# to avoid rpmlint warnings
-rm doc/html/.buildinfo
+# Generate autoloader
+rm -rf vendor/*
+cat << 'EOF' | tee vendor/autoload.php
+<?php
+/* Autoloader for phpMyAdmin and its dependencies */
 
-# Remove bundled libraries
-rm -r libraries/php-gettext
-rm -r libraries/tcpdf
-rm -r libraries/phpseclib
-rm -r libraries/sql-parser
-
-# Remove sources of JavaScript librairies
-rm -r js/jquery/src
-rm -r js/openlayers/src
-
-# Remove upstream test suite
-rm -r test
-rm    build.xml
-rm    phpunit.xml.dist
+require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('PMA\\', dirname(__DIR__));
+\Fedora\Autoloader\Dependencies::required([
+    '%{_datadir}/php/PhpMyAdmin/SqlParser/autoload.php',
+    '%{_datadir}/php/PhpMyAdmin/MoTranslator/autoload.php',
+    '%{_datadir}/php/PhpMyAdmin/ShapeFile/autoload.php',
+    '%{_datadir}/php/tcpdf/autoload.php',
+    '%{_datadir}/php/phpseclib/autoload.php',
+    '%{_datadir}/php/ReCaptcha/autoload.php',
+]);
+EOF
 
 
 %build
@@ -163,6 +194,8 @@ rm -f %{buildroot}/%{_datadir}/%{name}/libraries/.htaccess
 rm -f %{buildroot}/%{_datadir}/%{name}/setup/lib/.htaccess
 rm -f %{buildroot}/%{_datadir}/%{name}/setup/frames/.htaccess
 rm -rf %{buildroot}/%{_datadir}/%{name}/contrib
+rm     %{buildroot}/%{_datadir}/%{name}/composer.*
+
 # documentation
 rm -rf    %{buildroot}%{_datadir}/%{name}/examples/
 rm -rf    %{buildroot}%{_datadir}/%{name}/doc/
@@ -170,23 +203,14 @@ mkdir -p  %{buildroot}%{_datadir}/%{name}/doc/
 ln -s %{_pkgdocdir}/html  %{buildroot}%{_datadir}/%{name}/doc/html
 
 mkdir -p %{buildroot}/%{_localstatedir}/lib/%{name}/{upload,save,config}
-rm -rf %{buildroot}%{_datadir}/%{name}/libraries/php-gettext
-rm -rf %{buildroot}%{_datadir}/%{name}/libraries/tcpdf
 
 mv -f $RPM_BUILD_ROOT%{_datadir}/%{name}/js/jquery/MIT-LICENSE.txt LICENSE-jquery
 mv -f $RPM_BUILD_ROOT%{_datadir}/%{name}/js/codemirror/LICENSE LICENSE-codemirror
-mv -f $RPM_BUILD_ROOT%{_datadir}/%{name}/libraries/plugins/auth/recaptcha/LICENSE LICENSE-recaptcha
 
 
 %clean
 rm -rf %{buildroot}
 
-
-%if %{?fedora}%{!?fedora:99} <= 18
-%pre
-echo -e "\nWARNING : Fedora %{fedora} is now EOL :"
-echo -e "You should consider upgrading to a supported release.\n"
-%endif
 
 %pretrans
 # allow dir to link upgrade
@@ -208,6 +232,7 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 %doc ChangeLog README CONTRIBUTING.md DCO config.sample.inc.php
 %doc doc/html/
 %doc examples/
+%doc composer.json
 %{_datadir}/%{name}
 %attr(0750,root,apache) %dir %{_sysconfdir}/%{name}
 %config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.inc.php
@@ -222,6 +247,14 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 
 
 %changelog
+* Fri Jan 27 2017 Remi Collet <remi@remirepo.net> 4.7.0-0.1.beta1
+- update to 4.7.0-beta1
+- raise dependency on phpmyadmin/sql-parser version 4.1
+- add dependency on phpmyadmin/motranslator
+- add dependency on phpmyadmin/shapefile
+- add dependency on google/recaptcha
+- use fedora autoloader instead of composer one
+
 * Tue Jan 24 2017 Remi Collet <remi@remirepo.net> 4.6.6-1
 - update to 4.6.6 (2017-01-23, bug and security fixes)
 
