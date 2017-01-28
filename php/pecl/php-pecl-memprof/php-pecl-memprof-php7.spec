@@ -209,6 +209,8 @@ fi
 - update to 2.0.0 for PHP 7+
 - open https://github.com/arnaud-lb/php-memory-profiler/pull/13
   fix version and use normalized macro name
+- open https://github.com/arnaud-lb/php-memory-profiler/issues/14
+  usage clarification
 
 * Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-6
 - adapt for F24
