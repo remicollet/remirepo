@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        6.9.7
-%global Patchlevel 5
+%global Patchlevel 6
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 %global with_tests 0%{!?_without_tests:1}
@@ -439,8 +439,8 @@ fi
 %defattr(-,root,root,-)
 %doc ChangeLog
 %doc README.txt LICENSE NOTICE AUTHORS.txt NEWS.txt
-%{_libdir}/libMagickCore%{?libsuffixe}.so.3*
-%{_libdir}/libMagickWand%{?libsuffixe}.so.3*
+%{_libdir}/libMagickCore%{?libsuffixe}.so.4*
+%{_libdir}/libMagickWand%{?libsuffixe}.so.4*
 %{_libdir}/%{libname}-%{VER}
 %if "%{name}" != "%{libname}"
 %dir %{_datadir}/%{name}
@@ -521,6 +521,10 @@ fi
 
 
 %changelog
+* Sat Jan 28 2017 Remi Collet <remi@remirepo.net> - 6.9.7.6-1
+- update to version 6.9.7 patchlevel 6
+- libMagickCore and libMagickWand soname bump to 4
+
 * Sun Jan 22 2017 Remi Collet <remi@remirepo.net> - 6.9.7.5-1
 - update to version 6.9.7 patchlevel 5
 
