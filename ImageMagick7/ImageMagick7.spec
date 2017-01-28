@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        7.0.4
-%global Patchlevel 5
+%global Patchlevel 6
 %global incsuffixe -7
 %global libsuffixe -7.Q16HDRI
 %global with_tests 0%{!?_without_tests:1}
@@ -420,7 +420,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc ChangeLog
 %doc README.txt LICENSE NOTICE AUTHORS.txt NEWS.txt
-%{_libdir}/libMagickCore%{?libsuffixe}.so.1*
+%{_libdir}/libMagickCore%{?libsuffixe}.so.2*
 %{_libdir}/libMagickWand%{?libsuffixe}.so.0*
 %{_libdir}/%{libname}-%{VER}
 %if %{move}
@@ -494,6 +494,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jan 28 2017 Remi Collet <remi@remirepo.net> - 7.0.4.6-1
+- update to version 7.0.4 patchlevel 6
+- libMagickCore soname bump to 2
+- open https://github.com/ImageMagick/ImageMagick/issues/363
+  failed test on 32bits build
+
 * Sun Jan 22 2017 Remi Collet <remi@remirepo.net> - 7.0.4.5-1
 - update to version 7.0.4 patchlevel 5
 
