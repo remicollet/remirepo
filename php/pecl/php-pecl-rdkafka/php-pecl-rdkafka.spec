@@ -22,14 +22,12 @@
 
 Summary:        Kafka client based on librdkafka
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        3.0.0
+Version:        3.0.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-Patch0:         %{pecl_name}-build.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  librdkafka-devel > 0.8
@@ -99,7 +97,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-%patch0 -p1 -b .build
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_RDKAFKA_VERSION/{s/.* "//;s/".*$//;p}' php_rdkafka.h)
@@ -122,6 +119,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -141,6 +140,7 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
+%{?dtsenable}
 
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
@@ -218,6 +218,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jan 28 2017 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
+- Update to 3.0.1
+
 * Mon Dec 19 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - update to 3.0.0 (php 5 and 7, stable)
 - open https://github.com/arnaud-lb/php-rdkafka/issues/98 failed build

@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #114 rdkafka version 3.0.0 ] {
+Extension [ <persistent> extension #116 rdkafka version 3.0.1 ] {
 
   - Constants [89] {
     Constant [ integer RD_KAFKA_CONSUMER ] { 1 }
@@ -7,8 +7,8 @@ Extension [ <persistent> extension #114 rdkafka version 3.0.0 ] {
     Constant [ integer RD_KAFKA_OFFSET_STORED ] { -1000 }
     Constant [ integer RD_KAFKA_PARTITION_UA ] { -1 }
     Constant [ integer RD_KAFKA_PRODUCER ] { 0 }
-    Constant [ integer RD_KAFKA_VERSION ] { 590591 }
-    Constant [ integer RD_KAFKA_BUILD_VERSION ] { 590591 }
+    Constant [ integer RD_KAFKA_VERSION ] { 590847 }
+    Constant [ integer RD_KAFKA_BUILD_VERSION ] { 590847 }
     Constant [ integer RD_KAFKA_RESP_ERR__BEGIN ] { -200 }
     Constant [ integer RD_KAFKA_RESP_ERR__BAD_MSG ] { -199 }
     Constant [ integer RD_KAFKA_RESP_ERR__BAD_COMPRESSION ] { -198 }
