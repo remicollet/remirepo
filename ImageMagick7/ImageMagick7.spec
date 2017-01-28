@@ -69,6 +69,8 @@ License:        ImageMagick
 Url:            http://www.imagemagick.org/
 Source0:        ftp://ftp.ImageMagick.org/pub/ImageMagick/ImageMagick-%{VER}-%{Patchlevel}.tar.xz
 
+Patch0:         %{name}-upstream.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  bzip2-devel, freetype-devel, libjpeg-devel, libpng-devel
 BuildRequires:  libtiff-devel, giflib-devel, zlib-devel
@@ -280,6 +282,7 @@ however.
 
 %prep
 %setup -q -n %{libname}-%{VER}-%{Patchlevel}
+%patch0 -p1 -b .upstream
 
 # for %%doc
 mkdir Magick++/examples
