@@ -12,8 +12,8 @@
 
 %global github_owner     reactphp
 %global github_name      socket
-%global github_version   0.4.5
-%global github_commit    32385d71f84c4a26ea577cb91f1220decb440dce
+%global github_version   0.4.6
+%global github_commit    cf074e53c974df52388ebd09710a9018894745d2
 
 %global composer_vendor  react
 %global composer_project socket
@@ -53,7 +53,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       Async, streaming plaintext TCP/IP and secure TLS socket server
 
 Group:         Development/Libraries
@@ -196,6 +196,9 @@ exit $SCL_RETURN_CODE
 
 
 %changelog
+* Fri Jan 27 2017 Shawn Iwinski <shawn@iwin.ski> - 0.4.6-1
+- Update to 0.4.6 (RHBZ #1416802)
+
 * Wed Jan 25 2017 Remi Collet <remi@remirepo.net> - 0.4.5-2
 - backport for remi repo
 
