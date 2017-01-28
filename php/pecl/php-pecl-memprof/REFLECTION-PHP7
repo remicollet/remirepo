@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #106 memprof version 1.0.0 ] {
+Extension [ <persistent> extension #107 memprof version 2.0.0 ] {
 
   - Functions {
     Function [ <internal:memprof> function memprof_enabled ] {

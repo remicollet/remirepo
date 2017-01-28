@@ -10,40 +10,26 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
+%scl_package       php-pecl-memprof
 %endif
-%endif
-
-%{?scl:          %scl_package        php-pecl-memprof}
 
 # ZTS build is broken
 # https://github.com/arnaud-lb/php-memory-profiler/pull/7
 %global with_zts  0
 %global pecl_name memprof
-%if "%{php_version}" < "5.6"
-%global ini_name  %{pecl_name}.ini
-%else
 %global ini_name  40-%{pecl_name}.ini
-%endif
 
 Summary:        Memory usage profiler
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.0.0
-Release:        7%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        2.0.0
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# https://github.com/arnaud-lb/php-memory-profiler/pull/6
-Source1:        https://raw.github.com/arnaud-lb/php-memory-profiler/master/LICENSE
-Source2:        https://raw.github.com/arnaud-lb/php-memory-profiler/master/README.md
-
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel > 5.3
+BuildRequires:  %{?scl_prefix}php-devel > 7
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  Judy-devel
 
@@ -55,8 +41,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
@@ -64,17 +52,15 @@ Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -95,10 +81,14 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
 
-cd NTS
-cp %{SOURCE1} %{SOURCE2} .
+# Don't install tests
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
-sed -e 's:/lib:/$PHP_LIBDIR:' -i config.m4
+cd NTS
+# https://github.com/arnaud-lb/php-memory-profiler/pull/13
+sed -e '/MEMPROF_VERSION/s/1.0.0/%{version}/' -i php_memprof.h
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define MEMPROF_VERSION/{s/.* "//;s/".*$//;p}' php_memprof.h)
@@ -121,6 +111,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -141,7 +133,7 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
+%{?dtsenable}
 
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
@@ -158,8 +150,10 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Documentation
-%{!?_licensedir:install -Dpm 644 LICENSE %{buildroot}%{pecl_docdir}/%{pecl_name}/LICENSE}
-install -Dpm 644 NTS/README.md %{buildroot}%{pecl_docdir}/%{pecl_name}/README.md
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 
 %if 0%{?fedora} < 24
@@ -196,12 +190,7 @@ fi
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -216,6 +205,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jan 28 2017 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- update to 2.0.0 for PHP 7+
+- open https://github.com/arnaud-lb/php-memory-profiler/pull/13
+  fix version and use normalized macro name
+
 * Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-6
 - adapt for F24
 
