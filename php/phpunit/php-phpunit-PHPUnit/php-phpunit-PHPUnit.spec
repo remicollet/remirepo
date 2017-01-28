@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    bee7755d964f8e56d6ecb79046480fd0320b686d
+%global gh_commit    69f832b87c731d5cacad7f91948778fe98335fdd
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,8 +17,8 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.7
-%global minor        8
-%global specrel      2
+%global minor        9
+%global specrel      1
 
 Name:           php-phpunit-PHPUnit
 Version:        %{major}.%{minor}
@@ -40,7 +40,6 @@ Source2:        %{gh_project}-5.4.0-Autoload.php.in
 
 # Fix command for autoload
 Patch0:         %{gh_project}-rpm.patch
-Patch1:         %{gh_project}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -171,7 +170,6 @@ for the creation, execution and analysis of Unit Tests.
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p0 -b .rpm
-%patch1 -p1
 
 # Restore PSR-0 tree
 mv src PHPUnit
@@ -244,6 +242,9 @@ fi
 
 
 %changelog
+* Sat Jan 28 2017 Remi Collet <remi@fedoraproject.org> - 5.7.9-1
+- update to 5.7.9
+
 * Fri Jan 27 2017 Remi Collet <remi@fedoraproject.org> - 5.7.8-2
 - add upstream patch
 
