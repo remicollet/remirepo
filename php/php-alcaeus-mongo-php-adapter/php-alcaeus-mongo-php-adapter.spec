@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    592ecd7754e1263b5c120fd186bc95af921233ec
+%global gh_commit    fea3f8333c7b22dde97d7dbe8a82528fc5c27992
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     alcaeus
 %global gh_project   mongo-php-adapter
@@ -21,7 +21,7 @@
 
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.0.8
+Version:        1.0.9
 Release:        1%{?dist}
 Summary:        Mongo PHP Adapter
 
@@ -32,7 +32,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-composer(theseer/autoload)
+BuildRequires:  php-fedora-autoloader-devel
 BuildRequires:  php(language) >= 5.5
 %if %{with_tests}
 BuildRequires:  php-hash
@@ -59,6 +59,8 @@ Requires:       php-date
 Requires:       php-mbstring
 Requires:       php-pcre
 Requires:       php-spl
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 # Composer
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
@@ -85,15 +87,16 @@ mv lib/Mongo  lib/%{ns_vendor}/Mongo
 %build
 : Create a classmap autoloader
 %{_bindir}/phpab \
+    --template fedora \
     --output lib/%{ns_vendor}/MongoDbAdapter/autoload.php \
              lib/%{ns_vendor}
 
 cat << 'EOF' | tee -a lib/%{ns_vendor}/MongoDbAdapter/autoload.php
 
-require_once dirname(__DIR__) . '/Mongo/functions.php';
-
-// Dependencies
-require_once "%{_datadir}/php/MongoDB/autoload.php";
+\Fedora\Autoloader\Dependencies::required(array(
+    dirname(__DIR__) . '/Mongo/functions.php',
+    '%{_datadir}/php/MongoDB/autoload.php',
+));
 EOF
 
 
@@ -171,6 +174,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 29 2017 Remi Collet <remi@fedoraproject.org> - 1.0.9-1
+- update to 1.0.9
+- switch to fedora autoloader
+
 * Thu Jan 12 2017 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
 - update to 1.0.8
 
