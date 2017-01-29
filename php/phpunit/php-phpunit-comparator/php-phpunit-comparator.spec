@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    6554a8aff8735fcd859b44279d5c03a6d1b1cb23
+%global gh_commit    2b7424b55f5047b47ac6e5ccb20b2aea4011d9be
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   comparator
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-phpunit-comparator
-Version:        1.2.3
+Version:        1.2.4
 Release:        1%{?dist}
 Summary:        Compare PHP values for equality
 
@@ -131,6 +131,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 29 2017 Remi Collet <remi@fedoraproject.org> - 1.2.4-1
+- update to 1.2.4
+
 * Sun Jan 29 2017 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
 - update to 1.2.3
 
