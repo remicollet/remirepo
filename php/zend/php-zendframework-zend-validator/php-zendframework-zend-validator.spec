@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    8ec9f57a717dd37340308aa632f148a2c2be1cfc
+%global gh_commit    99b528e01276054458da9553b587cfb959dfa436
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-validator
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.8.1
-Release:        2%{?dist}
+Version:        2.8.2
+Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -29,9 +29,6 @@ License:        BSD
 URL:            https://zendframework.github.io/%{gh_project}/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
-
-# https://github.com/zendframework/zend-validator/pull/136
-Patch0:         %{name}-pr136.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -46,7 +43,7 @@ BuildRequires:  php-intl
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)             >= 2.7
-Requires:       php-composer(container-interop/container-interop) > 1.1
+BuildRequires:  php-composer(container-interop/container-interop) >= 1.1
 # From composer, "require-dev": {
 #        "zendframework/zend-cache": "^2.6.1",
 #        "zendframework/zend-config": "^2.6",
@@ -83,8 +80,8 @@ Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-stdlib)             >= 2.7
 Requires:       php-composer(%{gh_owner}/zend-stdlib)             <  4
-Requires:       php-composer(container-interop/container-interop) > 1.1
-Requires:       php-composer(container-interop/container-interop) < 2
+Requires:       php-composer(container-interop/container-interop) >= 1.1
+Requires:       php-composer(container-interop/container-interop) <  2
 # From composer, "suggest": {
 #        "zendframework/zend-db": "Zend\\Db component",
 #        "zendframework/zend-filter": "Zend\\Filter component, required by the Digits validator",
@@ -129,7 +126,6 @@ Documentation: https://zendframework.github.io/%{gh_project}/
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
-%patch0 -p1
 
 mv LICENSE.md LICENSE
 
@@ -195,6 +191,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 29 2017 Remi Collet <remi@fedoraproject.org> - 2.8.2-1
+- Update to 2.8.2
+
 * Tue Nov 15 2016 Remi Collet <remi@fedoraproject.org> - 2.8.1-2
 - add patch for PHP 7.1 and timezone changes
 - open https://github.com/zendframework/zend-validator/pull/136
