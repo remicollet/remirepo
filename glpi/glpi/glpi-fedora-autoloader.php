@@ -12,7 +12,11 @@ require_once $vendor . '/php-iamcal-lib-autolink/autoload.php';
 // "phpmailer/phpmailer"
 require_once $vendor . '/PHPMailer/PHPMailerAutoload.php';
 // "sabre/vobject"
-require_once $vendor . '/Sabre/VObject/autoload.php';
+if (file_exists($vendor . '/Sabre/VObject4/autoload.php')) {
+   require_once $vendor . '/Sabre/VObject4/autoload.php';
+} else {
+   require_once $vendor . '/Sabre/VObject/autoload.php';
+}
 // "simplepie/simplepie"
 require_once $vendor . '/php-simplepie/autoloader.php';
 // "tecnickcom/tcpdf"

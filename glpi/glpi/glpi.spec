@@ -44,7 +44,7 @@
 Name:           %{gh_project}
 Version:        9.1.2
 %global schema  9.1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -462,6 +462,9 @@ fi
 
 
 %changelog
+* Sun Jan 29 2017 Remi Collet <remi@fedoraproject.org> - 9.1.2-2
+- fix autoloader to allow sabre/vobject version 4
+
 * Mon Jan 23 2017 Johan Cwiklinski <jcwiklinski AT teclib DOT com> - 9.1.2-1
 - update to 9.1.2
 - add missing hostname BR from MariaDB package
