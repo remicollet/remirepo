@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5b9737cc2f0182e368d14c80df7f6b2d77dc1457
+%global gh_commit    11ba8e9400d9c3aad8541c6dc19f5f888d9f0804
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-dav
@@ -18,7 +18,7 @@
 
 Name:           php-%{gh_project}
 Summary:        WebDAV Framework for PHP
-Version:        3.2.0
+Version:        3.2.1
 Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
@@ -29,8 +29,6 @@ Source1:        %{name}-autoload.php
 
 # replace composer autoloader
 Patch0:         %{name}-autoload.patch
-# upstream patch for 7.1
-Patch1:         %{name}-php71.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -57,7 +55,7 @@ BuildRequires:  php-pdo
 #        "phpunit/phpunit" : "> 4.8, <=6.0.0",
 #        "evert/phpdoc-md" : "~0.1.0",
 #        "squizlabs/php_codesniffer": "~1.5.3"
-#        "sabre/cs"        : "~0.0.5",
+#        "sabre/cs"        : "^1.0.0",
 #        "monolog/monolog": "^1.18"
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.8
 BuildRequires:  php-composer(monolog/monolog) >= 1.18
@@ -143,7 +141,6 @@ Autoloader: %{_datadir}/php/Sabre/DAV/autoload.php
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
-%patch1 -p1 -b .php71
 
 cp %{SOURCE1} lib/DAV/autoload.php
 
@@ -208,6 +205,9 @@ exit $ret
 
 
 %changelog
+* Sun Jan 29 2017 Remi Collet <remi@fedoraproject.org> - 3.2.1-1
+- update to 3.2.1
+
 * Tue Jan 17 2017 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
 - update to 3.2.0
 - raise dependency on PHP version 5.5
