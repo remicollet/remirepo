@@ -28,7 +28,7 @@
 Summary:       PHP API for ImageMagick
 Name:          %{?scl_prefix}php-magickwand
 Version:       %{mainversion}%{?patchlevel:.%{patchlevel}}
-Release:       10%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       11%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       ImageMagick
 Group:         Development/Languages
 URL:           http://www.magickwand.org/
@@ -172,6 +172,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 29 2017 Remi Collet <remi@remirepo.net> - 1.0.9.2-11
+- rebuild against ImageMagick6 new soname (6.9.7-6)
+
 * Sun Dec 11 2016 Remi Collet <remi@fedoraproject.org> - 1.0.9.2-10
 - rebuild against ImageMagick6 (6.9.6-8)
 

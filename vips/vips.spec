@@ -12,12 +12,17 @@
 %global vips_soname_major 42
 
 %global with_python2 1
+%if 0%{?fedora}
+%global with_python3 1
+%global with_doc     1
+%else
 %global with_python3 0
 %global with_doc     0
+%endif
 
 Name:		vips
 Version:	%{vips_version}
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	C/C++ library for processing large images
 
 Group:		System Environment/Libraries
@@ -223,6 +228,9 @@ find ${RPM_BUILD_ROOT}%{python3_sitearch} \
 
 
 %changelog
+* Sun Jan 29 2017 Remi Collet <remi@remirepo.net> - 8.4.4-4
+- rebuild against ImageMagick6 new soname (6.9.7-6)
+
 * Mon Dec 12 2016 Remi Collet <remi@remirepo.net> - 8.4.4-3
 - rebuild against ImageMagick6
 

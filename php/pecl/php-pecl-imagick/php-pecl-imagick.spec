@@ -35,7 +35,7 @@ Version:       3.4.3
 Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       0.7.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.8.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:       PHP
@@ -267,12 +267,6 @@ cd ../ZTS
     --define extension_dir=%{buildroot}%{php_ztsextdir} \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
-
-: upstream test suite for ZTS extension
-TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so" \
-NO_INTERACTION=1 \
-%{__ztsphp} -n run-tests.php --show-diff
 %endif
 
 
@@ -305,8 +299,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 29 2017 Remi Collet <remi@remirepo.net> - 3.4.3-0.8.RC4
+- rebuild against ImageMagick6 new soname (6.9.7-6)
+
 * Thu Jan 26 2017 Remi Collet <remi@remirepo.net> - 3.4.3-0.7.RC4
-- Update to 3.4.3RC6
+- Update to 3.4.3RC4
 
 * Tue Jan 24 2017 Remi Collet <remi@fedoraproject.org> - 3.4.3-0.6.RC3
 - Update to 3.4.3RC3
