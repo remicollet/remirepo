@@ -1,3 +1,4 @@
+# remirepo spec file for php-react, from:
 #
 # Fedora spec file for php-react
 #
@@ -191,6 +192,9 @@ cp -p autoload.php %{buildroot}%{phpdir}/React/
 
 
 %changelog
+* Mon Jan 30 2017 Remi Collet <remi@remirepo.net> - 0.4.2-2
+- backport
+
 * Wed Jan 25 2017 Shawn Iwinski <shawn@iwin.ski> - 0.4.2-2
 - Add missing php-cli BuildRequires
 
