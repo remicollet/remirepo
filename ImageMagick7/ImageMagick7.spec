@@ -497,6 +497,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan 30 2017 Remi Collet <remi@remirepo.net> - 7.0.4.6-1
+- add upstream patch for tests on 32bits
+
 * Sat Jan 28 2017 Remi Collet <remi@remirepo.net> - 7.0.4.6-1
 - update to version 7.0.4 patchlevel 6
 - libMagickCore soname bump to 2
