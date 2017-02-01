@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    98b1cac0bc7a91497c5898184281abcd0e24c8d6
+%global gh_commit    09f4d279f46d86be63171ff62ee0f79eca878678
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-http
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.5
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -48,9 +48,9 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-uri)              >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.5
 # From composer, "require-dev": {
-#        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0",
-#        "zendframework/zend-config": "~2.5"
+#        "zendframework/zend-config": "^2.5",
+#        "zendframework/zend-coding-standard": "~1.0.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
@@ -165,6 +165,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb  1 2017 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- version 2.6.0
+
 * Mon Aug  8 2016 Remi Collet <remi@fedoraproject.org> - 2.5.5-1
 - version 2.5.5
 
