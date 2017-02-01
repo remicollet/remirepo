@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0acdb2838ae551fe87e4e334e449a468973839f2
+%global gh_commit    06e957a9060afd200cd66fef61125108bd66874a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     solariumphp
 %global gh_project   solarium
@@ -14,7 +14,7 @@
 
 Name:           php-%{gh_project}
 Summary:        Solarium PHP Solr client library
-Version:        3.7.0
+Version:        3.8.0
 Release:        1%{?dist}
 
 URL:            http://www.solarium-project.org/
@@ -34,8 +34,14 @@ BuildRequires:  php-composer(fedora/autoloader)
 #        "phpunit/phpunit": "~3.7",
 #        "squizlabs/php_codesniffer": "~1.4",
 #        "zendframework/zendframework1": "~1.12",
-#        "satooshi/php-coveralls": "~1.0"
+#        "satooshi/php-coveralls": "~1.0",
+#        "guzzlehttp/guzzle": "^3.8 || ^6.2"
 BuildRequires:  php-composer(phpunit/phpunit) >= 3.7
+%if 0%{?fedora}
+BuildRequires:  php-guzzlehttp-guzzle6 >= 6.2
+%else
+BuildRequires:  php-guzzle-Guzzle >= 3.8
+%endif
 %endif
 
 # From composer.json, "require": {
@@ -95,7 +101,16 @@ cp -pr library/Solarium %{buildroot}%{_datadir}/php/Solarium
 %if %{with_tests}
 : Autoloader
 mkdir vendor
-ln -s %{buildroot}%{_datadir}/php/Solarium/autoload.php vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
+<?php
+require_once '%{buildroot}%{_datadir}/php/Solarium/autoload.php';
+\Fedora\Autoloader\Dependencies::required(array(
+    array(
+        '%{_datadir}/php/Guzzle/autoload.php',
+        '%{_datadir}/php/GuzzleHttp6/autoload.php',
+    ),
+));
+EOF
 
 : Run upstream test suite against installed library
 # remirepo:11
@@ -128,6 +143,9 @@ exit $ret
 
 
 %changelog
+* Wed Feb  1 2017 Remi Collet <remi@fedoraproject.org> - 3.8.0-1
+- update to 3.8.0
+
 * Fri Oct 28 2016 Remi Collet <remi@fedoraproject.org> - 3.7.0-1
 - update to 3.7.0
 - add optional dependency on minimalcode/search
