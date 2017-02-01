@@ -1,4 +1,4 @@
-===== 7.1.1 (2017-01-19)
+===== 7.1.2R1 (2017-02-02)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
@@ -6,12 +6,15 @@ $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 /var/lib/mock/el6x/build.log:Tests failed    :     0
 /var/lib/mock/el7x/build.log:Tests failed    :     0
 /var/lib/mock/fc23i/build.log:Tests failed    :    0
-/var/lib/mock/fc23x/build.log:Tests failed    :    0
+/var/lib/mock/fc23x/build.log:Tests failed    :    1
 /var/lib/mock/fc24i/build.log:Tests failed    :    0
 /var/lib/mock/fc24x/build.log:Tests failed    :    0
 /var/lib/mock/fc25i/build.log:Tests failed    :    0
 /var/lib/mock/fc25x/build.log:Tests failed    :    0
 
+
+fc23x
+		php://input is empty when enable_post_data_reading=Off [tests/basic/bug67198.phpt]
 
 
 *	proc_open give erratic test results :(

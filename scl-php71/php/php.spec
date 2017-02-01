@@ -124,13 +124,13 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver        RC1
-%global rpmrel       3
+%global rcver        RC1
+%global rpmrel       1
 
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 7.1.1
+Version: 7.1.2
 Release: %{?rcver:0.}%{rpmrel}%{?rcver:.%{rcver}}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -183,7 +183,6 @@ Patch47: php-5.6.3-phpinfo.patch
 Patch91: php-5.6.3-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch100: php-intl.patch
 
 # Security fixes (200+)
 
@@ -895,7 +894,6 @@ support for JavaScript Object Notation (JSON) to PHP.
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch100 -p1 -b .73956
 
 # security patches
 
@@ -1810,6 +1808,9 @@ fi
 
 
 %changelog
+* Wed Feb  1 2017 Remi Collet <remi@fedoraproject.org> 7.1.2-0.1.RC1
+- Update to 7.1.2RC1
+
 * Wed Jan 18 2017 Remi Collet <remi@fedoraproject.org> 7.1.1-3
 - EL-7: add patch for https://bugs.php.net/73956
 - switch back to gcc 6.2
