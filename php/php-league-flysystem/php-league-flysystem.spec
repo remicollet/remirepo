@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github
-%global gh_commit    5c7f98498b12d47f9de90ec9186a90000125777c
+%global gh_commit    469ad53c13ea19a0e54e3e5d70f61227ddcc0299
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     thephpleague
 %global gh_project   flysystem
@@ -19,7 +19,7 @@
 %global ns_project   Flysystem
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        1.0.33
+Version:        1.0.34
 Release:        1%{?dist}
 Summary:        Filesystem abstraction: Many filesystems, one API
 
@@ -159,6 +159,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb  1 2017 Remi Collet <remi@fedoraproject.org> - 1.0.34-1
+- update to 1.0.34
+
 * Mon Jan 23 2017 Remi Collet <remi@fedoraproject.org> - 1.0.33-1
 - update to 1.0.33 (windows only)
 - switch to fedora/autoloader
