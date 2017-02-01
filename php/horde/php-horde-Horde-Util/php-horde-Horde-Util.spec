@@ -100,7 +100,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %if %{with_tests}
 export LANG=fr_FR.utf8
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-# remirepo:14
+# remirepo:18
 %if 0%{?rhel} == 5
 phpunit . || : Test suite result ignored
 %else
@@ -108,6 +108,10 @@ run=0
 ret=0
 if which php56; then
    php56 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if which php70; then
+   php70 %{_bindir}/phpunit . || ret=1
    run=1
 fi
 if which php71; then
