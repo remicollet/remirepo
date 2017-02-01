@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #167 redis version 3.1.1RC2 ] {
+Extension [ <persistent> extension #170 redis version 3.1.1 ] {
 
   - Dependencies {
     Dependency [ igbinary (Required) ]

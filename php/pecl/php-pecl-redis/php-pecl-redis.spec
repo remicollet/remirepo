@@ -27,12 +27,12 @@
 # after 40-igbinary
 %global ini_name    50-%{pecl_name}.ini
 %endif
-%global prever      RC2
+#global prever      RC2
 
 Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?sub_prefix}php-pecl-redis
 Version:       3.1.1
-Release:       0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 License:       PHP
 Group:         Development/Languages
@@ -162,6 +162,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -189,6 +191,7 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
+%{?dtsenable}
 
 # Install the NTS stuff
 make -C NTS install INSTALL_ROOT=%{buildroot}
@@ -305,6 +308,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb  1 2017 Remi Collet <remi@fedoraproject.org> - 3.1.1-1
+- Update to 3.1.1 (stable)
+
 * Tue Jan 17 2017 Remi Collet <remi@fedoraproject.org> - 3.1.1-0.2.RC2
 - Update to 3.1.1RC2
 
