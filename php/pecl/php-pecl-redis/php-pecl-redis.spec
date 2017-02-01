@@ -18,7 +18,7 @@
 
 %global pecl_name   redis
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
-%global with_tests  1%{?_with_tests:1}
+%global with_tests  0%{!?_without_tests:1}
 %global with_igbin  1
 %if "%{php_version}" < "5.6"
 # after igbinary
