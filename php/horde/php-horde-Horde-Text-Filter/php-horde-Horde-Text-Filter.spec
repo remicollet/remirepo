@@ -127,6 +127,10 @@ if which php56; then
    php56 %{_bindir}/phpunit . || ret=1
    run=1
 fi
+if which php70; then
+   php70 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
 if which php71; then
    php71 %{_bindir}/phpunit . || ret=1
    run=1
