@@ -124,13 +124,13 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver        RC1
+%global rcver        RC1
 %global rpmrel       1
 
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 7.0.15
+Version: 7.0.16
 Release: %{?rcver:0.}%{rpmrel}%{?rcver:.%{rcver}}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1822,6 +1822,9 @@ fi
 
 
 %changelog
+* Wed Feb  1 2017 Remi Collet <remi@fedoraproject.org> 7.0.16-0.1.RC1
+- Update to 7.0.16RC1
+
 * Tue Jan 17 2017 Remi Collet <remi@fedoraproject.org> 7.0.15-1
 - Update to 7.0.15 - http://www.php.net/releases/7_0_15.php
 

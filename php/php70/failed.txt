@@ -1,4 +1,4 @@
-===== 7.0.15 (2017-01-19)
+===== 7.0.16RC1 (2017-02-02)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
@@ -6,20 +6,17 @@ $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 /var/lib/mock/el6x/build.log:Tests failed    :     0
 /var/lib/mock/el7x/build.log:Tests failed    :     0
 /var/lib/mock/fc22i/build.log:Tests failed    :    0
-/var/lib/mock/fc22x/build.log:Tests failed    :    0
-/var/lib/mock/fc23i/build.log:Tests failed    :    1
-/var/lib/mock/fc23x/build.log:Tests failed    :    1
-/var/lib/mock/fc24i/build.log:Tests failed    :    2
+/var/lib/mock/fc22x/build.log:Tests failed    :    1
+/var/lib/mock/fc23i/build.log:Tests failed    :    0
+/var/lib/mock/fc23x/build.log:Tests failed    :    0
+/var/lib/mock/fc24i/build.log:Tests failed    :    0
 /var/lib/mock/fc24x/build.log:Tests failed    :    0
 /var/lib/mock/fc25i/build.log:Tests failed    :    0
 /var/lib/mock/fc25x/build.log:Tests failed    :    0
 
 
-fc23i, fc23x
-	*	Test session_set_save_handler() function : basic functionality [ext/session/tests/session_set_save_handler_basic.phpt]
-fc24i
-	*	Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
-	*	Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
+fc22x
+		php://input is empty when enable_post_data_reading=Off [tests/basic/bug67198.phpt]
 
 
 *	proc_open give erratic test results :(

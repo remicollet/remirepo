@@ -1,0 +1,21 @@
+From 0f1ae93bfa2feb3d0fd0b8d3036148df8ef856e2 Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Wed, 1 Feb 2017 10:25:30 +0100
+Subject: [PATCH] fix test for 32bits (int -> float)
+
+---
+ ext/standard/tests/serialize/bug72731.phpt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/ext/standard/tests/serialize/bug72731.phpt b/ext/standard/tests/serialize/bug72731.phpt
+index 3d7d1e7..020fb32 100644
+--- a/ext/standard/tests/serialize/bug72731.phpt
++++ b/ext/standard/tests/serialize/bug72731.phpt
+@@ -14,5 +14,5 @@ $poc = 'O:8:"stdClass":1:{i:0;O:3:"obj":1:{s:4:"ryat";R:1;}}';
+ var_dump(unserialize($poc));
+ 
+ ?>
+---EXPECT--
+-int(73588229205)
++--EXPECTF--
++%s(73588229205)
