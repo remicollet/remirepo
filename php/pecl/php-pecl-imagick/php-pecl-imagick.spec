@@ -17,7 +17,7 @@
 %global gh_project  imagick
 #global gh_date     20151204
 %global pecl_name   imagick
-%global prever      RC4
+#global prever      RC4
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 %global ini_name    %{pecl_name}.ini
@@ -35,7 +35,7 @@ Version:       3.4.3
 Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       0.8.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:       PHP
@@ -299,6 +299,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb  2 2017 Remi Collet <remi@remirepo.net> - 3.4.3-1
+- Update to 3.4.3 (no change)
+
 * Sun Jan 29 2017 Remi Collet <remi@remirepo.net> - 3.4.3-0.8.RC4
 - rebuild against ImageMagick6 new soname (6.9.7-6)
 
