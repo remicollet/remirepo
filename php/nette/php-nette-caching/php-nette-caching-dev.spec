@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    7da6cc65f301e220acba4fd8a11d3afdc642be9e
+%global gh_commit    2436e530484a346d0a246733519ceaa40b943bd6
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
+Version:        2.5.3
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Caching Component
@@ -41,8 +41,8 @@ BuildRequires:  php-composer(%{gh_owner}/finder) >= 2.2
 BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.4
 # From composer.json, "require-dev": {
 #               "nette/tester": "~2.0",
-#               "nette/di": "~2.4",
-#               "latte/latte": "~2.4",
+#               "nette/di": "^2.4 || ~3.0.0",
+#               "latte/latte": "^2.4",
 #               "tracy/tracy": "^2.4"
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
 BuildRequires:  php-composer(%{gh_owner}/di) >= 2.4
@@ -52,13 +52,13 @@ BuildRequires:  php-composer(tracy/tracy) >= 2.4
 
 # from composer.json, "require": {
 #               "php": ">=5.6.0",
-#               "nette/finder": "~2.2",
-#               "nette/utils": "~2.4"
+#               "nette/finder": "^2.2 || ~3.0.0",
+#               "nette/utils": "^2.4 || ~3.0.0"
 Requires:       php(language) >= 5.6
 Requires:       php-composer(%{gh_owner}/finder) >= 2.2
-Requires:       php-composer(%{gh_owner}/finder) <  3
+Requires:       php-composer(%{gh_owner}/finder) <  4
 Requires:       php-composer(%{gh_owner}/utils) >= 2.4
-Requires:       php-composer(%{gh_owner}/utils) <  3
+Requires:       php-composer(%{gh_owner}/utils) <  4
 # from phpcompatinfo report for version 2.3.3
 Requires:       php-pdo
 Requires:       php-reflection
@@ -122,21 +122,12 @@ require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
 EOF
 
 : Run test suite in sources tree
-# remirepo:11
 ret=0
-run=0
-if which php56; then
-   php56 %{_bindir}/nette-tester --colors 0 -p php56 -C tests -s || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/nette-tester --colors 0 -p php71 -C tests -s || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/nette-tester --colors 0 -p php -C tests -s
-# remirepo:2
-fi
+for cmd in php56 php71 php70 php; do
+   if which $cmd; then
+      $cmd %{_bindir}/nette-tester --colors 0 -p $cmd -C tests -s || ret=1
+   fi
+done
 exit $ret
 %else
 : Test suite disabled
@@ -158,6 +149,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb  2 2017 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
+- update to 2.5.3
+
 * Wed Oct 19 2016 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - update to 2.5.2
 
