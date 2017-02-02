@@ -13,7 +13,7 @@
 %global pear_name     PHP_CodeSniffer
 
 Name:           php-pear-PHP-CodeSniffer
-Version:        2.7.1
+Version:        2.8.0
 Release:        1%{?dist}
 Summary:        PHP coding standards enforcement tool
 
@@ -34,7 +34,7 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 # From package.xml
 Requires:       php-pear(PEAR)
-# From phpcompatinfo report for version 2.3.4
+# From phpcompatinfo report for version 2.8.0
 Requires:       php-ctype
 Requires:       php-date
 Requires:       php-dom
@@ -88,22 +88,13 @@ install -pm 644 %{pear_name}.xml %{buildroot}%{pear_xmldir}
 %check
 cd %{pear_name}-%{version}/tests
 
-# remirepo:11
-run=0
+# Version 2.8.0: Tests: 238, Assertions: 92, Skipped: 3.
 ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit AllTests.php
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit AllTests.php
-   run=1
-fi
-if [ $run -eq 0 ]; then
-# Version 2.7.0: Tests: 236, Assertions: 90, Skipped: 3.
-%{_bindir}/phpunit AllTests.php
-# remirepo:2
-fi
+for cmd in php php56 php70 php71; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit AllTests.php || ret=1
+   fi
+done
 exit $ret
 
 
@@ -135,6 +126,9 @@ fi
 
 
 %changelog
+* Thu Feb 02 2017 Remi Collet <remi@fedoraproject.org> - 2.8.0-1
+- Update to 2.8.0
+
 * Wed Nov 30 2016 Remi Collet <remi@fedoraproject.org> - 2.7.1-1
 - Update to 2.7.1
 
