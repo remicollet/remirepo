@@ -1,0 +1,352 @@
+From 188b80f45facf9f8c4ad584b12ff7c62a569e8ed Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 2 Feb 2017 12:58:32 +0100
+Subject: [PATCH] fix for PHP 5.3 (as still set as supported)
+
+---
+ library/Solarium/Core/Client/Adapter/Guzzle3.php   |  8 +--
+ .../Select/ResponseParser/Component/Grouping.php   |  2 +-
+ .../Tests/Core/Client/Adapter/Guzzle3Test.php      | 38 ++++++-------
+ .../Tests/Core/Client/Adapter/GuzzleTest.php       | 62 +++++++++++-----------
+ 4 files changed, 55 insertions(+), 55 deletions(-)
+
+diff --git a/library/Solarium/Core/Client/Adapter/Guzzle3.php b/library/Solarium/Core/Client/Adapter/Guzzle3.php
+index 752141f..fa5b7db 100644
+--- a/library/Solarium/Core/Client/Adapter/Guzzle3.php
++++ b/library/Solarium/Core/Client/Adapter/Guzzle3.php
+@@ -74,10 +74,10 @@ public function execute($request, $endpoint)
+             $endpoint->getBaseUri() . $request->getUri(),
+             $this->getRequestHeaders($request),
+             $this->getRequestBody($request),
+-            [
++            array(
+                 'timeout' => $endpoint->getTimeout(),
+                 'connecttimeout' => $endpoint->getTimeout(),
+-            ]
++            )
+         );
+ 
+         // Try endpoint authentication first, fallback to request for backwards compatibility
+@@ -96,7 +96,7 @@ public function execute($request, $endpoint)
+             $guzzleResponse = $guzzleRequest->getResponse();
+ 
+             $responseHeaders = array_merge(
+-                ["HTTP/1.1 {$guzzleResponse->getStatusCode()} {$guzzleResponse->getReasonPhrase()}"],
++                array("HTTP/1.1 {$guzzleResponse->getStatusCode()} {$guzzleResponse->getReasonPhrase()}"),
+                 $guzzleResponse->getHeaderLines()
+             );
+ 
+@@ -155,7 +155,7 @@ private function getRequestBody(Request $request)
+      */
+     private function getRequestHeaders(Request $request)
+     {
+-        $headers = [];
++        $headers = array();
+         foreach ($request->getHeaders() as $headerLine) {
+             list($header, $value) = explode(':', $headerLine);
+             if ($header = trim($header)) {
+diff --git a/library/Solarium/QueryType/Select/ResponseParser/Component/Grouping.php b/library/Solarium/QueryType/Select/ResponseParser/Component/Grouping.php
+index b365e75..27be278 100644
+--- a/library/Solarium/QueryType/Select/ResponseParser/Component/Grouping.php
++++ b/library/Solarium/QueryType/Select/ResponseParser/Component/Grouping.php
+@@ -82,7 +82,7 @@ public function parse($query, $grouping, $data)
+             $matches = (isset($result['matches'])) ? $result['matches'] : null;
+             $groupCount = (isset($result['ngroups'])) ? $result['ngroups'] : null;
+             if ($grouping->getFormat() === GroupingComponent::FORMAT_SIMPLE) {
+-                $valueGroups = [$this->extractValueGroup($valueResultClass, $documentClass, $result, $query)];
++                $valueGroups = array($this->extractValueGroup($valueResultClass, $documentClass, $result, $query));
+                 $groups[$field] = new FieldGroup($matches, $groupCount, $valueGroups);
+                 continue;
+             }
+diff --git a/tests/Solarium/Tests/Core/Client/Adapter/Guzzle3Test.php b/tests/Solarium/Tests/Core/Client/Adapter/Guzzle3Test.php
+index 0133fc3..9976d32 100644
+--- a/tests/Solarium/Tests/Core/Client/Adapter/Guzzle3Test.php
++++ b/tests/Solarium/Tests/Core/Client/Adapter/Guzzle3Test.php
+@@ -91,11 +91,11 @@ public function executeGet()
+         $this->assertSame('OK', $response->getStatusMessage());
+         $this->assertSame('200', $response->getStatusCode());
+         $this->assertSame(
+-            [
++            array(
+                 'HTTP/1.1 200 OK',
+                 'Content-Type: application/json',
+                 'X-PHPUnit: response value',
+-            ],
++            ),
+             $response->getHeaders()
+         );
+         $this->assertSame($guzzleResponse->getBody(true), $response->getBody());
+@@ -138,11 +138,11 @@ public function executePostWithFile()
+         $this->assertSame('OK', $response->getStatusMessage());
+         $this->assertSame('200', $response->getStatusCode());
+         $this->assertSame(
+-            [
++            array(
+                 'HTTP/1.1 200 OK',
+                 'Content-Type: application/json',
+                 'X-PHPUnit: response value',
+-            ],
++            ),
+             $response->getHeaders()
+         );
+         $this->assertSame($guzzleResponse->getBody(true), $response->getBody());
+@@ -187,11 +187,11 @@ public function executePostWithRawBody()
+         $this->assertSame('OK', $response->getStatusMessage());
+         $this->assertSame('200', $response->getStatusCode());
+         $this->assertSame(
+-            [
++            array(
+                 'HTTP/1.1 200 OK',
+                 'Content-Type: application/json',
+                 'X-PHPUnit: response value',
+-            ],
++            ),
+             $response->getHeaders()
+         );
+         $this->assertSame($guzzleResponse->getBody(true), $response->getBody());
+@@ -239,11 +239,11 @@ public function executeGetWithAuthentication()
+         $this->assertSame('OK', $response->getStatusMessage());
+         $this->assertSame('200', $response->getStatusCode());
+         $this->assertSame(
+-            [
++            array(
+                 'HTTP/1.1 200 OK',
+                 'Content-Type: application/json',
+                 'X-PHPUnit: response value',
+-            ],
++            ),
+             $response->getHeaders()
+         );
+         $this->assertSame($guzzleResponse->getBody(true), $response->getBody());
+@@ -280,9 +280,9 @@ public function executeRequestException()
+         $request->setMethod(Request::METHOD_GET);
+ 
+         $endpoint = new Endpoint(
+-            [
++            array(
+                 'scheme'  => 'silly', //invalid protocol
+-            ]
++            )
+         );
+ 
+         $this->adapter->execute($request, $endpoint);
+@@ -296,12 +296,12 @@ public function executeRequestException()
+     private function getValidResponse()
+     {
+         $body = json_encode(
+-            [
+-                'response' => [
++            array(
++                'response' => array(
+                     'numFound' => 10,
+                     'start' => 0,
+-                    'docs' => [
+-                        [
++                    'docs' => array(
++                        array(
+                             'id' => '58339e95d5200',
+                             'author' => 'Gambardella, Matthew',
+                             'title' => "XML Developer's Guide",
+@@ -309,13 +309,13 @@ private function getValidResponse()
+                             'price' => 44.95,
+                             'published' => 970372800,
+                             'description' => 'An in-depth look at creating applications with XML.',
+-                        ],
+-                    ],
+-                ],
+-            ]
++                        ),
++                    ),
++                ),
++            )
+         );
+ 
+-        $headers = ['Content-Type' => 'application/json', 'X-PHPUnit' => 'response value'];
++        $headers = array('Content-Type' => 'application/json', 'X-PHPUnit' => 'response value');
+         return new Response(200, $headers, $body);
+     }
+ }
+diff --git a/tests/Solarium/Tests/Core/Client/Adapter/GuzzleTest.php b/tests/Solarium/Tests/Core/Client/Adapter/GuzzleTest.php
+index dbc526c..2b6fdd4 100644
+--- a/tests/Solarium/Tests/Core/Client/Adapter/GuzzleTest.php
++++ b/tests/Solarium/Tests/Core/Client/Adapter/GuzzleTest.php
+@@ -75,15 +75,15 @@ public function setUp()
+     public function executeGet()
+     {
+         $guzzleResponse = $this->getValidResponse();
+-        $mockHandler = new MockHandler([$guzzleResponse]);
++        $mockHandler = new MockHandler(array($guzzleResponse));
+ 
+-        $container = [];
++        $container = array();
+         $history = Middleware::history($container);
+ 
+         $stack = HandlerStack::create($mockHandler);
+         $stack->push($history);
+ 
+-        $adapter = new GuzzleAdapter(['handler' => $stack]);
++        $adapter = new GuzzleAdapter(array('handler' => $stack));
+ 
+         $request = new Request();
+         $request->setMethod(Request::METHOD_GET);
+@@ -96,11 +96,11 @@ public function executeGet()
+         $this->assertSame('OK', $response->getStatusMessage());
+         $this->assertSame('200', $response->getStatusCode());
+         $this->assertSame(
+-            [
++            array(
+                 'HTTP/1.1 200 OK',
+                 'Content-Type: application/json',
+                 'X-PHPUnit: response value',
+-            ],
++            ),
+             $response->getHeaders()
+         );
+         $this->assertSame((string)$guzzleResponse->getBody(), $response->getBody());
+@@ -121,15 +121,15 @@ public function executeGet()
+     public function executePostWithFile()
+     {
+         $guzzleResponse = $this->getValidResponse();
+-        $mockHandler = new MockHandler([$guzzleResponse]);
++        $mockHandler = new MockHandler(array($guzzleResponse));
+ 
+-        $container = [];
++        $container = array();
+         $history = Middleware::history($container);
+ 
+         $stack = HandlerStack::create($mockHandler);
+         $stack->push($history);
+ 
+-        $adapter = new GuzzleAdapter(['handler' => $stack]);
++        $adapter = new GuzzleAdapter(array('handler' => $stack));
+ 
+         $request = new Request();
+         $request->setMethod(Request::METHOD_POST);
+@@ -143,11 +143,11 @@ public function executePostWithFile()
+         $this->assertSame('OK', $response->getStatusMessage());
+         $this->assertSame('200', $response->getStatusCode());
+         $this->assertSame(
+-            [
++            array(
+                 'HTTP/1.1 200 OK',
+                 'Content-Type: application/json',
+                 'X-PHPUnit: response value',
+-            ],
++            ),
+             $response->getHeaders()
+         );
+         $this->assertSame((string)$guzzleResponse->getBody(), $response->getBody());
+@@ -169,15 +169,15 @@ public function executePostWithFile()
+     public function executePostWithRawBody()
+     {
+         $guzzleResponse = $this->getValidResponse();
+-        $mockHandler = new MockHandler([$guzzleResponse]);
++        $mockHandler = new MockHandler(array($guzzleResponse));
+ 
+-        $container = [];
++        $container = array();
+         $history = Middleware::history($container);
+ 
+         $stack = HandlerStack::create($mockHandler);
+         $stack->push($history);
+ 
+-        $adapter = new GuzzleAdapter(['handler' => $stack]);
++        $adapter = new GuzzleAdapter(array('handler' => $stack));
+ 
+         $request = new Request();
+         $request->setMethod(Request::METHOD_POST);
+@@ -192,11 +192,11 @@ public function executePostWithRawBody()
+         $this->assertSame('OK', $response->getStatusMessage());
+         $this->assertSame('200', $response->getStatusCode());
+         $this->assertSame(
+-            [
++            array(
+                 'HTTP/1.1 200 OK',
+                 'Content-Type: application/json',
+                 'X-PHPUnit: response value',
+-            ],
++            ),
+             $response->getHeaders()
+         );
+         $this->assertSame((string)$guzzleResponse->getBody(), $response->getBody());
+@@ -219,15 +219,15 @@ public function executePostWithRawBody()
+     public function executeGetWithAuthentication()
+     {
+         $guzzleResponse = $this->getValidResponse();
+-        $mockHandler = new MockHandler([$guzzleResponse]);
++        $mockHandler = new MockHandler(array($guzzleResponse));
+ 
+-        $container = [];
++        $container = array();
+         $history = Middleware::history($container);
+ 
+         $stack = HandlerStack::create($mockHandler);
+         $stack->push($history);
+ 
+-        $adapter = new GuzzleAdapter(['handler' => $stack]);
++        $adapter = new GuzzleAdapter(array('handler' => $stack));
+ 
+         $request = new Request();
+         $request->setMethod(Request::METHOD_GET);
+@@ -241,11 +241,11 @@ public function executeGetWithAuthentication()
+         $this->assertSame('OK', $response->getStatusMessage());
+         $this->assertSame('200', $response->getStatusCode());
+         $this->assertSame(
+-            [
++            array(
+                 'HTTP/1.1 200 OK',
+                 'Content-Type: application/json',
+                 'X-PHPUnit: response value',
+-            ],
++            ),
+             $response->getHeaders()
+         );
+         $this->assertSame((string)$guzzleResponse->getBody(), $response->getBody());
+@@ -277,9 +277,9 @@ public function executeRequestException()
+         $request->setMethod(Request::METHOD_GET);
+ 
+         $endpoint = new Endpoint(
+-            [
++            array(
+                 'scheme'  => 'silly', //invalid protocol
+-            ]
++            )
+         );
+         $endpoint->setTimeout(10);
+ 
+@@ -294,12 +294,12 @@ public function executeRequestException()
+     private function getValidResponse()
+     {
+         $body = json_encode(
+-            [
+-                'response' => [
++            array(
++                'response' => array(
+                     'numFound' => 10,
+                     'start' => 0,
+-                    'docs' => [
+-                        [
++                    'docs' => array(
++                        array(
+                             'id' => '58339e95d5200',
+                             'author' => 'Gambardella, Matthew',
+                             'title' => "XML Developer's Guide",
+@@ -307,13 +307,13 @@ private function getValidResponse()
+                             'price' => 44.95,
+                             'published' => 970372800,
+                             'description' => 'An in-depth look at creating applications with XML.',
+-                        ],
+-                    ],
+-                ],
+-            ]
++                        ),
++                    ),
++                ),
++            )
+         );
+ 
+-        $headers = ['Content-Type' => 'application/json', 'X-PHPUnit' => 'response value'];
++        $headers = array('Content-Type' => 'application/json', 'X-PHPUnit' => 'response value');
+         return new Response(200, $headers, $body);
+     }
+ }

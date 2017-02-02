@@ -23,6 +23,10 @@ Group:          Development/Libraries
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 Source1:        %{name}-autoload.php
 
+# https://github.com/solariumphp/solarium/pull/479
+# fix for PHP 5.3 (EPEL-6)
+Patch0:         %{name}-pr479.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
@@ -82,6 +86,7 @@ Documentation: http://wiki.solarium-project.org/
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+%patch0 -p1
 
 rm examples/.gitignore
 
@@ -145,6 +150,8 @@ exit $ret
 %changelog
 * Wed Feb  1 2017 Remi Collet <remi@fedoraproject.org> - 3.8.0-1
 - update to 3.8.0
+- open https://github.com/solariumphp/solarium/pull/479
+  fix for PHP 5.3 in EL-6
 
 * Fri Oct 28 2016 Remi Collet <remi@fedoraproject.org> - 3.7.0-1
 - update to 3.7.0
