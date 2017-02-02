@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    7a7b51520f3d98e3f6c38df5495ac775463972d5
+%global gh_commit    debc7db9f4d7ffff71e2c3a81f841fbcbab4610d
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -22,7 +22,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.4.1
+Version:        2.4.2
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Database Component
@@ -47,9 +47,9 @@ BuildRequires:  php-json
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 # From composer.json, "require-dev": {
-#               "nette/tester": "~2.0",
-#               "nette/di": "~2.4",
-#               "mockery/mockery": "~1.0.0",
+#               "nette/tester": "^2.0",
+#               "nette/di": "^2.4 || ~3.0.0",
+#               "mockery/mockery": "^1.0.0",
 #               "tracy/tracy": "^2.4"
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
 BuildRequires:  php-composer(%{gh_owner}/di) >= 2.4
@@ -61,14 +61,14 @@ BuildRequires:  php-composer(tracy/tracy) >= 2.3
 # from composer.json, "require": {
 #        "php": ">=5.6.0"
 #        "ext-pdo": "*",
-#        "nette/caching": "~2.2",
-#        "nette/utils": "~2.4"
+#               "nette/caching": "^2.2",
+#               "nette/utils": "^2.4 || ~3.0.0"
 Requires:       php(language) >= 5.6
 Requires:       php-pdo
 Requires:       php-composer(%{gh_owner}/caching) >= 2.2
 Requires:       php-composer(%{gh_owner}/caching) <  3
 Requires:       php-composer(%{gh_owner}/utils) >= 2.4
-Requires:       php-composer(%{gh_owner}/utils) <  3
+Requires:       php-composer(%{gh_owner}/utils) <  4
 # from phpcompatinfo report for version 2.4.0
 Requires:       php-date
 Requires:       php-json
@@ -138,21 +138,12 @@ require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
 EOF
 
 : Run test suite in sources tree
-# remirepo:11
 ret=0
-run=0
-if which php56; then
-   php56 %{_bindir}/nette-tester --colors 0 -p php56 -C tests -s || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/nette-tester --colors 0 -p php71 -C tests -s || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/nette-tester --colors 0 -p php -C tests -s
-# remirepo:2
-fi
+for cmd in php56 php70 php71 php; do
+   if which $cmd; then
+   $cmd %{_bindir}/nette-tester --colors 0 -p $cmd -C tests -s || ret=1
+   fi
+done
 exit $ret
 %else
 : Test suite disabled
@@ -174,6 +165,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb  2 2017 Remi Collet <remi@fedoraproject.org> - 2.4.2-1
+- update to 2.4.2
+
 * Wed Oct 19 2016 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
 - update to 2.4.1
 
