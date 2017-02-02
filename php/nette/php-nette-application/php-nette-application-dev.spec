@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    3e30a1ec941717668bcdab336d690484700207cd
+%global gh_commit    cec392dd66d5432d47b856d70ac64a5ce15f2538
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.4.4
+Version:        2.4.5
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Application MVC Component
@@ -42,12 +42,12 @@ BuildRequires:  php-pcre
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
 # From composer.json, "require-dev": {
-#               "nette/tester": "~2.0",
-#               "nette/di": "~2.4",
-#               "nette/forms": "~2.4",
+#               "nette/tester": "^2.0",
+#               "nette/di": "^2.4 || ~3.0.0",
+#               "nette/forms": "^2.4",
 #               "nette/robot-loader": "~2.4.2 || ^3.0",
-#               "nette/security": "~2.4",
-#               "latte/latte": "^2.4.1",
+#               "nette/security": "^2.4",
+#               "latte/latte": "^2.4.3",
 #               "tracy/tracy": "^2.4",
 #               "mockery/mockery": "^0.9.5"
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
@@ -55,17 +55,17 @@ BuildRequires:  php-composer(%{gh_owner}/di) >= 2.4
 BuildRequires:  php-composer(%{gh_owner}/forms) >= 2.4
 BuildRequires:  php-composer(%{gh_owner}/robot-loader) >= 2.4.2
 BuildRequires:  php-composer(%{gh_owner}/security) >= 2.4
-BuildRequires:  php-composer(latte/latte) >= 2.4.1
+BuildRequires:  php-composer(latte/latte) >= 2.4.3
 BuildRequires:  php-composer(tracy/tracy) >= 2.4
 BuildRequires:  php-composer(mockery/mockery) >= 0.9.5
 %endif
 
 # from composer.json, "require": {
-#        "php": ">=5.6.0"
-#        "nette/component-model": "~2.3",
-#        "nette/http": "~2.2",
-#        "nette/reflection": "~2.2",
-#        "nette/utils": "~2.4"
+#               "php": ">=5.6.0"
+#               "nette/component-model": "^2.3",
+#               "nette/http": "^2.2",
+#               "nette/reflection": "^2.2",
+#               "nette/utils": "^2.4 || ~3.0.0"
 Requires:       php(language) >= 5.6
 Requires:       php-composer(%{gh_owner}/component-model) >= 2.3
 Requires:       php-composer(%{gh_owner}/component-model) <  3
@@ -74,7 +74,7 @@ Requires:       php-composer(%{gh_owner}/http) <  3
 Requires:       php-composer(%{gh_owner}/reflection) >= 2.2
 Requires:       php-composer(%{gh_owner}/reflection) <  3
 Requires:       php-composer(%{gh_owner}/utils) >= 2.4
-Requires:       php-composer(%{gh_owner}/utils) <  3
+Requires:       php-composer(%{gh_owner}/utils) <  4
 # from composer.json, "suggest": {
 #       "nette/forms": "Allows to use Nette\\Application\\UI\\Form",
 #       "latte/latte": "Allows using Latte in templates"
@@ -159,21 +159,12 @@ require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
 EOF
 
 : Run test suite in sources tree
-# remirepo:11
-run=0
 ret=0
-if which php56; then
-   php56 %{_bindir}/nette-tester --colors 0 -p php56 -C tests -s || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/nette-tester --colors 0 -p php71 -C tests -s || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/nette-tester --colors 0 -p php -C tests -s
-# remirepo:2
-fi
+for cmd in php56 php70 php71 php; do
+   if which $cmd; then
+      $cmd %{_bindir}/nette-tester --colors 0 -p $cmd -C tests -s || ret=1
+   fi
+done
 exit $ret
 %else
 : Test suite disabled
@@ -195,6 +186,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb  2 2017 Remi Collet <remi@fedoraproject.org> - 2.4.5-1
+- update to 2.4.5
+
 * Thu Jan 19 2017 Remi Collet <remi@fedoraproject.org> - 2.4.4-1
 - update to 2.4.4
 
