@@ -121,7 +121,7 @@
 %endif
 
 %global rcver         RC1
-%global rpmrel        1
+%global rpmrel        2
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -177,7 +177,6 @@ Patch47: php-5.6.3-phpinfo.patch
 Patch91: php-5.6.3-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch100: php-upstream.patch
 
 # Security fixes (200+)
 
@@ -1027,7 +1026,6 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch100 -p1 -b .upstream
 
 # security patches
 
@@ -2053,7 +2051,10 @@ fi
 
 
 %changelog
-* Wed Feb  1 2017 Remi Collet <remi@fedoraproject.org> 7.1.1-0.2.RC1
+* Thu Feb  2 2017 Remi Collet <remi@fedoraproject.org> - 7.1.2-0.2.RC1
+- Update to 7.1.2RC1 (new sources)
+
+* Wed Feb  1 2017 Remi Collet <remi@fedoraproject.org> 7.1.2-0.1.RC1
 - Update to 7.1.2RC1
 
 * Wed Jan 18 2017 Remi Collet <remi@fedoraproject.org> 7.1.1-3
