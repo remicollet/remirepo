@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    06e957a9060afd200cd66fef61125108bd66874a
+%global gh_commit    c353babec89fdbe8c64054bfec8e77bcb5da6705
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     solariumphp
 %global gh_project   solarium
@@ -14,7 +14,7 @@
 
 Name:           php-%{gh_project}
 Summary:        Solarium PHP Solr client library
-Version:        3.8.0
+Version:        3.8.1
 Release:        1%{?dist}
 
 URL:            http://www.solarium-project.org/
@@ -22,10 +22,6 @@ License:        BSD
 Group:          Development/Libraries
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 Source1:        %{name}-autoload.php
-
-# https://github.com/solariumphp/solarium/pull/479
-# fix for PHP 5.3 (EPEL-6)
-Patch0:         %{name}-pr479.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -86,7 +82,6 @@ Documentation: http://wiki.solarium-project.org/
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
-%patch0 -p1
 
 rm examples/.gitignore
 
@@ -111,28 +106,19 @@ cat << 'EOF' | tee vendor/autoload.php
 require_once '%{buildroot}%{_datadir}/php/Solarium/autoload.php';
 \Fedora\Autoloader\Dependencies::required(array(
     array(
-        '%{_datadir}/php/Guzzle/autoload.php',
         '%{_datadir}/php/GuzzleHttp6/autoload.php',
+        '%{_datadir}/php/Guzzle/autoload.php',
     ),
 ));
 EOF
 
 : Run upstream test suite against installed library
-# remirepo:11
-run=0
 ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose
-# remirepo:2
-fi
+for cmd in php56 php70 php71 php; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit || ret=1
+   fi
+done
 exit $ret
 %else
 : Skip upstream test suite
@@ -148,6 +134,9 @@ exit $ret
 
 
 %changelog
+* Thu Feb  2 2017 Remi Collet <remi@fedoraproject.org> - 3.8.1-1
+- update to 3.8.1
+
 * Wed Feb  1 2017 Remi Collet <remi@fedoraproject.org> - 3.8.0-1
 - update to 3.8.0
 - open https://github.com/solariumphp/solarium/pull/479
