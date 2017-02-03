@@ -15,11 +15,11 @@
 %endif
 
 # https://github.com/php/pecl-search_engine-sphinx/tree/php7
-%global gh_commit   9a3d08c67af0cad216aa0d38d39be71362667738
+%global gh_commit   201eb00bd370bf8ff2d5787ac1a1b588f14af5a0
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    php
 %global gh_project  pecl-search_engine-sphinx
-%global gh_date     20160323
+%global gh_date     20170203
 
 %global pecl_name   sphinx
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
@@ -28,7 +28,7 @@
 Name:           %{?sub_prefix}php-pecl-sphinx
 Version:        1.4.0
 %if 0%{?gh_date:1}
-Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -218,8 +218,13 @@ fi
 
 
 %changelog
+* Fri Feb  3 2017 Remi Collet <remi@remirepo.net> - 1.4.0-0.2.20170203git201eb00
+- update to 1.4.0-dev (git snapshot) for PHP 7
+- refresh with fix for 32bits
+
 * Fri Feb  3 2017 Remi Collet <remi@remirepo.net> - 1.4.0-0.1.20160323git9a3d08c
 - update to 1.4.0-dev (git snapshot) for PHP 7
+- x86_64 only as i386 is broken
 
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.3.3-3
 - adapt for F24
