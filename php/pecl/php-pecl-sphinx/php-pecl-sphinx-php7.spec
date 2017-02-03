@@ -10,36 +10,41 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
+%scl_package       php-pecl-selinux
 %endif
 
-%{?scl:          %scl_package        php-pecl-selinux}
+# https://github.com/php/pecl-search_engine-sphinx/tree/php7
+%global gh_commit   9a3d08c67af0cad216aa0d38d39be71362667738
+%global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner    php
+%global gh_project  pecl-search_engine-sphinx
+%global gh_date     20160323
 
-%define pecl_name   sphinx
-%global with_zts    0%{?__ztsphp:1}
-%if "%{php_version}" < "5.6"
-%global ini_name    %{pecl_name}.ini
-%else
+%global pecl_name   sphinx
+%global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global ini_name    40-%{pecl_name}.ini
-%endif
 
 Name:           %{?sub_prefix}php-pecl-sphinx
-Version:        1.3.3
-Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.4.0
+%if 0%{?gh_date:1}
+Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+%else
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+%endif
 Summary:        PECL extension for Sphinx SQL full-text search engine
 Group:          Development/Languages
 License:        PHP
 URL:            http://pecl.php.net/package/%{pecl_name}
+%if 0%{?gh_date:1}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
+%else
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+%endif
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  libsphinxclient-devel
 BuildRequires:  %{?scl_prefix}php-pear
-BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-devel > 7
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
@@ -49,8 +54,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
@@ -58,17 +65,15 @@ Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -88,16 +93,27 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -q -c
+%if 0%{?gh_date:1}
+mv %{gh_project}-%{gh_commit} NTS
+%{__php} -r '
+  $pkg = simplexml_load_file("NTS/package.xml");
+  $pkg->date = substr("%{gh_date}",0,4)."-".substr("%{gh_date}",4,2)."-".substr("%{gh_date}",6,2);
+  $pkg->version->release = "%{version}dev";
+  $pkg->stability->release = "devel";
+  $pkg->asXML("package.xml");
+'
+%else
+mv %{pecl_name}-%{version} NTS
+%endif
 
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
-mv %{pecl_name}-%{version} NTS
 cd NTS
 
 # Check reported version (phpinfo), as this is often broken
 extver=$(sed -n '/#define PHP_SPHINX_VERSION/{s/.* "//;s/".*$//;p}' php_sphinx.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream version is ${extver}, expecting %{version}.
+if test "x${extver}" != "x%{version}%{?gh_date:-dev}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}%{?gh_date:-dev}.
    exit 1
 fi
 cd ..
@@ -114,6 +130,8 @@ cp -pr NTS ZTS
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure  --with-php-config=%{_bindir}/php-config
@@ -142,7 +160,7 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
+%{?dtsenable}
 
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
@@ -163,10 +181,6 @@ cd NTS
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
-
-
-%clean
-rm -rf %{buildroot}
 
 
 %if 0%{?fedora} < 24
@@ -190,7 +204,6 @@ fi
 
 
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -205,6 +218,9 @@ fi
 
 
 %changelog
+* Fri Feb  3 2017 Remi Collet <remi@remirepo.net> - 1.4.0-0.1.20160323git9a3d08c
+- update to 1.4.0-dev (git snapshot) for PHP 7
+
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.3.3-3
 - adapt for F24
 
