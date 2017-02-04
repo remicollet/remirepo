@@ -21,7 +21,7 @@
 
 Name:          %{?scl_prefix}php-sqlsrv
 Summary:       Microsoft Drivers for PHP for SQL Server
-Version:       4.0.8
+Version:       4.1.6
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
@@ -141,6 +141,8 @@ cp -pr NTS ZTS
 
 
 %build
+%{?dtsenable}
+
 : =================== sqlsrv NTS ===================
 cd NTS/%{extname}
 %{_bindir}/phpize
@@ -177,6 +179,8 @@ make %{?_smp_mflags}
 
 
 %install
+%{?dtsenable}
+
 install -Dpm 644 NTS/%{extname}/package.xml %{buildroot}%{pecl_xmldir}/php-pecl-%{extname}.xml
 install -Dpm 644 NTS/pdo_%{extname}/package.xml %{buildroot}%{pecl_xmldir}/php-pecl-pdo-%{extname}.xml
 
@@ -253,6 +257,9 @@ fi
 
 
 %changelog
+* Sat Feb  4 2017 Remi Collet <remi@remirepo.net> - 4.1.6-1
+- update to 4.1.6 (devel)
+
 * Tue Dec 20 2016 Remi Collet <remi@remirepo.net> - 4.0.8-1
 - update to 4.0.8 (stable)
 
