@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    adf44419c0fc014a0f191db6f89d3e55d4211744
+%global gh_commit    5b8182cc0abb4b0ff290ba9df6c0e1323286013a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nikic
 %global gh_project   PHP-Parser
@@ -14,7 +14,7 @@
 %global php_home     %{_datadir}/php
 %global with_tests   0%{!?_without_tests:1}
 %global major        3
-%global minor        0.2
+%global minor        0.3
 
 %global eolv1   0
 %global eolv2   0
@@ -178,6 +178,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Feb 4  2017 Remi Collet <remi@fedoraproject.org> - 3.0.3-1
+- update to 3.0.3
+
 * Wed Dec 7  2016 Remi Collet <remi@fedoraproject.org> - 3.0.2-1
 - new package for library version 3
 
