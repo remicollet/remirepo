@@ -24,7 +24,7 @@
 # https://pear.php.net/bugs/bug.php?id=19367
 # Structures_Graph 1.0.4 - incorrect FSF address
 %global structver 1.1.1
-%global xmlutil   1.3.0
+%global xmlutil   1.4.0
 %global manpages  1.10.0
 
 # Tests are only run with rpmbuild --with tests
@@ -40,7 +40,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.10.1
-Release: 8%{?dist}
+Release: 9%{?dist}
 Epoch: 1
 # PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -429,6 +429,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Feb  4 2017 Remi Collet <remi@fedoraproject.org> 1:1.10.1-9
+- update XML_Util to 1.4.0
+
 * Sat Dec 10 2016 Remi Collet <remi@fedoraproject.org> 1:1.10.1-8
 - obsolete pear1u to allow simple upgrade
 
