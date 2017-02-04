@@ -12,8 +12,8 @@
 
 %global github_owner     punic
 %global github_name      punic
-%global github_version   1.6.4
-%global github_commit    c6a779cb0349948f093d40b9f6a4fe5c6f8a6a36
+%global github_version   1.6.5
+%global github_commit    7bc85ce1137cf52db4d2a6298256a4c4a24da99a
 
 %global composer_vendor  punic
 %global composer_project punic
@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       PHP-Unicode CLDR
 
 Group:         Development/Libraries
@@ -128,8 +128,8 @@ ln -s \
 %check
 %if %{with_tests}
 : Skip tests known to fail
-sed 's/function testDescribeInterval/function SKIP_testDescribeInterval/' \
-    -i tests/Calendar/CalendarTest.php
+#sed 's/function testDescribeInterval/function SKIP_testDescribeInterval/' \
+#    -i tests/Calendar/CalendarTest.php
 
 %{_bindir}/phpunit \
   -d memory_limit=-1 \
@@ -156,6 +156,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Feb  4 2017 Remi Collet <remi@remirepo.net> - 1.6.5-1
+- update to 1.6.5
+
 * Sat Nov 26 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.6.4-1
 - Update to 1.6.4 (RHBZ #1397224)
 - Switch autoloader from php-composer(symfony/class-loader) to
