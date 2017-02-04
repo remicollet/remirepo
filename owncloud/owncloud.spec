@@ -8,8 +8,8 @@
 # Please preserve changelog entries
 #
 Name:           owncloud
-Version:        9.1.3
-Release:        2%{?dist}
+Version:        9.1.4
+Release:        1%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
 
@@ -62,7 +62,7 @@ Patch6:         %{name}-8.2.3-correct-cli-upgrade-command.patch
 Patch7:         %{name}-9.1.0-default_integrity_check_disabled.patch
 
 # No need to check PHP versions, Fedora maintainers are on the job
-Patch8:         %{name}-9.1.2-dont_warn_about_php_versions.patch
+Patch8:         %{name}-9.1.4-dont_warn_about_php_versions.patch
 
 #Backport of php7.1 fixes
 Patch9:         %{name}-b129d5d-php71-backport.patch
@@ -108,7 +108,7 @@ BuildRequires:       php-composer(pimple/pimple) < 4.0
 BuildRequires:       php-composer(ircmaxell/password-compat) >= 1.0.0
 BuildRequires:       php-composer(nikic/php-parser) >= 1.4.1
 BuildRequires:       php-composer(nikic/php-parser) < 2.0
-BuildRequires:       php-composer(icewind/streams) >= 0.4.1
+BuildRequires:       php-composer(icewind/streams) >= 0.5.2
 BuildRequires:       php-composer(swiftmailer/swiftmailer) >= 5.4.1
 BuildRequires:       php-composer(guzzlehttp/guzzle) >= 5.3.0
 BuildRequires:       php-composer(guzzlehttp/guzzle) < 6.0
@@ -222,8 +222,8 @@ Requires:       php-composer(ircmaxell/password-compat) >= 1.0.0
 Requires:       php-composer(nikic/php-parser) >= 1.4.1
 Requires:       php-composer(nikic/php-parser) < 2.0
 
-# "icewind/Streams": "0.4.1"
-Requires:       php-composer(icewind/streams) >= 0.4.1
+# "icewind/Streams": "0.5.2"
+Requires:       php-composer(icewind/streams) >= 0.5.2
 
 # "swiftmailer/swiftmailer": "@stable"
 # Version 5.4.1 for autoloader in /usr/share/php
@@ -746,6 +746,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 03 2017 James Hogarth <james.hogarth@gmail.com> - 9.1.4-1
+- Update to 9.1.4
+- Fix guzzle autoloader ordering dependency issue
+
 * Wed Dec 14 2016 James Hogarth <james.hogarth@gmail.com> - 9.1.3-1
 - Fix bz#1404441 - php7 does not get the httpd php settings
 - No need to check PHP versions within the code

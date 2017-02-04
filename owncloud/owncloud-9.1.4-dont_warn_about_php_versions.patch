@@ -1,8 +1,8 @@
 diff --git a/console.php b/console.php
-index 7235965..1f4b721 100644
+index 2bb3a2b..0df5343 100644
 --- a/console.php
 +++ b/console.php
-@@ -33,21 +33,6 @@ use Symfony\Component\Console\Output\ConsoleOutput;
+@@ -33,22 +33,6 @@ use Symfony\Component\Console\Output\ConsoleOutput;
  
  define('OC_CONSOLE', 1);
  
@@ -15,29 +15,21 @@ index 7235965..1f4b721 100644
 -}
 -
 -// Show warning if PHP 7.1 is used as ownCloud is not compatible with PHP 7.1 until
--// version 9.2.0.
+-// version 10.0.0.
 -if (version_compare(PHP_VERSION, '7.1.0') !== -1) {
 -	echo 'This version of ownCloud is not compatible with PHP 7.1.<br/>';
--	echo 'You are currently running ' . PHP_VERSION . '. Please use at least ownCloud 9.2.0.';
+-	echo 'You are currently running ' . PHP_VERSION . '. Please use at least ownCloud 10.0.0.';
 -	return;
 -}
- 
+-
  function exceptionHandler($exception) {
  	echo "An unhandled exception has been thrown:" . PHP_EOL;
-@@ -78,7 +63,7 @@ try {
- 			echo "Console has to be executed with the user that owns the file config/config.php" . PHP_EOL;
- 			echo "Current user: " . $user['name'] . PHP_EOL;
- 			echo "Owner of config.php: " . $configUser['name'] . PHP_EOL;
--			echo "Try adding 'sudo -u " . $configUser['name'] . " ' to the beginning of the command (without the single quotes)" . PHP_EOL;  
-+			echo "Try adding 'sudo -u " . $configUser['name'] . " ' to the beginning of the command (without the single quotes)" . PHP_EOL;
- 			exit(0);
- 		}
- 	}
+ 	echo $exception;
 diff --git a/index.php b/index.php
-index 136ddcb..5230cb2 100644
+index ad33ad9..1210e4b 100644
 --- a/index.php
 +++ b/index.php
-@@ -24,31 +24,9 @@
+@@ -24,28 +24,6 @@
   *
   */
  
@@ -50,10 +42,10 @@ index 136ddcb..5230cb2 100644
 -}
 -
 -// Show warning if PHP 7.1 is used as ownCloud is not compatible with PHP 7.1 until
--// version 9.2.0.
+-// version 10.0.0.
 -if (version_compare(PHP_VERSION, '7.1.0') !== -1) {
 -	echo 'This version of ownCloud is not compatible with PHP 7.1.<br/>';
--	echo 'You are currently running ' . PHP_VERSION . '. Please use at least ownCloud 9.2.0.';
+-	echo 'You are currently running ' . PHP_VERSION . '. Please use at least ownCloud 10.0.0.';
 -	return;
 -}
 -
@@ -65,16 +57,12 @@ index 136ddcb..5230cb2 100644
 -}
  
  try {
--	
-+
- 	require_once 'lib/base.php';
- 
- 	OC::handleRequest();
+ 	
 diff --git a/settings/Controller/CheckSetupController.php b/settings/Controller/CheckSetupController.php
-index 52ef34d..e39fdf2 100644
+index 52ef34d..bdb2a3a 100644
 --- a/settings/Controller/CheckSetupController.php
 +++ b/settings/Controller/CheckSetupController.php
-@@ -349,11 +349,7 @@ Raw output
+@@ -349,11 +349,8 @@ Raw output
  	protected function isEndOfLive() {
  		$eol = false;
  
@@ -83,7 +71,8 @@ index 52ef34d..e39fdf2 100644
 -			$eol = true;
 -			return $eol;
 -		}
-+        // Red Hat support PHP so don't EOL
++    // Red Hat support PHP so don't EOL
++
  		return $eol;
  	}
  }
