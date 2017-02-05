@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #113 snappy version 0.1.5 ] {
+Extension [ <persistent> extension #15 snappy version 0.1.6 ] {
 
   - Functions {
     Function [ <internal:snappy> function snappy_compress ] {

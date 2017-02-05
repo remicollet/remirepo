@@ -15,7 +15,7 @@
 %scl_package        php-snappy
 %endif
 
-%global gh_commit   f7a9c4dfe0796184ecbdcde809a8a234f508d8ea
+%global gh_commit   0d5f153ec4da79e70fbc838126dc58d0bd13e9cb
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    kjdev
 %global gh_project  php-ext-snappy
@@ -26,11 +26,11 @@
 
 Summary:       Snappy Extension for PHP
 Name:          %{?sub_prefix}php-snappy
-Version:       0.1.5
+Version:       0.1.6
 %if 0%{?gh_date:1}
 Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:       3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 License:       PHP
 Group:         Development/Languages
@@ -111,6 +111,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -134,6 +136,8 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
+%{?dtsenable}
+
 # Install the NTS stuff
 make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
@@ -197,6 +201,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb  5 2017 Remi Collet <remi@fedoraproject.org> - 0.1.6-1
+- update to 0.1.6 (no change)
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 0.1.5-3
 - rebuild with PHP 7.1.0 GA
 
