@@ -23,7 +23,7 @@
 Summary:        Memory usage profiler
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        2.0.0
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -80,6 +80,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %prep
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
+mv package2.xml package.xml
 
 # Don't install tests
 sed -e 's/role="test"/role="src"/' \
@@ -205,6 +206,9 @@ fi
 
 
 %changelog
+* Sun Feb  5 2017 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
+- use package2.xml for correct registration
+
 * Sat Jan 28 2017 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0 for PHP 7+
 - open https://github.com/arnaud-lb/php-memory-profiler/pull/13
