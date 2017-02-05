@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    69f832b87c731d5cacad7f91948778fe98335fdd
+%global gh_commit    a6ad2472daba76b0689042b7709f86d4f06bcaab
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.7
-%global minor        9
+%global minor        11
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -51,12 +51,12 @@ BuildRequires:  php-composer(phpunit/php-code-coverage) >= 4.0.4
 BuildRequires:  php-composer(phpunit/php-timer) >= 1.0.6
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 3.2
 BuildRequires:  php-composer(phpspec/prophecy) >= 1.6.2
-BuildRequires:  php-composer(sebastian/comparator) >= 1.2.2
+BuildRequires:  php-composer(sebastian/comparator) >= 1.2.4
 BuildRequires:  php-composer(sebastian/diff) >= 1.2
 BuildRequires:  php-composer(sebastian/environment) >= 1.3.4
 BuildRequires:  php-composer(sebastian/exporter) >= 2.0
 BuildRequires:  php-composer(sebastian/recursion-context) >= 2.0
-BuildRequires:  php-composer(sebastian/global-state) >= 1.0
+BuildRequires:  php-composer(sebastian/global-state) >= 1.1
 BuildRequires:  php-composer(sebastian/object-enumerator) >= 2.0
 BuildRequires:  php-composer(sebastian/resource-operations) >= 1.0
 BuildRequires:  php-composer(sebastian/version) >= 1.0
@@ -76,11 +76,11 @@ BuildRequires:  php-composer(fedora/autoloader)
 #        "phpunit/phpunit-mock-objects": "^3.2",
 #        "phpspec/prophecy": "^1.6.2",
 #        "symfony/yaml": "~2.1|~3.0",
-#        "sebastian/comparator": "~1.2.2",
+#        "sebastian/comparator": "^1.2.4",
 #        "sebastian/diff": "~1.2",
 #        "sebastian/environment": "^1.3.4 || ^2.0",
 #        "sebastian/exporter": "~2.0",
-#        "sebastian/global-state": "^1.0 || ^2.0",
+#        "sebastian/global-state": "^1.1",
 #        "sebastian/object-enumerator": "~2.0",
 #        "sebastian/resource-operations": "~1.0",
 #        "sebastian/version": "~1.0|~2.0",
@@ -104,7 +104,7 @@ Requires:       php-composer(phpunit/phpunit-mock-objects) >= 3.2
 Requires:       php-composer(phpunit/phpunit-mock-objects) <  4
 Requires:       php-composer(phpspec/prophecy) >= 1.6.2
 Requires:       php-composer(phpspec/prophecy) <  2
-Requires:       php-composer(sebastian/comparator) >= 1.2.2
+Requires:       php-composer(sebastian/comparator) >= 1.2.4
 Requires:       php-composer(sebastian/comparator) <  2
 Requires:       php-composer(sebastian/diff) >= 1.2
 Requires:       php-composer(sebastian/diff) <  2
@@ -112,8 +112,8 @@ Requires:       php-composer(sebastian/environment) >= 1.3.4
 Requires:       php-composer(sebastian/environment) <  3
 Requires:       php-composer(sebastian/exporter) >= 2.0
 Requires:       php-composer(sebastian/exporter) <  3
-Requires:       php-composer(sebastian/global-state) >= 1.0
-Requires:       php-composer(sebastian/global-state) <  3
+Requires:       php-composer(sebastian/global-state) >= 1.1
+Requires:       php-composer(sebastian/global-state) <  2
 Requires:       php-composer(sebastian/object-enumerator) >= 2.0
 Requires:       php-composer(sebastian/object-enumerator) <  3
 Requires:       php-composer(sebastian/resource-operations) >= 1.0
@@ -242,6 +242,11 @@ fi
 
 
 %changelog
+* Sun Feb  5 2017 Remi Collet <remi@fedoraproject.org> - 5.7.11-1
+- update to 5.7.11
+- raise dependency on sebastian/comparator 1.2.4
+- raise dependency on sebastian/global-state 1.1
+
 * Sat Jan 28 2017 Remi Collet <remi@fedoraproject.org> - 5.7.9-1
 - update to 5.7.9
 
