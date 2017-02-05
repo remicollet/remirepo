@@ -22,12 +22,16 @@
 Summary:        Trace is a low-overhead tracing tool for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # common/sds is BSD-2, other is ASL 2.0
 License:        ASL 2.0 and BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# https://github.com/Qihoo360/phptrace/issues/75
+# https://github.com/Qihoo360/phptrace/pull/76
+Patch0:         %{pecl_name}-pr76.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # https://github.com/Qihoo360/phptrace/issues/71
@@ -64,6 +68,10 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
@@ -90,6 +98,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -q -c
+pushd %{pecl_name}-%{version}
+%patch0 -p1 -b .pr76
+popd
 
 # Don't install tests
 sed -e 's/role="test"/role="src"/' \
@@ -123,6 +134,7 @@ EOF
 
 
 %build
+%{?dtsenable}
 cd %{pecl_name}-%{version}/extension
 
 %{_bindir}/phpize
@@ -135,6 +147,7 @@ make cli %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
+%{?dtsenable}
 
 make -C %{pecl_name}-%{version}/extension install-all INSTALL_ROOT=%{buildroot}
 
@@ -213,6 +226,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb  5 2017 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- add patch for security issue (umask=0)
+  patch from https://github.com/Qihoo360/phptrace/pull/76
+  see https://github.com/Qihoo360/phptrace/issues/75
+
 * Thu Jan 19 2017 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - Update to 1.0.0 (beta)
 - open https://github.com/Qihoo360/phptrace/issues/71: PHP 7.1 build broken

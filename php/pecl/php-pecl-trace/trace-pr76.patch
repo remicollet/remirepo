@@ -1,0 +1,27 @@
+From cf9e59ad032a56ee14d96f2a6adb6e17f51fa852 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sat, 4 Feb 2017 10:39:23 +0100
+Subject: [PATCH] Fix #75: don't change umask value
+
+---
+ common/trace_mmap.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/common/trace_mmap.c b/common/trace_mmap.c
+index a051ecd..02a433c 100644
+--- a/common/trace_mmap.c
++++ b/common/trace_mmap.c
+@@ -77,10 +77,12 @@ int pt_mmap_open(pt_segment_t *seg, const char *file, size_t size)
+ int pt_mmap_create(pt_segment_t *seg, const char *file, size_t size)
+ {
+     int fd;
++    mode_t um;
+ 
+     /* file open */
+-    umask(0000);
++    um = umask(0000);
+     fd = open(file, O_RDWR | O_CREAT, DEFFILEMODE);
++    umask(um);
+     if (fd == -1) {
+         return reset_with_retval(seg, -1);
+     }
