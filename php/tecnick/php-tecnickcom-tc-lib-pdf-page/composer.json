@@ -14,8 +14,10 @@
     ],
     "require": {
         "php": ">=5.4",
-        "tecnickcom/tc-lib-pdf-encrypt": "^1.4.3",
-        "tecnickcom/tc-lib-color": "^1.12.1"
+        "ext-date": "*",
+        "ext-zlib": "*",
+        "tecnickcom/tc-lib-pdf-encrypt": "^1.4.4",
+        "tecnickcom/tc-lib-color": "^1.12.4"
     },
     "require-dev": {
         "apigen/apigen" : "^4.1.2",
