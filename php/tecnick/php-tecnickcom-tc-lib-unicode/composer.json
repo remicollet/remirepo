@@ -14,6 +14,8 @@
     ],
     "require": {
         "php": ">=5.4",
+        "ext-mbstring": "*",
+        "ext-pcre": "*",
         "tecnickcom/tc-lib-unicode-data": "^1.6.3"
     },
     "require-dev": {

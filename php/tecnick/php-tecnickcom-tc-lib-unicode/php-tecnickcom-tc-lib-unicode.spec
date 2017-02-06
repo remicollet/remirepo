@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    632975705e2d6e620ae67e4b40f9ccdbb4a39afa
+%global gh_commit    d90a91626d60fd947a7b8a3618670b724cdcebef
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.3.3
+Version:        1.3.4
 Release:        1%{?dist}
 Summary:        PHP library containing Unicode methods
 
@@ -37,13 +37,16 @@ BuildRequires:  php-pcre
 
 # From composer.json, "require": {
 #        "php": ">=5.4"
+#        "ext-mbstring": "*",
+#        "ext-pcre": "*",
 #        "tecnickcom/tc-lib-unicode-data": "^1.6.0"
 Requires:       php(language) >= 5.4
+Requires:       php-mbstring
+Requires:       php-pcre
 Requires:       php-composer(%{c_vendor}/tc-lib-unicode-data) >= 1.6.3
 Requires:       php-composer(%{c_vendor}/tc-lib-unicode-data) <  2
 # From phpcompatinfo report for version 1.2.1
-Requires:       php-mbstring
-Requires:       php-pcre
+# None
 
 # Composer
 Provides:       php-composer(%{c_vendor}/%{gh_project}) = %{version}
@@ -86,21 +89,12 @@ require '%{buildroot}%{php_project}/autoload.php';
 require '%{php_project}/Data/autoload.php';
 EOF
 
-# remirepo:11
-run=0
 ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose
-# remirepo:2
-fi
+for cmd in php56 php70 php71 php; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit --verbose || ret=1
+   fi
+done
 exit $ret
 %else
 : Test suite disabled
@@ -121,6 +115,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb  6 2017 Remi Collet <remi@remirepo.net> - 1.3.4-1
+- update to 1.3.4 (no change)
+
 * Fri Sep  2 2016 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
 - update to 1.3.3 (no change)
 - raise dependency on tecnickcom/tc-lib-unicode-data >= 1.6.3
