@@ -13,7 +13,8 @@
         }
     ],
     "require": {
-        "php": ">=5.4"
+        "php": ">=5.4",
+        "ext-pcre": "*"
     },
     "require-dev": {
         "apigen/apigen" : "^4.1.2",
