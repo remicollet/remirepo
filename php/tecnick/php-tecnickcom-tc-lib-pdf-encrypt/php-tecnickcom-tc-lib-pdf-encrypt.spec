@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5a0b4a5bc65285467ef61ddd6f702f1e18f2164f
+%global gh_commit    3f2acfefe6a5a0b81f2399a2b993e29c389da3c2
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.4.3
+Version:        1.4.4
 Release:        1%{?dist}
 Summary:        PHP library to encrypt data for PDF
 
@@ -39,16 +39,22 @@ BuildRequires:  php-posix
 %endif
 
 # From composer.json, "require": {
-#        "php": ">=5.4"
+#        "php": ">=5.4",
+#        "ext-date": "*",
+#        "ext-hash": "*",
+#        "ext-mcrypt": "*",
+#        "ext-openssl": "*",
+#        "ext-pcre": "*",
+#        "ext-posix": "*"
 Requires:       php(language) >= 5.4
-# From phpcompatinfo report for version 1.3.0
 Requires:       php-date
 Requires:       php-hash
 # mcrypt is optional, openssl preferred
 Requires:       php-openssl
 Requires:       php-pcre
 Requires:       php-posix
-
+# From phpcompatinfo report for version 1.4.4
+# none
 
 # Composer
 Provides:       php-composer(%{c_vendor}/%{gh_project}) = %{version}
@@ -90,21 +96,13 @@ date_default_timezone_set("UTC");
 require '%{buildroot}%{php_project}/autoload.php';
 EOF
 
-# remirepo:11
-run=0
 ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if which php70; then
-   php70 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose
-# remirepo:2
-fi
+# ignore 7.1, see https://github.com/tecnickcom/tc-lib-pdf-encrypt/issues/4
+for cmd in php56 php70 php; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit --verbose || ret=1
+   fi
+done
 exit $ret
 %else
 : Test suite disabled
@@ -128,6 +126,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb  6 2017 Remi Collet <remi@fedoraproject.org> - 1.4.4-1
+- update to 1.4.4 (no change)
+- open https://github.com/tecnickcom/tc-lib-pdf-encrypt/issues/4 - 7.1 failure
+- open https://github.com/tecnickcom/tc-lib-pdf-encrypt/pull/5 add 7.1 to travis
+- open https://github.com/tecnickcom/tc-lib-pdf-encrypt/pull/6 better exception
+
 * Fri Sep  2 2016 Remi Collet <remi@fedoraproject.org> - 1.4.3-1
 - update to 1.4.3
 
