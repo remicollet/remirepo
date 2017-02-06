@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    34b0224f71ebfe83adcef9f14f3d81965fb55493
+%global gh_commit    2057d4c7a7f4397546f06d4f46eb7bbcd2955535
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.15.4
+Version:        1.15.5
 Release:        1%{?dist}
 Summary:        PHP library to generate linear and bidimensional barcodes
 
@@ -41,15 +41,20 @@ BuildRequires:  php-pecl-imagick
 
 # From composer.json, "require": {
 #        "php": ">=5.4"
-#        "tecnickcom/tc-lib-color": "^1.12.1"
+#        "ext-bcmath": "*",
+#        "ext-date": "*",
+#        "ext-gd": "*",
+#        "ext-pcre": "*",
+#        "tecnickcom/tc-lib-color": "^1.12.4"
 Requires:       php(language) >= 5.4
-Requires:       php-composer(%{c_vendor}/tc-lib-color) >= 1.12.1
-Requires:       php-composer(%{c_vendor}/tc-lib-color) <  2
-# From phpcompatinfo report for version 1.14.0
 Requires:       php-bcmath
 Requires:       php-date
 Requires:       php-gd
 Requires:       php-pcre
+Requires:       php-composer(%{c_vendor}/tc-lib-color) >= 1.12.1
+Requires:       php-composer(%{c_vendor}/tc-lib-color) <  2
+# From phpcompatinfo report for version 1.15.5
+# none
 
 # Composer
 Provides:       php-composer(%{c_vendor}/%{gh_project}) = %{version}
@@ -104,21 +109,12 @@ require '%{php_project}/../Color/autoload.php';
 require __DIR__ . '/../test/TestStrings.php';
 EOF
 
-# remirepo:11
-run=0
 ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose
-# remirepo:2
-fi
+for cmd in php56 php70 php71 php; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit --verbose || ret=1
+   fi
+done
 exit $ret
 %else
 : Test suite disabled
@@ -139,6 +135,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb  6 2017 Remi Collet <remi@fedoraproject.org> - 1.15.5-1
+- update to 1.15.5 (no change)
+
 * Fri Nov 18 2016 Remi Collet <remi@fedoraproject.org> - 1.15.4-1
 - update to 1.15.4
 
