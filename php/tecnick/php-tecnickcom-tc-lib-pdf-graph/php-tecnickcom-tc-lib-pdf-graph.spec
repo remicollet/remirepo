@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b5bf185951f019599f1d0729130125808adffd2c
+%global gh_commit    4b488e21b65cf9d7df9daf071c18acf5c1bc9d32
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.4.2
+Version:        1.4.3
 Release:        1%{?dist}
 Summary:        PHP library containing PDF graphic and geometric methods
 
@@ -36,15 +36,17 @@ BuildRequires:  php-composer(%{c_vendor}/tc-lib-pdf-encrypt) >= 1.4.3
 
 # From composer.json, "require": {
 #        "php": ">=5.4"
-#        "tecnickcom/tc-lib-color": "^1.12.1",
-#        "tecnickcom/tc-lib-pdf-encrypt": "^1.4.3"
+#        "ext-zlib": "*",
+#        "tecnickcom/tc-lib-color": "^1.12.4",
+#        "tecnickcom/tc-lib-pdf-encrypt": "^1.4.4"
 Requires:       php(language) >= 5.4
+Requires:       php-zlib
 Requires:       php-composer(%{c_vendor}/tc-lib-color) >= 1.12.1
 Requires:       php-composer(%{c_vendor}/tc-lib-color) <  2
 Requires:       php-composer(%{c_vendor}/tc-lib-pdf-encrypt) >= 1.4.3
 Requires:       php-composer(%{c_vendor}/tc-lib-pdf-encrypt) <  2
-# From phpcompatinfo report for version 1.4.1
-Requires:       php-zlib
+# From phpcompatinfo report for version 1.4.2
+# none
 
 # Composer
 Provides:       php-composer(%{c_vendor}/%{gh_project}) = %{version}
@@ -86,21 +88,12 @@ require '%{buildroot}%{php_project}/autoload.php';
 require '%{php_project}/../../Color/autoload.php';
 EOF
 
-# remirepo:11
-run=0
 ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose
-# remirepo:2
-fi
+for cmd in php56 php70 php71 php; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit --verbose || ret=1
+   fi
+done
 exit $ret
 %else
 : Test suite disabled
@@ -122,6 +115,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb  6 2017 Remi Collet <remi@remirepo.net> - 1.4.3-1
+- update to 1.4.3 (no change)
+
 * Tue Sep 27 2016 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
 - update to 1.4.2
 
