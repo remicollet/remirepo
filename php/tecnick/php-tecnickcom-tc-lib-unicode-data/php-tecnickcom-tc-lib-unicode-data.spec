@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0ffb29bdbd68d3f05e62da491fca9425c5bfeb72
+%global gh_commit    ac065f9ad2964b660fb8d5e7deda59049d6e44b0
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.6.3
+Version:        1.6.4
 Release:        1%{?dist}
 Summary:        PHP library containing UTF-8 font definitions
 
@@ -79,21 +79,12 @@ cat <<EOF | tee vendor/autoload.php
 require '%{buildroot}%{php_project}/autoload.php';
 EOF
 
-# remirepo:11
-run=0
 ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose
-# remirepo:2
-fi
+for cmd in php56 php70 php71 php; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit --verbose || ret=1
+   fi
+done
 exit $ret
 %else
 : Test suite disabled
@@ -117,6 +108,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb  6 2017 Remi Collet <remi@remirepo.net> - 1.6.4-1
+- update to 1.6.4 (no change)
+
 * Fri Sep  2 2016 Remi Collet <remi@fedoraproject.org> - 1.6.3-1
 - update to 1.6.3 (no change)
 
