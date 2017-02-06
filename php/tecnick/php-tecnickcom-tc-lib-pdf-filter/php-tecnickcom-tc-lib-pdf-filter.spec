@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b26d5e06b8bd7bef836b0c18530b971839eee664
+%global gh_commit    476b2a31563ea094cb345687d6aa33efd00e107f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.3.3
+Version:        1.3.4
 Release:        1%{?dist}
 Summary:        PHP library to decode PDF compression and encryption filters
 
@@ -35,11 +35,14 @@ Requires:       php-zlib
 %endif
 
 # From composer.json, "require": {
-#        "php": ">=5.4"
+#        "php": ">=5.4",
+#        "ext-zlib": "*",
+#        "ext-pcre": "*"
 Requires:       php(language) >= 5.4
-# From phpcompatinfo report for version 1.1.0
 Requires:       php-pcre
 Requires:       php-zlib
+# From phpcompatinfo report for version 1.3.4
+# none
 
 # Composer
 Provides:       php-composer(%{c_vendor}/%{gh_project}) = %{version}
@@ -80,21 +83,12 @@ cat <<EOF | tee vendor/autoload.php
 require '%{buildroot}%{php_project}/autoload.php';
 EOF
 
-# remirepo:11
-run=0
 ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose
-# remirepo:2
-fi
+for cmd in php56 php70 php71 php; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit --verbose || ret=1
+   fi
+done
 exit $ret
 %else
 : Test suite disabled
@@ -118,6 +112,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb  6 2017 Remi Collet <remi@remirepo.net> - 1.3.4-1
+- update to 1.3.4 (no change)
+
 * Fri Sep  2 2016 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
 - update to 1.3.3 (no change)
 
