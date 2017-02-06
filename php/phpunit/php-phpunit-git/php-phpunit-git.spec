@@ -94,6 +94,7 @@ fi
 %changelog
 * Mon Feb  6 2017 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
 - update to 2.1.4
+- switch to fedora/autoloader
 
 * Wed Jun 15 2016 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
 - update to 2.1.3
