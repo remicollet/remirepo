@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-symfony
 #
-# Copyright (c) 2013-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2017 Shawn Iwinski <shawn.iwinski@gmail.com>
 #                         Remi Collet <remi@fedoraproject.org>
 #
 # License: MIT
@@ -13,8 +13,8 @@
 
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.8.16
-%global github_commit    9fef72a3ab561c4bfa703a70369db028dec387d2
+%global github_version   2.8.17
+%global github_commit    c423a13a031c9388b7f9103f176b1872c00c7ffa
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -1915,6 +1915,9 @@ sed -e 's#function testCreateFromChoicesSameChoices#function SKIP_testCreateFrom
 sed 's/function testEncodeWithError/function SKIP_testEncodeWithError/' \
     -i src/Symfony/Component/Serializer/Tests/Encoder/JsonEncodeTest.php
 %endif
+: Skip for Missing dependency sensio/framework-extra-bundle
+sed -e 's/testAnnotatedController/SKIP_testAnnotatedController/' \
+    -i src/Symfony/Bundle/FrameworkBundle/Tests/Functional/AnnotatedControllerTest.php
 : Skip online tests
 sed -e 's/testCopyForOriginUrlsAndExistingLocalFileDefaultsToCopy/SKIP_testCopyForOriginUrlsAndExistingLocalFileDefaultsToCopy/' \
     -i src/Symfony/Component/Filesystem/Tests/FilesystemTest.php
@@ -1953,6 +1956,7 @@ cat << 'BOOTSTRAP' | tee bootstrap.php
 
 require_once '%{buildroot}%{phpdir}/Symfony/autoload.php';
 require_once '%{buildroot}%{phpdir}/Symfony/Bridge/PhpUnit/bootstrap.php';
+require_once '%{buildroot}%{phpdir}/Symfony/Component/VarDumper/Resources/functions/dump.php';
 BOOTSTRAP
 
 : Run tests
@@ -2700,6 +2704,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Mon Feb  6 2017 Remi Collet <remi@fedoraproject.org> - 2.8.17-1
+- Update to 2.8.17
+
 * Fri Jan 13 2017 Remi Collet <remi@fedoraproject.org> - 2.8.16-1
 - Update to 2.8.16
 
