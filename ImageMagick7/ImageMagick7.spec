@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        7.0.4
-%global Patchlevel 6
+%global Patchlevel 7
 %global incsuffixe -7
 %global libsuffixe -7.Q16HDRI
 %global with_tests 0%{!?_without_tests:1}
@@ -68,8 +68,6 @@ Group:          Applications/Multimedia
 License:        ImageMagick
 Url:            http://www.imagemagick.org/
 Source0:        ftp://ftp.ImageMagick.org/pub/ImageMagick/ImageMagick-%{VER}-%{Patchlevel}.tar.xz
-
-Patch0:         %{name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  bzip2-devel, freetype-devel, libjpeg-devel, libpng-devel
@@ -282,7 +280,6 @@ however.
 
 %prep
 %setup -q -n %{libname}-%{VER}-%{Patchlevel}
-%patch0 -p1 -b .upstream
 
 # for %%doc
 mkdir Magick++/examples
@@ -497,6 +494,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb  6 2017 Remi Collet <remi@remirepo.net> - 7.0.4.7-1
+- update to version 7.0.4 patchlevel 7
+
 * Mon Jan 30 2017 Remi Collet <remi@remirepo.net> - 7.0.4.6-1
 - add upstream patch for tests on 32bits
 
