@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5100bc50cd9e70f424c643618e142214225024f3
+%global gh_commit    815bbbc963cf35e5413df195aa29df58243ecd24
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   git
@@ -16,7 +16,7 @@
 %global with_tests   %{?_without_tests:1}%{!?_without_tests:0}
 
 Name:           php-phpunit-git
-Version:        2.1.3
+Version:        2.1.4
 Release:        1%{?dist}
 Summary:        Simple wrapper for Git
 
@@ -28,7 +28,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-fedora-autoloader-devel
 
 Requires:       git
 # From composer.json
@@ -37,6 +37,8 @@ Requires:       php(language) >= 5.3.3
 # From phpcompatinfo report for 2.1.2
 Requires:       php-date
 Requires:       php-spl
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(sebastian/git) = %{version}
 
@@ -57,6 +59,7 @@ Simple PHP wrapper for Git.
 
 %build
 %{_bindir}/phpab \
+  --template fedora \
   --output src/autoload.php \
   src
 
@@ -89,6 +92,9 @@ fi
 
 
 %changelog
+* Mon Feb  6 2017 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
+- update to 2.1.4
+
 * Wed Jun 15 2016 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
 - update to 2.1.3
 
