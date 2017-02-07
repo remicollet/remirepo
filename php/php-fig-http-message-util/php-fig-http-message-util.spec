@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 
-%global gh_commit    70899e53776d4d65fec9f90f0f88ba6c4d0f7b88
+%global gh_commit    2794f0e6a2566c9cd6a9a521a729da8963a52ca4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     php-fig
 %global gh_project   http-message-util
@@ -15,7 +15,7 @@
 %global pk_project   %{gh_project}
 
 Name:           php-%{pk_owner}-%{pk_project}
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        PSR Http Message Util
 
@@ -101,6 +101,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb  7 2017 Remi Collet <remi@remirepo.net> - 1.1.1-1
+- update to 1.1.1
+
 * Wed Dec 14 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - initial package
 
