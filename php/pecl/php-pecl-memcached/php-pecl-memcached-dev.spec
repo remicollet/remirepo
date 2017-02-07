@@ -22,9 +22,9 @@
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 %global pecl_name   memcached
 # https://github.com/php-memcached-dev/php-memcached/commits/php7
-%global gh_commit   e65be324557eda7167c4831b4bfb1ad23a152beb
+%global gh_commit   71f20e19253f27d6deaeab200007bd4cf9d8aec4
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date     20161207
+#global gh_date     20161207
 %global gh_owner    php-memcached-dev
 %global gh_project  php-memcached
 #global prever      RC1
@@ -39,17 +39,15 @@
 
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?sub_prefix}php-pecl-memcached
-Version:      3.0.0
-Release:      0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:      3.0.1
+Release:      1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
 Source0:      https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
 
-BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-# 5.2.10 required to HAVE_JSON enabled
-BuildRequires: %{?scl_prefix}php-devel >= 5.2.10
+BuildRequires: %{?scl_prefix}php-devel >= 7
 BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: %{?scl_prefix}php-json
 %if %{with_igbin}
@@ -156,12 +154,13 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %prep 
 %setup -c -q
 mv %{gh_project}-%{gh_commit} NTS
-sed -e '/PHP_MEMCACHED_VERSION/s/3.0.0b1/%{version}-dev/' -i NTS/php_memcached.h
 %{__php} -r '
   $pkg = simplexml_load_file("NTS/package.xml");
+%if 0%{?gh_date:1}
   $pkg->date = substr("%{gh_date}",0,4)."-".substr("%{gh_date}",4,2)."-".substr("%{gh_date}",6,2);
   $pkg->version->release = "%{version}dev";
   $pkg->stability->release = "devel";
+%endif
   $pkg->asXML("package.xml");
 '
 
@@ -214,6 +213,8 @@ cp -r NTS ZTS
 
 
 %build
+%{?dtsenable}
+
 # only needed for SCL
 export PKG_CONFIG_PATH=%{_libdir}/pkgconfig
 
@@ -251,6 +252,8 @@ make %{?_smp_mflags}
 
 
 %install
+%{?dtsenable}
+
 # Install the NTS extension
 make install -C NTS INSTALL_ROOT=%{buildroot}
 
@@ -272,10 +275,6 @@ cd NTS
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
-
-
-%clean
-rm -rf %{buildroot}
 
 
 %if 0%{?fedora} < 24
@@ -354,7 +353,6 @@ exit $ret
 
 
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -369,6 +367,9 @@ exit $ret
 
 
 %changelog
+* Tue Feb  7 2017 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
+- update to 3.0.1 (php 7, stable)
+
 * Fri Dec  9 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.4.20161207gite65be32
 - refresh to more recent snapshot
 

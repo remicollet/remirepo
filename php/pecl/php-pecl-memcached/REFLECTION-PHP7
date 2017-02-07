@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #155 memcached version 3.0.0-dev ] {
+Extension [ <persistent> extension #166 memcached version 3.0.1 ] {
 
   - Dependencies {
     Dependency [ session (Required) ]
@@ -99,11 +99,11 @@ Extension [ <persistent> extension #155 memcached version 3.0.0-dev ] {
         Constant [ integer OPT_SERIALIZER ] { -1003 }
         Constant [ integer OPT_USER_FLAGS ] { -1006 }
         Constant [ integer OPT_STORE_RETRY_COUNT ] { -1005 }
-        Constant [ integer HAVE_IGBINARY ] { 1 }
-        Constant [ integer HAVE_JSON ] { 1 }
-        Constant [ integer HAVE_MSGPACK ] { 1 }
-        Constant [ integer HAVE_SESSION ] { 1 }
-        Constant [ integer HAVE_SASL ] { 1 }
+        Constant [ boolean HAVE_IGBINARY ] { 1 }
+        Constant [ boolean HAVE_JSON ] { 1 }
+        Constant [ boolean HAVE_MSGPACK ] { 1 }
+        Constant [ boolean HAVE_SESSION ] { 1 }
+        Constant [ boolean HAVE_SASL ] { 1 }
         Constant [ integer OPT_HASH ] { 2 }
         Constant [ integer HASH_DEFAULT ] { 0 }
         Constant [ integer HASH_MD5 ] { 1 }
@@ -591,7 +591,8 @@ Extension [ <persistent> extension #155 memcached version 3.0.0-dev ] {
 
         Method [ <internal:memcached> public method getStats ] {
 
-          - Parameters [0] {
+          - Parameters [1] {
+            Parameter #0 [ <required> $args ]
           }
         }
 
