@@ -12,8 +12,9 @@ if (!class_exists('Fedora\\Autoloader\\Autoload', false)) {
     __DIR__
 );
 
+$sym = (getenv('RPM_SYMFONY_TREE') ?: 'Symfony');
 /* don't use symfony autoloader which pull some unwanted stuff (polyfill) */
-$vendorDir = stream_resolve_include_path('Symfony/Component/Yaml/Yaml.php');
+$vendorDir = stream_resolve_include_path("$sym/Component/Yaml/Yaml.php");
 \Fedora\Autoloader\Autoload::addPsr4('Symfony\\Component\\', dirname(dirname($vendorDir)));
 
 /* Required */

@@ -18,7 +18,7 @@
 %global pear_channel pear.phpunit.de
 %global major        5.7
 %global minor        11
-%global specrel      1
+%global specrel      2
 
 Name:           php-phpunit-PHPUnit
 Version:        %{major}.%{minor}
@@ -47,8 +47,10 @@ BuildRequires:  php(language) >= 5.6
 BuildRequires:  %{_bindir}/phpab
 BuildRequires:  php-composer(phpunit/php-file-iterator) >= 1.4
 BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
+BuildRequires:  php-composer(phpunit/php-code-coverage) <  5
 BuildRequires:  php-composer(phpunit/php-code-coverage) >= 4.0.4
 BuildRequires:  php-composer(phpunit/php-timer) >= 1.0.6
+BuildRequires:  php-composer(phpunit/phpunit-mock-objects) <  4
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 3.2
 BuildRequires:  php-composer(phpspec/prophecy) >= 1.6.2
 BuildRequires:  php-composer(sebastian/comparator) >= 1.2.4
@@ -61,6 +63,7 @@ BuildRequires:  php-composer(sebastian/object-enumerator) >= 2.0
 BuildRequires:  php-composer(sebastian/resource-operations) >= 1.0
 BuildRequires:  php-composer(sebastian/version) >= 1.0
 BuildRequires:  php-composer(myclabs/deep-copy) >= 1.3
+BuildRequires:  php-composer(symfony/yaml) <  3
 BuildRequires:  php-composer(symfony/yaml) >= 2.1
 BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 BuildRequires:  php-composer(doctrine/instantiator) >= 1.0.4
@@ -123,7 +126,7 @@ Requires:       php-composer(sebastian/version) <  3
 Requires:       php-composer(myclabs/deep-copy) >= 1.3
 Requires:       php-composer(myclabs/deep-copy) <  2
 Requires:       php-composer(symfony/yaml) >= 2.1
-Requires:       php-composer(symfony/yaml) <  4
+Requires:       php-composer(symfony/yaml) <  3
 Requires:       php-dom
 Requires:       php-json
 Requires:       php-mbstring
@@ -199,24 +202,12 @@ install -D -p -m 755 phpunit %{buildroot}%{_bindir}/phpunit
 %check
 OPT="--testsuite=small --no-coverage"
 
-sed -e "/'testNoTestCases'/d" \
-    -i tests/Framework/SuiteTest.php
-
-# remirepo:11
-run=0
 ret=0
-if which php56; then
-   php56 ./phpunit $OPT
-   run=1
-fi
-if which php71; then
-   php71 ./phpunit $OPT
-   run=1
-fi
-if [ $run -eq 0 ]; then
-./phpunit $OPT --verbose
-# remirepo:2
-fi
+for cmd in php56 php70 php71 php; do
+   if which $cmd; then
+      $cmd ./phpunit $OPT --verbose
+   fi
+done
 exit $ret
 
 
@@ -242,6 +233,11 @@ fi
 
 
 %changelog
+* Tue Feb  7 2017 Remi Collet <remi@fedoraproject.org> - 5.7.11-2
+- add max version for some build dependencies
+- only allow Symfony 2
+- handle redirect to composer installed PHPUnit v6
+
 * Sun Feb  5 2017 Remi Collet <remi@fedoraproject.org> - 5.7.11-1
 - update to 5.7.11
 - raise dependency on sebastian/comparator 1.2.4
