@@ -13,8 +13,8 @@
 
 %global github_owner     doctrine
 %global github_name      dbal
-%global github_version   2.5.11
-%global github_commit    1b1effbddbdc0f40d1c8f849f44bcddac4f52a48
+%global github_version   2.5.12
+%global github_commit    7b9e911f9d8b30d43b96853dab26898c710d8f44
 
 %global composer_vendor  doctrine
 %global composer_project dbal
@@ -223,6 +223,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb  8 2017 Remi Collet <remi@remirepo.net> - 2.5.12-1
+- update to 2.5.12
+
 * Mon Feb  6 2017 Remi Collet <remi@remirepo.net> - 2.5.11-1
 - update to 2.5.11
 
