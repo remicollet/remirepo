@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    3f2acfefe6a5a0b81f2399a2b993e29c389da3c2
+%global gh_commit    66db26ddb3d1a0204b9113dbc594750f4d5448ae
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.4.4
+Version:        1.5.0
 Release:        1%{?dist}
 Summary:        PHP library to encrypt data for PDF
 
@@ -32,7 +32,6 @@ BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php(language) >= 5.4
 BuildRequires:  php-date
 BuildRequires:  php-hash
-BuildRequires:  php-mcrypt
 BuildRequires:  php-openssl
 BuildRequires:  php-pcre
 BuildRequires:  php-posix
@@ -42,18 +41,16 @@ BuildRequires:  php-posix
 #        "php": ">=5.4",
 #        "ext-date": "*",
 #        "ext-hash": "*",
-#        "ext-mcrypt": "*",
 #        "ext-openssl": "*",
 #        "ext-pcre": "*",
 #        "ext-posix": "*"
 Requires:       php(language) >= 5.4
 Requires:       php-date
 Requires:       php-hash
-# mcrypt is optional, openssl preferred
 Requires:       php-openssl
 Requires:       php-pcre
 Requires:       php-posix
-# From phpcompatinfo report for version 1.4.4
+# From phpcompatinfo report for version 1.5.0
 # none
 
 # Composer
@@ -97,8 +94,7 @@ require '%{buildroot}%{php_project}/autoload.php';
 EOF
 
 ret=0
-# ignore 7.1, see https://github.com/tecnickcom/tc-lib-pdf-encrypt/issues/4
-for cmd in php56 php70 php; do
+for cmd in php56 php70 php71 php; do
    if which $cmd; then
       $cmd %{_bindir}/phpunit --verbose || ret=1
    fi
@@ -126,6 +122,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb  8 2017 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
+- update to 1.5.0
+- drop dependency on php-mcrypt
+
 * Mon Feb  6 2017 Remi Collet <remi@fedoraproject.org> - 1.4.4-1
 - update to 1.4.4 (no change)
 - open https://github.com/tecnickcom/tc-lib-pdf-encrypt/issues/4 - 7.1 failure

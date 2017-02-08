@@ -16,7 +16,6 @@
         "php": ">=5.4",
         "ext-date": "*",
         "ext-hash": "*",
-        "ext-mcrypt": "*",
         "ext-openssl": "*",
         "ext-pcre": "*",
         "ext-posix": "*"
