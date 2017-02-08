@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 
-%global gh_commit    4e886a6aec1870b2660b9985c2d72cd276da5683
+%global gh_commit    a371e1669edfbf2fea9e533488eee5da06535773
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmyadmin
 #global gh_date      20150820
@@ -17,7 +17,7 @@
 %global ns_project   SqlParser
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        4.1.0
+Version:        4.1.1
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A validating SQL lexer and parser with a focus on MySQL dialect
 
@@ -46,8 +46,12 @@ BuildRequires:  php-composer(fedora/autoloader)
 
 # From composer.json, "require": {
 #        "php": ">=5.3.0",
-#        "phpmyadmin/motranslator": "~3.0",
 #        "ext-mbstring": "*"
+# From composer.json, "conflict": {
+#        "phpmyadmin/motranslator": "<3.0"
+# From composer.json, "suggest": {
+#        "phpmyadmin/motranslator": "Translate messages to your favorite locale"
+
 Requires:       php(language) >= 5.3
 Requires:       php-composer(phpmyadmin/motranslator) <  4
 Requires:       php-composer(phpmyadmin/motranslator) >= 3.0
@@ -127,21 +131,12 @@ require '%{buildroot}%{_datadir}/php/%{ns_vendor}/%{ns_project}/autoload.php';
 \Fedora\Autoloader\Autoload::addPsr4('%{ns_vendor}\\%{ns_project}\\Tests\\', dirname(__DIR__).'/tests');
 EOF
 
-# remirepo:11
-run=0
 ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit --no-coverage || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit --no-coverage || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --no-coverage --verbose
-# remirepo:2
-fi
+for cmd in php56 php70 php71 php; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit --no-coverage --verbose || ret=1
+   fi
+done
 exit $ret
 %else
 : Test suite disabled
@@ -173,6 +168,9 @@ exit $ret
 
 
 %changelog
+* Wed Feb  8 2017 Remi Collet <remi@fedoraproject.org> - 4.1.1-1
+- update to 4.1.1
+
 * Mon Jan 23 2017 Remi Collet <remi@fedoraproject.org> - 4.1.0-1
 - update to 4.1.0
 - add dependency on phpmyadmin/motranslator

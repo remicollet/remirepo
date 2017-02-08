@@ -1,6 +1,7 @@
 {
     "php-sabre-vobject4": "sabre\/vobject",
 	"php-google-recaptcha": "google/recaptcha",
+    "php-phpmyadmin-sql-parser": "phpmyadmin\/sql-parser",
 	"php-phpmyadmin-shapefile": "phpmyadmin\/shapefile",
 	"php-phpmyadmin-motranslator": "phpmyadmin\/motranslator",
     "php-ZendFramework": "zendframework\/zendframework1",
