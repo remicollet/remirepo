@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a6ad2472daba76b0689042b7709f86d4f06bcaab
+%global gh_commit    944600e244f80a5252679878553b95c63dbf978b
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,8 +17,8 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.7
-%global minor        11
-%global specrel      2
+%global minor        12
+%global specrel      1
 
 Name:           php-phpunit-PHPUnit
 Version:        %{major}.%{minor}
@@ -233,6 +233,9 @@ fi
 
 
 %changelog
+* Wed Feb  8 2017 Remi Collet <remi@fedoraproject.org> - 5.7.12-1
+- update to 5.7.12
+
 * Tue Feb  7 2017 Remi Collet <remi@fedoraproject.org> - 5.7.11-2
 - add max version for some build dependencies
 - only allow Symfony 2
