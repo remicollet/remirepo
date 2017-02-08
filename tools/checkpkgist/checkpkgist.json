@@ -18,6 +18,7 @@
 	"php-phpunit-php-code-coverage5": "phpunit\/php-code-coverage",
 	"php-phpunit-mock-objects4": "phpunit\/phpunit-mock-objects",
     "php-phpunit-dbunit3": "phpunit\/dbunit",
+    "phpcov": "phpunit\/phpcov",
 	"phpunit6": "phpunit\/phpunit",
     "php-phine-path": "phine\/path",
     "php-phine-exception": "phine\/exception",
