@@ -1,0 +1,28 @@
+diff -up ./dbunit.rpm ./dbunit
+--- ./dbunit.rpm	2015-10-02 16:35:17.448763973 +0200
++++ ./dbunit	2015-10-02 16:36:38.991090874 +0200
+@@ -9,23 +9,7 @@
+  * file that was distributed with this source code.
+  */
+ 
+-foreach (array(__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php') as $file) {
+-    if (file_exists($file)) {
+-        define('DBUNIT_COMPOSER_INSTALL', $file);
+-        break;
+-    }
+-}
+-
+-unset($file);
+-
+-if (!defined('DBUNIT_COMPOSER_INSTALL')) {
+-    fwrite(STDERR,
+-        'You need to set up the project dependencies using the following commands:' . PHP_EOL .
+-        'wget http://getcomposer.org/composer.phar' . PHP_EOL .
+-        'php composer.phar install' . PHP_EOL
+-    );
+-    die(1);
+-}
++define('DBUNIT_COMPOSER_INSTALL', '/usr/share/php/PHPUnit/Autoload.php');
+ 
+ require DBUNIT_COMPOSER_INSTALL;
+ 

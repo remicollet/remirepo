@@ -1,0 +1,39 @@
+{
+    "name": "phpunit/dbunit",
+    "description": "PHPUnit extension for database interaction testing",
+    "type": "library",
+    "keywords": [
+        "database",
+        "testing",
+        "xunit"
+    ],
+    "homepage": "https://github.com/sebastianbergmann/dbunit/",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Sebastian Bergmann",
+            "email": "sebastian@phpunit.de",
+            "role": "lead"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/sebastianbergmann/dbunit/issues"
+    },
+    "require": {
+        "php": "^7.0",
+        "phpunit/phpunit": "^6.0",
+        "symfony/yaml": "^3.0",
+        "ext-pdo": "*",
+        "ext-simplexml": "*"
+    },
+    "autoload": {
+        "classmap": [
+            "src/"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.0.x-dev"
+        }
+    }
+}

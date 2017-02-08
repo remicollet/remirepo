@@ -6,6 +6,7 @@
 	"php-phpunit-PHPUnit": 5,
 	"php-phpunit-PHPUnit-MockObject": 3,
 	"php-phpunit-PHP-CodeCoverage": 4,
+    "php-phpunit-DbUnit": 2,
     "php-robrichards-xmlseclibs1": 1,
     "php-robrichards-xmlseclibs": 2,
     "php-symfony": 2,
