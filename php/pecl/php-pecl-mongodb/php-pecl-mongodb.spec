@@ -47,8 +47,8 @@ Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
-# Fix tests when using system libraries
-Patch0:         %{pecl_name}-tests.patch
+# https://github.com/mongodb/mongo-php-driver/pull/526
+Patch1:         526.patch
 
 BuildRequires:  %{?scl_prefix}php-devel > 5.4
 BuildRequires:  %{?scl_prefix}php-pear
@@ -129,7 +129,7 @@ sed -e 's/role="test"/role="src"/' \
 
 cd NTS
 %if %{with_syslib}
-%patch0 -p0 -b .rpm
+%patch1 -p1 -b .526
 %endif
 
 # Sanity check, really often broken
@@ -272,10 +272,7 @@ if [ -s server.pid ] ; then
   : Drop known to fail tests
 %if "%{mongo_version}" < "3.4"
     ### With mongodb 3.2
-    rm ?TS/tests/manager/manager-debug-001.phpt
-    rm ?TS/tests/manager/manager-executequery-without-assignment.phpt
     rm ?TS/tests/standalone/bug0487-002.phpt
-    rm ?TS/tests/standalone/bug0655.phpt
 %endif
 %if "%{mongo_version}" < "3.2"
     ### With mongodb 3.0
