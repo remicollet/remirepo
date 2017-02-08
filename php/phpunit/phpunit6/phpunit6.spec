@@ -18,14 +18,12 @@
 # Namespace
 %global ns_vendor    PHPUnit6
 %global php_home     %{_datadir}/php
-%global pear_name    PHPUnit
-%global pear_channel pear.phpunit.de
 %global ver_major    6
 %global ver_minor    0
 %global ver_patch    6
-%global specrel      1
+%global specrel      2
 
-Name:           %{gh_project}%{ver_major}
+Name:           %{pk_project}%{ver_major}
 Version:        %{ver_major}.%{ver_minor}.%{ver_patch}
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        The PHP Unit Testing framework
@@ -141,23 +139,23 @@ Requires:       php-pcntl
 Requires:       php-pcre
 Requires:       php-phar
 Requires:       php-spl
+%if 0%{?fedora} > 21
+Recommends:     php-phpunit-dbunit3
+%endif
 
 %if 0%{?fedora} > 99
 %global single 1
 Obsoletes:      php-phpunit-PHPUnit < %{ver_major}
 Provides:       php-phpunit-PHPUnit = %{version}
-Provides:       phpunit             = %{version}
-Provides:       php-composer(phpunit/phpunit) = %{version}
+Provides:       %{pk_project}       = %{version}
+Provides:       php-composer(%{pk_vendor}/%{pk_project}) = %{version}
 %else
 %global single 0
 %endif
 
 %description
-PHPUnit is a family of PEAR packages that supports the development of
-object-oriented PHP applications using the concepts and methods of Agile
-Software Development, Extreme Programming, Test-Driven Development and
-Design-by-Contract Development by providing an elegant and robust framework
-for the creation, execution and analysis of Unit Tests.
+PHPUnit is a programmer-oriented testing framework for PHP.
+It is an instance of the xUnit architecture for unit testing frameworks.
 
 
 %prep
@@ -172,11 +170,6 @@ for the creation, execution and analysis of Unit Tests.
   src
 cat << 'EOF' | tee -a src/autoload.php
 /* dependencies */
-$sym = (getenv('RPM_SYMFONY_TREE') ?: 'Symfony');
-/* don't use symfony autoloader which pull some unwanted stuff (polyfill) */
-$vendorDir = stream_resolve_include_path("$sym/Component/Yaml/Yaml.php");
-\Fedora\Autoloader\Autoload::addPsr4('Symfony\\Component\\', dirname(dirname($vendorDir)));
-
 require_once 'File/Iterator/Autoload.php';
 require_once 'Text/Template/Autoload.php';
 require_once 'SebastianBergmann/CodeCoverage5/autoload.php';
@@ -195,9 +188,9 @@ require_once 'DeepCopy/autoload.php';
 require_once 'PHP/Invoker/Autoload.php';
 
 // Extensions
-foreach (glob(__DIR__ . '/PHPUnit/Extensions/*/autoload.php') as $dep) {
-    require_once $dep;
-}
+\Fedora\Autoloader\Dependencies::optional([
+    '%{php_home}/%{ns_vendor}/DbUnit/autoload.php',
+]);
 EOF
 
 
@@ -241,6 +234,11 @@ php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
 
 
 %changelog
+* Wed Feb  8 2017 Remi Collet <remi@fedoraproject.org> - 6.0.6-2
+- cleanup autoloader (Symfony no more used)
+- fix autoloader for dbunit
+- fix description
+
 * Wed Feb  8 2017 Remi Collet <remi@fedoraproject.org> - 6.0.6-1
 - update to 6.0.6
 
