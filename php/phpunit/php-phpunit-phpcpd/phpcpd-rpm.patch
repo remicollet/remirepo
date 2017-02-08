@@ -22,7 +22,7 @@ diff -up ./phpcpd.rpm ./phpcpd
 -        'php composer.phar install' . PHP_EOL
 -    );
 -}
-+require 'SebastianBergmann/PHPCPD/autoload.php';
++require '/usr/share/php/SebastianBergmann/PHPCPD/autoload.php';
  
  $application = new SebastianBergmann\PHPCPD\CLI\Application;
  $application->run();

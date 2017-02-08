@@ -1,14 +1,25 @@
-%global gh_commit    24d9a880deadb0b8c9680e9cfe78e30b704225db
+# remirepo/fedora spec file for php-phpunit-phpcpd
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
+%global gh_commit    d7006078b75a34c9250831c3453a2e256a687615
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpcpd
-%global php_home     %{_datadir}/php/SebastianBergmann
-%global pear_name    phpcpd
-%global pear_channel pear.phpunit.de
+%global php_home     %{_datadir}/php
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+# Packagist
+%global pk_vendor    sebastian
+%global pk_project   phpcpd
+# Namespace
+%global ns_vendor    SebastianBergmann
+%global ns_project   PHPCPD
 
-Name:           php-phpunit-phpcpd
-Version:        2.0.4
+Name:           php-phpunit-%{pk_project}
+Version:        3.0.0
 Release:        1%{?dist}
 Summary:        Copy/Paste Detector (CPD) for PHP code
 
@@ -17,53 +28,47 @@ License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
-# Autoload template
-Source1:        autoload.php.in
-
 # Fix for RPM, use autoload
 Patch0:         %{gh_project}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language)  >= 5.3.3
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php(language)  >= 5.6
+BuildRequires:  php-fedora-autoloader-devel
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-composer(sebastian/finder-facade) >= 1.1
 BuildRequires:  php-composer(sebastian/version)       >= 1.0
 BuildRequires:  php-composer(symfony/console)         >= 2.7
 BuildRequires:  php-composer(phpunit/php-timer)       >= 1.0.6
-BuildRequires:  php-composer(theseer/fdomdocument)    >= 1.4
 %endif
 
 # From composer.json, requires
-#        "php": ">=5.3.3",
-#        "sebastian/finder-facade": "~1.1",
-#        "sebastian/version": "~1.0|~2.0",
-#        "symfony/console": "~2.7|^3.0",
-#        "phpunit/php-timer": ">=1.0.6",
-#        "theseer/fdomdocument": "~1.4"
-Requires:       php(language) >= 5.3.3
+#        "php": "^5.6|^7.0",
+#        "sebastian/finder-facade": "^1.1",
+#        "sebastian/version": "^2.0",
+#        "symfony/console": "^3.0",
+#        "phpunit/php-timer": "^1.0.6"
+Requires:       php(language) >= 5.6
 Requires:       php-composer(sebastian/finder-facade) >= 1.1
 Requires:       php-composer(sebastian/finder-facade) <  2
-Requires:       php-composer(sebastian/version)       >= 1.0
+Requires:       php-composer(sebastian/version)       >= 2.0
 Requires:       php-composer(sebastian/version)       <  3
-Requires:       php-composer(symfony/console)         >= 2.7
+# temporarily ignore min version
+Requires:       php-composer(symfony/console)         >= 2.8
 Requires:       php-composer(symfony/console)         <  4
 Requires:       php-composer(phpunit/php-timer)       >= 1.0.6
-Requires:       php-composer(theseer/fdomdocument)    >= 1.4
-Requires:       php-composer(theseer/fdomdocument)    <  2
-# From phpcompatinfo report for version 2.0.1
+# From phpcompatinfo report for version 3.0.0
 Requires:       php-cli
 Requires:       php-dom
 Requires:       php-mbstring
+Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-tokenizer
 Requires:       php-xml
 
-# For compatibility with pear
-Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
-Provides:       php-composer(sebastian/phpcpd) = %{version}
+Provides:       %{pk_project} = %{version}
+Provides:       php-composer(%{pk_vendor}/%{pk_project}) = %{version}
 
 
 %description
@@ -83,29 +88,44 @@ need to get a quick overview of duplicated code in a project.
 %build
 phpab \
   --output   src/autoload.php \
-  --template %{SOURCE1} \
+  --template fedora \
   src
+
+cat << 'EOF' | tee -a src/autoload.php
+// Dependencies
+\Fedora\Autoloader\Dependencies::required([
+    '%{php_home}/%{ns_vendor}/FinderFacade/autoload.php',
+    '%{php_home}/%{ns_vendor}/Version/autoload.php',
+    [
+        '%{php_home}/Symfony3/Component/Console/autoload.php',
+        '%{php_home}/Symfony/Component/Console/autoload.php',
+    ],
+    '%{php_home}/PHP/Timer/Autoload.php',
+]);
+EOF
 
 
 %install
-rm -rf     %{buildroot}
-mkdir -p   %{buildroot}%{php_home}
-cp -pr src %{buildroot}%{php_home}/PHPCPD
+mkdir -p   %{buildroot}%{php_home}/%{ns_vendor}
+cp -pr src %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}
 
 install -D -p -m 755 phpcpd %{buildroot}%{_bindir}/phpcpd
 
 
-%if %{with_tests}
 %check
-%{_bindir}/phpunit \
-    --bootstrap src/autoload.php \
-    tests
+%if %{with_tests}
+mkdir vendor
+ln -s %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php vendor/autoload.php
 
-if which php70; then
-  php70 %{_bindir}/phpunit \
-    --bootstrap src/autoload.php \
-    tests
-fi
+ret=0;
+for cmd in php56 php70 php71 php; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit --verbose || ret=1
+   fi
+done
+exit $ret
+%else
+: Test suite skipped
 %endif
 
 
@@ -113,23 +133,24 @@ fi
 rm -rf %{buildroot}
 
 
-%post
-if [ -x %{_bindir}/pear ]; then
-   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
-      %{pear_channel}/%{pear_name} >/dev/null || :
-fi
-
-
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc README.md composer.json
-%{php_home}/PHPCPD
-%{_bindir}/phpcpd
+%{php_home}/%{ns_vendor}/%{ns_project}
+%{_bindir}/%{pk_project}
 
 
 %changelog
+* Wed Feb  8 2017 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- Update to 3.0.0
+- raise dependency on PHP 5.6
+- drop dependency on theseer/fdomdocument
+- raise dependency on sebastian/version 2.0
+- cleanup update from pear
+- switch to fedora/autoloader
+
 * Mon Apr 18 2016 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4  (no change)
 - allow sebastian/version 2.0

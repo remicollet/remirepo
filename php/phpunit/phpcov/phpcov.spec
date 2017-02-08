@@ -108,8 +108,8 @@ cat << 'EOF' | tee -a src/autoload.php
     '%{php_home}/%{ns_vendor}/FinderFacade/autoload.php',
     '%{php_home}/%{ns_vendor}/Version/autoload.php',
     [
-        '%{php_home}/Symfony3/Component/Console/autoloader.php',
-        '%{php_home}/Symfony/Component/Console/autoloader.php',
+        '%{php_home}/Symfony3/Component/Console/autoload.php',
+        '%{php_home}/Symfony/Component/Console/autoload.php',
     ]
 ]);
 EOF
