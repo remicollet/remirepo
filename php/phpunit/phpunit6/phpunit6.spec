@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    1fb01cbd5aa7fa2457cc10170070676a9ad315d2
+%global gh_commit    e702506af102d0dc5312dd24b8e97fd6e58ce3ba
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_vendor    sebastianbergmann
@@ -22,7 +22,7 @@
 %global pear_channel pear.phpunit.de
 %global ver_major    6
 %global ver_minor    0
-%global ver_patch    5
+%global ver_patch    6
 %global specrel      1
 
 Name:           %{gh_project}%{ver_major}
@@ -241,6 +241,9 @@ php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
 
 
 %changelog
+* Wed Feb  8 2017 Remi Collet <remi@fedoraproject.org> - 6.0.6-1
+- update to 6.0.6
+
 * Tue Feb  7 2017 Remi Collet <remi@fedoraproject.org> - 6.0.5-1
 - rename to phpunit6
 - move to /usr/share/php/PHPUnit6
