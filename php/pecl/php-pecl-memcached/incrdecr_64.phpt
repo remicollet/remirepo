@@ -1,75 +1,39 @@
 --TEST--
-Memcached::increment() Memcached::decrement() on 64bits
+64-bit Memcached::increment() decrement() incrementByKey() decrementByKey()
 --SKIPIF--
 <?php
 include "skipif.inc";
-if (PHP_INT_SIZE < 8) die("skip valid for 64-bit only");
+if (PHP_INT_SIZE < 8) die("skip valid for 64-bit PHP only");
 ?>
 --FILE--
 <?php
 include dirname (__FILE__) . '/config.inc';
 $m = memc_get_instance ();
 
-echo "Not there\n";
-$m->delete('foo');
-var_dump($m->increment('foo', 1));
-var_dump($m->getResultCode());
-var_dump($m->decrement('foo', 1));
-var_dump($m->getResultCode());
-var_dump($m->get('foo'));
-var_dump($m->getResultCode());
-
 echo "Normal\n";
 $m->set('foo', 1);
 var_dump($m->get('foo'));
-$m->increment('foo');
-var_dump($m->get('foo'));
-$m->increment('foo', 2);
-var_dump($m->get('foo'));
-$m->decrement('foo');
-var_dump($m->get('foo'));
-$m->decrement('foo', 2);
+
+echo "Enormous offset 64-bit\n";
+$m->increment('foo', 0x100000000);
 var_dump($m->get('foo'));
 
-error_reporting(0);
-
-echo "Negative offset\n";
-$php_errormsg = '';
-$m->increment('foo', -1);
-echo $php_errormsg, "\n";
+$m->decrement('foo', 0x100000000);
 var_dump($m->get('foo'));
 
-$php_errormsg = '';
-$m->decrement('foo', -1);
-echo $php_errormsg, "\n";
+echo "Enormous offset 64-bit by key\n";
+$m->incrementByKey('foo', 'foo', 0x100000000);
 var_dump($m->get('foo'));
 
-echo "Enormous offset\n";
-$m->increment('foo', 4294967296);
-var_dump($m->get('foo'));
-
-$m->decrement('foo', 4294967296);
+$m->decrementByKey('foo', 'foo', 0x100000000);
 var_dump($m->get('foo'));
 
 --EXPECT--
-Not there
-bool(false)
-int(16)
-bool(false)
-int(16)
-bool(false)
-int(16)
 Normal
 int(1)
-int(2)
-int(4)
-int(3)
+Enormous offset 64-bit
+int(4294967297)
 int(1)
-Negative offset
-Memcached::increment(): offset cannot be a negative value
-int(1)
-Memcached::decrement(): offset cannot be a negative value
-int(1)
-Enormous offset
+Enormous offset 64-bit by key
 int(4294967297)
 int(1)
