@@ -19,33 +19,23 @@
 %global with_fastlz 1
 %global with_igbin  1
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
-%global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests  0%{!?_without_tests:1}
 %global pecl_name   memcached
-# https://github.com/php-memcached-dev/php-memcached/commits/php7
-%global gh_commit   71f20e19253f27d6deaeab200007bd4cf9d8aec4
-%global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
-#global gh_date     20161207
-%global gh_owner    php-memcached-dev
-%global gh_project  php-memcached
-#global prever      RC1
-#global intver      rc1
-%if "%{php_version}" < "5.6"
-# After igbinary, json, msgpack
-%global ini_name  z-%{pecl_name}.ini
-%else
 # After 40-igbinary, 40-json, 40-msgpack
-%global ini_name  50-%{pecl_name}.ini
-%endif
+%global ini_name    50-%{pecl_name}.ini
 
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?sub_prefix}php-pecl-memcached
 Version:      3.0.1
-Release:      1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:      2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
-Source0:      https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
+Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# https://github.com/php-memcached-dev/php-memcached/pull/319
+Patch0:       %{pecl_name}-pr319.patch
 
 BuildRequires: %{?scl_prefix}php-devel >= 7
 BuildRequires: %{?scl_prefix}php-pear
@@ -65,27 +55,9 @@ BuildRequires: fastlz-devel
 BuildRequires: memcached
 %endif
 
-%if 0%{?scl:1} && 0%{?fedora} < 15 && 0%{?rhel} < 7 && "%{?scl_vendor}" != "remi"
-# Filter in the SCL collection
-%{?filter_requires_in: %filter_requires_in %{_libdir}/.*\.so}
-# libvent from SCL as not available in system
-BuildRequires: %{?sub_prefix}libevent-devel  > 2
-Requires:      %{?sub_prefix}libevent%{_isa} > 2
-BuildRequires: %{?sub_prefix}libmemcached-devel  > 1
-Requires:      %{?sub_prefix}libmemcached-libs%{_isa} > 1
-%if %{with_fastlz}
-Requires:      fastlz%{_isa}
-%endif
-Requires:      cyrus-sasl-lib%{_isa}
-%else
 BuildRequires: libevent-devel >= 2.0.2
-%if 0%{?rhel} == 5
-BuildRequires: libmemcached-devel  > 1
-%else
 # To ensure use of libmemcached-last for --enable-memcached-protocol
 BuildRequires: libmemcached-devel  >= 1.0.16
-%endif
-%endif
 
 Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:     %{?scl_prefix}php(api) = %{php_core_api}
@@ -153,16 +125,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep 
 %setup -c -q
-mv %{gh_project}-%{gh_commit} NTS
-%{__php} -r '
-  $pkg = simplexml_load_file("NTS/package.xml");
-%if 0%{?gh_date:1}
-  $pkg->date = substr("%{gh_date}",0,4)."-".substr("%{gh_date}",4,2)."-".substr("%{gh_date}",6,2);
-  $pkg->version->release = "%{version}dev";
-  $pkg->stability->release = "devel";
-%endif
-  $pkg->asXML("package.xml");
-'
+mv %{pecl_name}-%{version} NTS
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' \
@@ -170,6 +133,8 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
+%patch0 -p1 -b .pr319
+
 %if %{with_fastlz}
 rm -r fastlz
 sed -e '/name=.fastlz/d' -i ../package.xml
@@ -316,10 +281,15 @@ OPT="-n"
 %endif
 
 %if %{with_tests}
+# XFAIL and very slow so no value
+rm ?TS/tests/expire.phpt
+
 ret=0
 
 : Launch the Memcached service
-memcached -p 11211 -U 11211      -d -P $PWD/memcached.pid
+port=$(%{__php} -r 'echo 10000 + PHP_MAJOR_VERSION*100 + PHP_MINOR_VERSION*10 + PHP_INT_SIZE;')
+memcached -p $port -U $port      -d -P $PWD/memcached.pid
+sed -e "s/11211/$port/" -i ?TS/tests/*
 
 : Run the upstream test Suite for NTS extension
 pushd NTS
@@ -328,7 +298,7 @@ TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="$OPT -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__php} -n run-tests.php --show-diff tests/*phpt || ret=1
+%{__php} -n run-tests.php --show-diff || ret=1
 popd
 
 %if %{with_zts}
@@ -339,7 +309,7 @@ TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="$OPT -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__ztsphp} -n run-tests.php --show-diff tests/*phpt  || ret=1
+%{__ztsphp} -n run-tests.php --show-diff || ret=1
 popd
 %endif
 
@@ -367,6 +337,12 @@ exit $ret
 
 
 %changelog
+* Thu Feb  9 2017 Remi Collet <remi@fedoraproject.org> - 3.0.1-2
+- switch to pecl sources
+- enable test suite
+- open https://github.com/php-memcached-dev/php-memcached/pull/319
+  fix test suite for 32bits build
+
 * Tue Feb  7 2017 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
 - update to 3.0.1 (php 7, stable)
 

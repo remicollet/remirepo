@@ -1,0 +1,79 @@
+From f8fd6228e34e1b49947890b060a501a6eab6978c Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 9 Feb 2017 07:24:15 +0100
+Subject: [PATCH] ensure tests are ok for 32bits build
+
+---
+ tests/gh_90.phpt          | 4 ++--
+ tests/incrdecr.phpt       | 6 +++---
+ tests/incrdecr_bykey.phpt | 6 +++---
+ 3 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/tests/gh_90.phpt b/tests/gh_90.phpt
+index 733b761..2a16f60 100644
+--- a/tests/gh_90.phpt
++++ b/tests/gh_90.phpt
+@@ -12,7 +12,7 @@ $memcached = memc_get_instance (array (
+ // Create a key for use as a lock.  If this key already exists, wait till it doesn't exist.
+ {
+     $key = 'LockKey';
+-    $lockToken = mt_rand(0, pow(2, 32)); //Random value betwen 0 and 2^32 for ownership verification
++    $lockToken = mt_rand(0, mt_getrandmax()); //Random value for ownership verification
+ 
+     while (true)
+     {
+@@ -88,4 +88,4 @@ array(10) {
+   int(1)
+   ["9_%s"]=>
+   int(1)
+-}
+\ No newline at end of file
++}
+diff --git a/tests/incrdecr.phpt b/tests/incrdecr.phpt
+index cb3914a..b4e9469 100644
+--- a/tests/incrdecr.phpt
++++ b/tests/incrdecr.phpt
+@@ -42,10 +42,10 @@ echo $php_errormsg, "\n";
+ var_dump($m->get('foo'));
+ 
+ echo "Enormous offset\n";
+-$m->increment('foo', 4294967296);
++$m->increment('foo', 0x7f000000);
+ var_dump($m->get('foo'));
+ 
+-$m->decrement('foo', 4294967296);
++$m->decrement('foo', 0x7f000000);
+ var_dump($m->get('foo'));
+ 
+ --EXPECT--
+@@ -68,5 +68,5 @@ int(1)
+ Memcached::decrement(): offset cannot be a negative value
+ int(1)
+ Enormous offset
+-int(4294967297)
++int(2130706433)
+ int(1)
+diff --git a/tests/incrdecr_bykey.phpt b/tests/incrdecr_bykey.phpt
+index 809f3b8..8b931fa 100644
+--- a/tests/incrdecr_bykey.phpt
++++ b/tests/incrdecr_bykey.phpt
+@@ -39,10 +39,10 @@ echo $php_errormsg, "\n";
+ var_dump($m->get('foo'));
+ 
+ echo "Enormous offset\n";
+-$m->incrementByKey('foo', 'foo', 4294967296);
++$m->incrementByKey('foo', 'foo', 0x7f000000);
+ var_dump($m->get('foo'));
+ 
+-$m->decrementByKey('foo', 'foo', 4294967296);
++$m->decrementByKey('foo', 'foo', 0x7f000000);
+ var_dump($m->get('foo'));
+ 
+ --EXPECT--
+@@ -62,5 +62,5 @@ int(1)
+ Memcached::decrementByKey(): offset cannot be a negative value
+ int(1)
+ Enormous offset
+-int(4294967297)
++int(2130706433)
+ int(1)
