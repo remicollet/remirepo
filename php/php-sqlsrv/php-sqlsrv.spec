@@ -21,7 +21,7 @@
 
 Name:          %{?scl_prefix}php-sqlsrv
 Summary:       Microsoft Drivers for PHP for SQL Server
-Version:       4.1.6
+Version:       4.1.6.1
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
@@ -109,9 +109,10 @@ mv %{gh_project}-%{gh_commit}/LICENSE .
 cd NTS
 # Sanity check, really often broken
 extmaj=$(sed -n '/#define SQLVERSION_MAJOR/{s/.*MAJOR //;s/\r//;p}' sqlsrv/shared/version.h)
-extmin=$(sed -n '/#define SQLVERSION_MINOR/{s/.*MINOR //;s/\r//p}' sqlsrv/shared/version.h)
-extrel=$(sed -n '/#define SQLVERSION_RELEASE/{s/.*ASE //;s/\r//p}' sqlsrv/shared/version.h)
-extver=${extmaj}.${extmin}.${extrel}
+extmin=$(sed -n '/#define SQLVERSION_MINOR/{s/.*MINOR //;s/\r//;p}' sqlsrv/shared/version.h)
+extrel=$(sed -n '/#define SQLVERSION_RELEASE/{s/.*ASE //;s/\r//;p}' sqlsrv/shared/version.h)
+extbld=$(sed -n '/#define SQLVERSION_BUILD/{s/.*BUILD //;s/\r//;p}' sqlsrv/shared/version.h)
+extver=${extmaj}.${extmin}.${extrel}.${extbld}
 if test "x${extver}" != "x%{version}%{?prever}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
@@ -257,6 +258,9 @@ fi
 
 
 %changelog
+* Thu Feb  9 2017 Remi Collet <remi@remirepo.net> - 4.1.6.1-1
+- update to 4.1.6.1 (devel)
+
 * Sat Feb  4 2017 Remi Collet <remi@remirepo.net> - 4.1.6-1
 - update to 4.1.6 (devel)
 
