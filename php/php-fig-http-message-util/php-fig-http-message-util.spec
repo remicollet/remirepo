@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 
-%global gh_commit    2794f0e6a2566c9cd6a9a521a729da8963a52ca4
+%global gh_commit    20b2c280cb6914b7b83089720df44e490f4b42f0
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     php-fig
 %global gh_project   http-message-util
@@ -15,7 +15,7 @@
 %global pk_project   %{gh_project}
 
 Name:           php-%{pk_owner}-%{pk_project}
-Version:        1.1.1
+Version:        1.1.2
 Release:        1%{?dist}
 Summary:        PSR Http Message Util
 
@@ -101,6 +101,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb  9 2017 Remi Collet <remi@remirepo.net> - 1.1.2-1
+- update to 1.1.2
+
 * Tue Feb  7 2017 Remi Collet <remi@remirepo.net> - 1.1.1-1
 - update to 1.1.1
 
