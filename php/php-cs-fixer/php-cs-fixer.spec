@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    f3baf72eb2f58bf275b372540f5b47d25aed910f
+%global gh_commit    863ad254da1e44904c8bf8fbcc9f5624834fc71a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150717
 %global gh_owner     FriendsOfPHP
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-cs-fixer
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A tool to automatically fix PHP code style
 
@@ -63,24 +63,24 @@ BuildRequires:  php-composer(fedora/autoloader)
 # From composer.json,     "require": {
 #        "php": "^5.3.6 || >=7.0 <7.2",
 #        "ext-tokenizer": "*",
+#        "sebastian/diff": "^1.1",
 #        "symfony/console": "^2.3 || ^3.0",
 #        "symfony/event-dispatcher": "^2.1 || ^3.0",
 #        "symfony/filesystem": "^2.4 || ^3.0",
 #        "symfony/finder": "^2.2 || ^3.0",
 #        "symfony/polyfill-php54": "^1.0",
 #        "symfony/process": "^2.3 || ^3.0",
-#        "symfony/stopwatch": "^2.5 || ^3.0",
-#        "sebastian/diff": "^1.1"
+#        "symfony/stopwatch": "^2.5 || ^3.0"
 # use 5.4 to avoid polyfill
 Requires:       php(language) >= 5.4
 Requires:       php-tokenizer
+Requires:       php-composer(sebastian/diff)           >= 1.1
 Requires:       php-composer(symfony/console)          >= 2.3
 Requires:       php-composer(symfony/event-dispatcher) >= 2.1
 Requires:       php-composer(symfony/filesystem)       >= 2.4
 Requires:       php-composer(symfony/finder)           >= 2.4
 Requires:       php-composer(symfony/process)          >= 2.3
 Requires:       php-composer(symfony/stopwatch)        >= 2.5
-Requires:       php-composer(sebastian/diff)           >= 1.1
 # From phpcompatinfo report for version 2.0.0
 Requires:       php-cli
 Requires:       php-reflection
@@ -151,6 +151,11 @@ if which php71; then
    run=1
 fi
 if [ $run -eq 0 ]; then
+# see https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/master/.travis.yml
+if php -r 'exit (version_compare(PHP_VERSION, "5.6", "<") ? 0 : 1);'; then
+  export SKIP_LINT_TEST_CASES=1
+fi
+
 %{_bindir}/phpunit --verbose
 # remirepo:2
 fi
@@ -175,6 +180,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb  9 2017 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- update to 2.0.1
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0
 

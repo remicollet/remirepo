@@ -1,6 +1,6 @@
 diff -up ./php-cs-fixer.rpm ./php-cs-fixer
---- ./php-cs-fixer.rpm	2016-12-01 15:13:25.882871262 +0100
-+++ ./php-cs-fixer	2016-12-01 15:14:08.756051245 +0100
+--- ./php-cs-fixer.rpm	2017-02-09 09:20:40.000000000 +0100
++++ ./php-cs-fixer	2017-02-09 09:22:43.400071075 +0100
 @@ -32,12 +32,7 @@ set_error_handler(function ($severity, $
      }
  });
@@ -15,3 +15,14 @@ diff -up ./php-cs-fixer.rpm ./php-cs-fixer
  
  use PhpCsFixer\Console\Application;
  
+diff -up ./tests/ProjectCodeTest.php.rpm ./tests/ProjectCodeTest.php
+--- ./tests/ProjectCodeTest.php.rpm	2017-02-09 09:44:35.627516496 +0100
++++ ./tests/ProjectCodeTest.php	2017-02-09 09:44:39.935537666 +0100
+@@ -234,6 +234,7 @@ final class ProjectCodeTest extends \PHP
+             ->files()
+             ->name('*.php')
+             ->in(__DIR__.'/../src')
++            ->notName('autoload.php')
+             ->exclude(array(
+                 'Resources',
+             ))
