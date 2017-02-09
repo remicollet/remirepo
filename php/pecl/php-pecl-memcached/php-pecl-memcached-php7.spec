@@ -27,12 +27,15 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?sub_prefix}php-pecl-memcached
 Version:      3.0.1
-Release:      2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:      3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
 Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source1:      skipif.inc
+Source2:      incrdecr_64.phpt
+Source3:      incrdecr_bykey_64.phpt
 
 # https://github.com/php-memcached-dev/php-memcached/pull/319
 Patch0:       %{pecl_name}-pr319.patch
@@ -133,6 +136,7 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
+cp %{SOURCE1} %{SOURCE2} %{SOURCE3} tests/
 %patch0 -p1 -b .pr319
 
 %if %{with_fastlz}
@@ -337,6 +341,9 @@ exit $ret
 
 
 %changelog
+* Thu Feb  9 2017 Remi Collet <remi@fedoraproject.org> - 3.0.1-3
+- test build for https://github.com/php-memcached-dev/php-memcached/pull/320
+
 * Thu Feb  9 2017 Remi Collet <remi@fedoraproject.org> - 3.0.1-2
 - switch to pecl sources
 - enable test suite
