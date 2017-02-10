@@ -7,7 +7,7 @@
 #
 # Please preserve changelog entries
 
-%global gh_commit    f3dcf5130e634b6123d40727d612ec6aa4f61fb3
+%global gh_commit    b5f95749071c82a8e0f58586987627054400cdf6
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nikic
 %global gh_project   FastRoute
@@ -16,7 +16,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{pk_project}
-Version:        1.1.0
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        Fast implementation of a regular expression based router
 
@@ -116,6 +116,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 10 2017 Johan Cwiklinski <johan AT x-tnd DOT be> - 1.2.0-1
+- Last upstream release
+
 * Wed Dec 28 2016 Remi Collet <remi@remirepo.net> - 1.1.0-1
 - update to 1.1.0
 
