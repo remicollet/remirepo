@@ -17,7 +17,7 @@
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   eduardok
 %global gh_project libsmbclient-php
-%global gh_date    20161104
+#global gh_date    20161104
 #global prever     RC1
 
 %global pecl_name  smbclient
@@ -35,7 +35,7 @@ Version:        0.9.0
 %if 0%{?gh_date}
 Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 
 Summary:        PHP wrapper for libsmbclient
@@ -52,8 +52,6 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 Source2:        %{gh_project}-phpunit.xml
 %endif
 
-Patch0:         %{pecl_name}-zts.patch
-
 BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  libsmbclient-devel > 3.6
@@ -69,9 +67,10 @@ Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Obsoletes:      %{?sub_prefix}php-libsmbclient               < 0.8.0-0.2
 Provides:       %{?sub_prefix}php-libsmbclient               = %{version}-%{release}
 Provides:       %{?sub_prefix}php-libsmbclient%{?_isa}       = %{version}-%{release}
-# For more-php56
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}-%{release}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}-%{release}
+%endif
 # PECL
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
@@ -136,8 +135,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-%patch0 -p1 -b .zts
-
 # Check extension version
 ver=$(sed -n '/define PHP_SMBCLIENT_VERSION/{s/.* "//;s/".*$//;p}' php_smbclient.h)
 if test "$ver" != "%{version}%{?prever}%{?gh_date:-dev}"; then
@@ -159,6 +156,8 @@ cp -pr NTS ZTS
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure --with-php-config=%{_bindir}/php-config
@@ -173,6 +172,8 @@ make %{?_smp_mflags}
 
 
 %install
+%{?dtsenable}
+
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install configuration
@@ -251,6 +252,9 @@ fi
 
 
 %changelog
+* Fri Feb 10 2017 Remi Collet <remi@fedoraproject.org> - 0.9.0-1
+- update to 0.9.0 (stable)
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 0.9.0-0.2.20161104git1857016
 - rebuild with PHP 7.1.0 GA
 

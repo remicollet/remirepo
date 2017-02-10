@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #115 smbclient version 0.9.0-dev ] {
+Extension [ <persistent> extension #123 smbclient version 0.9.0 ] {
 
   - Constants [30] {
     Constant [ integer SMBCLIENT_XATTR_CREATE ] { 1 }
@@ -139,9 +139,10 @@ Extension [ <persistent> extension #115 smbclient version 0.9.0-dev ] {
     }
     Function [ <internal:smbclient> function smbclient_read ] {
 
-      - Parameters [2] {
+      - Parameters [3] {
         Parameter #0 [ <required> $state ]
         Parameter #1 [ <required> $file ]
+        Parameter #2 [ <required> $count ]
       }
     }
     Function [ <internal:smbclient> function smbclient_close ] {
