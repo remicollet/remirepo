@@ -8,12 +8,12 @@
 #
 Name:           remi-release
 %if %{rhel} == 7
-Version:        7.2
+Version:        7.3
 Release:        1%{?dist}
 %endif
 %if %{rhel} == 6
 Version:        6.8
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 %if %{rhel} == 5
 Version:        5.10
@@ -30,6 +30,7 @@ Source1:        remi-el.repo
 Source2:        remi-safe.repo
 Source3:        remi-php70.repo
 Source4:        remi-php71.repo
+Source5:        remi-php54.repo
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}
 BuildArchitectures: noarch
@@ -50,9 +51,6 @@ Only the "remi-safe" repository is enabled after installation.
 %else
 The repository is not enabled after installation.
 %endif
-For PHP 5.5 you must enable the remi-php55 repository:
-    yum-config-manager --enable remi-php55
-
 For PHP 5.6 you must enable the remi-php56 repository:
     yum-config-manager --enable remi-php56
 
@@ -76,9 +74,6 @@ Seul le dépôt "remi-safe" est activé après l'installation.
 %else
 Le dépôt n'est pas activé après l'installation.
 %endif
-Pour PHP 5.5 vous devez activer le dépôt remi-php55
-    yum-config-manager --enable remi-php55
-
 Pour PHP 5.6 vous devez activer le dépôt remi-php56
     yum-config-manager --enable remi-php56
 
@@ -103,6 +98,7 @@ sed -e "s/VERSION/%{rhel}/" %{SOURCE1} | tee remi.repo
 sed -e "s/VERSION/%{rhel}/" %{SOURCE2} | tee remi-safe.repo
 sed -e "s/VERSION/%{rhel}/" %{SOURCE3} | tee remi-php70.repo
 sed -e "s/VERSION/%{rhel}/" %{SOURCE4} | tee remi-php71.repo
+sed -e "s/VERSION/%{rhel}/" %{SOURCE5} | tee remi-php54.repo
 %endif
 
 
@@ -134,6 +130,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 10 2017 Remi Collet <remmi@remirepo.net> - 6.8-2 and 7.3-1
+- add remi-php54 repository
 - add mirrorlist for https mirrors (as comment)
 
 * Thu Jun 30 2016 Remi Collet <remmi@remirepo.net> - 6.8-1 and 7.2-1
