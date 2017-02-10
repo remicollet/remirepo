@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    cc97b79f62c2180caba0be1d3744a335a296a678
+%global gh_commit    6d9b6dcc55ee4d85adf5f6c1d7773271f458d19d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     robmorgan
 #global gh_date      20150820
@@ -20,7 +20,7 @@
 %endif
 
 Name:           %{gh_project}
-Version:        0.6.6
+Version:        0.7.0
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        Manage the database migrations for your PHP app
 
@@ -130,21 +130,13 @@ EOF
 sed -e '/_ENABLED/s/true/false/;/SQLITE_ENABLED/s/false/true/' \
     phpunit.xml.dist >phpunit.xml
 
-# remirepo:11
-run=0
+: Run upstream test suite
 ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit --no-coverage tests || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit --no-coverage tests || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose tests
-# remirepo:2
-fi
+for cmd in php56 php70 php71 php; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit --verbose || ret=1
+   fi
+done
 exit $ret
 %else
 : Test suite disabled
@@ -167,6 +159,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 10 2017 Remi Collet <remi@remirepo.net> - 0.7.0-1
+- update to 0.7.0
+
 * Mon Jan 23 2017 Remi Collet <remi@remirepo.net> - 0.6.6-1
 - update to 0.6.6
 - use a git snashop to retrieve test suite
