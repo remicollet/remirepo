@@ -18,8 +18,8 @@
 
 Summary:        Embedded lua interpreter
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        2.0.2
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        2.0.3
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -28,6 +28,8 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 BuildRequires:  lua-devel
 BuildRequires:  %{?scl_prefix}php-devel > 7
 BuildRequires:  %{?scl_prefix}php-pear
+# For tests
+BuildRequires:  %{?scl_prefix}php-json
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
@@ -109,6 +111,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -129,6 +133,8 @@ make %{?_smp_mflags}
 
 
 %install
+%{?dtsenable}
+
 make -C NTS \
      install INSTALL_ROOT=%{buildroot}
 
@@ -183,7 +189,7 @@ cd NTS
 
 # Upstream test suite  for NTS extension
 TEST_PHP_EXECUTABLE=%{__php} \
-TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
+TEST_PHP_ARGS="-n -d extension=json.so -d extension=%{buildroot}/%{php_extdir}/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__php} -n run-tests.php
@@ -197,7 +203,7 @@ cd ../ZTS
 
 # Upstream test suite  for ZTS extension
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
+TEST_PHP_ARGS="-n -d extension=json.so -d extension=%{buildroot}/%{php_ztsextdir}/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
@@ -219,6 +225,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Fri Feb 10 2017 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- update to 2.0.3 (php 7, stable)
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-3
 - rebuild with PHP 7.1.0 GA
 

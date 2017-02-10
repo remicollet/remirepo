@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #66 lua version 2.0.2 ] {
+Extension [ <persistent> extension #102 lua version 2.0.3 ] {
 
   - Constants [8] {
     Constant [ integer LUA_OK ] { 0 }
@@ -15,7 +15,7 @@ Extension [ <persistent> extension #66 lua version 2.0.2 ] {
     Class [ <internal:lua> final class Lua ] {
 
       - Constants [1] {
-        Constant [ string LUA_VERSION ] { Lua 5.3.2 }
+        Constant [ string LUA_VERSION ] { Lua 5.3.3 }
       }
 
       - Static properties [1] {
