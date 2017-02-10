@@ -7,14 +7,14 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    4de7969f4664da3cef1ccd83866c9f59378c3371
+%global gh_commit    1e5e2ffdc4d71d7358ed58a6fdd30a4a0c506855
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     padraic
 %global gh_project   mockery
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-deepend-Mockery
-Version:        0.9.7
+Version:        0.9.8
 Release:        1%{?dist}
 Summary:        Mockery is a simple but flexible PHP mock object framework
 
@@ -98,21 +98,12 @@ rm -rf %{buildroot}
 sed -e 's:@BUILD@:%{buildroot}/%{_datadir}/php:' -i tests/Bootstrap.php
 
 : Run upstream test suite
-# remirepo:11
-run=0
 ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose
-# remirepo:2
-fi
+for cmd in php56 php70 php71 php; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit --verbose || ret=1
+   fi
+done
 exit $ret
 %endif
 
@@ -135,6 +126,9 @@ fi
 
 
 %changelog
+* Fri Feb 10 2017 Remi Collet <remi@remirepo.net> - 0.9.8-1
+- Update to 0.9.8
+
 * Fri Dec 23 2016 Remi Collet <remi@fedoraproject.org> - 0.9.7-1
 - Update to 0.9.7
 
