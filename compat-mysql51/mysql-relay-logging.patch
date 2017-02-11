@@ -1,0 +1,20 @@
+--- mysql-5.1.73/sql/sql_parse.cc.orig	2013-11-04 19:52:27.000000000 +0100
++++ mysql-5.1.73/sql/sql_parse.cc	2015-11-18 13:04:53.692712812 +0100
+@@ -19,6 +19,7 @@
+ #include "mysql_priv.h"
+ #include "sql_repl.h"
+ #include "rpl_filter.h"
++#include "rpl_mi.h"
+ #include "repl_failsafe.h"
+ #include <m_ctype.h>
+ #include <myisam.h>
+@@ -7022,7 +7023,9 @@ bool reload_acl_and_cache(THD *thd, ulon
+ #ifdef HAVE_REPLICATION
+     int rotate_error= 0;
+     pthread_mutex_lock(&LOCK_active_mi);
++    pthread_mutex_lock(&active_mi->data_lock);
+     rotate_error= rotate_relay_log(active_mi);
++    pthread_mutex_unlock(&active_mi->data_lock);
+     pthread_mutex_unlock(&LOCK_active_mi);
+     if (rotate_error)
+       *write_to_binlog= -1;

@@ -1,0 +1,16 @@
+Disable the outfile_loaddata test, which as of 5.1.38 is giving
+platform-dependent results, with the "expected" results being arguably the
+wrong ones.  This is upstream at http://bugs.mysql.com/bug.php?id=46895
+(note that upstream has also disabled it, but only for Solaris, so we still
+need this patch).
+
+
+diff -Naur mysql-5.1.61.orig/mysql-test/t/disabled.def mysql-5.1.61/mysql-test/t/disabled.def
+--- mysql-5.1.61.orig/mysql-test/t/disabled.def	2011-12-16 14:16:53.000000000 -0500
++++ mysql-5.1.61/mysql-test/t/disabled.def	2012-02-03 15:36:34.918740979 -0500
+@@ -13,3 +13,5 @@
+ read_many_rows_innodb    : Bug#11748886 2010-11-15 mattiasj report already exists
+ main.log_tables-big      : Bug#11756699 2010-11-15 mattiasj report already exists
+ query_cache_28249        : Bug#12584161 2011-11-17 joh      fails sporadically in 5.1 only
++#
++outfile_loaddata         : bug#46895 code wrong, expected results wrong too

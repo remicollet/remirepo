@@ -1,0 +1,40 @@
+Remove makefile logic dealing with mysql.info.  We cannot ship that
+documentation since it is not freely redistributable.
+
+
+ 
+diff -up mysql-5.1.70/Docs/Makefile.am.p9 mysql-5.1.70/Docs/Makefile.am
+--- mysql-5.1.70/Docs/Makefile.am.p9	2013-05-13 15:33:33.000000000 +0200
++++ mysql-5.1.70/Docs/Makefile.am	2013-07-23 07:58:29.868617019 +0200
+@@ -13,28 +13,21 @@
+ # along with this program; if not, write to the Free Software
+ # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+ 
+-EXTRA_DIST =		mysql.info INSTALL-BINARY @extra_docs@
++EXTRA_DIST =		INSTALL-BINARY @extra_docs@
+ 
+-# make sure that "make install" installs the info page, too
+-# automake only seems to take care of this automatically,
+-# if we're building the info page from texi directly.
+-install-data-hook:	$(srcdir)/mysql.info
++install-data-hook:
+ 	if test `basename $(prefix)` = "mysql" ; then \
+ 	  $(mkinstalldirs) $(DESTDIR)$(prefix)/docs ; \
+-	  $(INSTALL_DATA) $(srcdir)/mysql.info $(DESTDIR)$(prefix)/docs ; \
+ 	  test ! -f $(top_srcdir)/ChangeLog || $(INSTALL_DATA) $(top_srcdir)/ChangeLog $(DESTDIR)$(prefix)/docs ; \
+ 	else \
+-	  $(mkinstalldirs) $(DESTDIR)$(infodir) $(DESTDIR)$(pkgdatadir) ; \
+-	  $(INSTALL_DATA) $(srcdir)/mysql.info $(DESTDIR)$(infodir) ; \
++	  $(mkinstalldirs) $(DESTDIR)$(pkgdatadir) ; \
+ 	  test ! -f $(top_srcdir)/ChangeLog || $(INSTALL_DATA) $(top_srcdir)/ChangeLog $(DESTDIR)$(pkgdatadir) ; \
+ 	fi
+ 
+ uninstall-local:
+ 	if test `basename $(prefix)` = "mysql" ; then \
+-	  @RM@ -f $(DESTDIR)$(prefix)/docs/mysql.info ; \
+ 	  @RM@ -f $(DESTDIR)$(prefix)/docs/ChangeLog ; \
+ 	else \
+-	  @RM@ -f $(DESTDIR)$(infodir)/mysql.info ; \
+ 	  @RM@ -f $(DESTDIR)$(pkgdatadir)/ChangeLog ; \
+ 	fi
+ 

@@ -1,0 +1,295 @@
+diff -rupN mysql-5.1.73.orig/mysql-test/r/openssl_1.result mysql-5.1.73/mysql-test/r/openssl_1.result
+--- mysql-5.1.73.orig/mysql-test/r/openssl_1.result	2016-02-25 16:34:16.096559322 +0100
++++ mysql-5.1.73/mysql-test/r/openssl_1.result	2016-02-25 16:38:38.685377646 +0100
+@@ -2,16 +2,16 @@ drop table if exists t1;
+ create table t1(f1 int);
+ insert into t1 values (5);
+ grant select on test.* to ssl_user1@localhost require SSL;
+-grant select on test.* to ssl_user2@localhost require cipher "DHE-RSA-AES256-SHA";
+-grant select on test.* to ssl_user3@localhost require cipher "DHE-RSA-AES256-SHA" AND SUBJECT "/C=SE/ST=Uppsala/O=MySQL AB";
+-grant select on test.* to ssl_user4@localhost require cipher "DHE-RSA-AES256-SHA" AND SUBJECT "/C=SE/ST=Uppsala/O=MySQL AB" ISSUER "/C=SE/ST=Uppsala/L=Uppsala/O=MySQL AB";
+-grant select on test.* to ssl_user5@localhost require cipher "DHE-RSA-AES256-SHA" AND SUBJECT "xxx";
++grant select on test.* to ssl_user2@localhost require cipher "DHE-RSA-AES256-GCM-SHA384";
++grant select on test.* to ssl_user3@localhost require cipher "DHE-RSA-AES256-GCM-SHA384" AND SUBJECT "/C=SE/ST=Uppsala/O=MySQL AB";
++grant select on test.* to ssl_user4@localhost require cipher "DHE-RSA-AES256-GCM-SHA384" AND SUBJECT "/C=SE/ST=Uppsala/O=MySQL AB" ISSUER "/C=SE/ST=Uppsala/L=Uppsala/O=MySQL AB";
++grant select on test.* to ssl_user5@localhost require cipher "DHE-RSA-AES256-GCM-SHA384" AND SUBJECT "xxx";
+ flush privileges;
+ connect(localhost,ssl_user5,,test,MASTER_PORT,MASTER_SOCKET);
+ ERROR 28000: Access denied for user 'ssl_user5'@'localhost' (using password: NO)
+ SHOW STATUS LIKE 'Ssl_cipher';
+ Variable_name	Value
+-Ssl_cipher	DHE-RSA-AES256-SHA
++Ssl_cipher	DHE-RSA-AES256-GCM-SHA384
+ select * from t1;
+ f1
+ 5
+@@ -19,7 +19,7 @@ delete from t1;
+ ERROR 42000: DELETE command denied to user 'ssl_user1'@'localhost' for table 't1'
+ SHOW STATUS LIKE 'Ssl_cipher';
+ Variable_name	Value
+-Ssl_cipher	DHE-RSA-AES256-SHA
++Ssl_cipher	DHE-RSA-AES256-GCM-SHA384
+ select * from t1;
+ f1
+ 5
+@@ -27,7 +27,7 @@ delete from t1;
+ ERROR 42000: DELETE command denied to user 'ssl_user2'@'localhost' for table 't1'
+ SHOW STATUS LIKE 'Ssl_cipher';
+ Variable_name	Value
+-Ssl_cipher	DHE-RSA-AES256-SHA
++Ssl_cipher	DHE-RSA-AES256-GCM-SHA384
+ select * from t1;
+ f1
+ 5
+@@ -35,7 +35,7 @@ delete from t1;
+ ERROR 42000: DELETE command denied to user 'ssl_user3'@'localhost' for table 't1'
+ SHOW STATUS LIKE 'Ssl_cipher';
+ Variable_name	Value
+-Ssl_cipher	DHE-RSA-AES256-SHA
++Ssl_cipher	DHE-RSA-AES256-GCM-SHA384
+ select * from t1;
+ f1
+ 5
+diff -rupN mysql-5.1.73.orig/mysql-test/r/openssl_6975,tlsv10.result mysql-5.1.73/mysql-test/r/openssl_6975,tlsv10.result
+--- mysql-5.1.73.orig/mysql-test/r/openssl_6975,tlsv10.result	1970-01-01 01:00:00.000000000 +0100
++++ mysql-5.1.73/mysql-test/r/openssl_6975,tlsv10.result	2016-02-25 16:34:45.356539140 +0100
+@@ -0,0 +1,25 @@
++grant select on test.* to ssl_sslv3@localhost require cipher "RC4-SHA";
++grant select on test.* to ssl_tls12@localhost require cipher "AES128-SHA256";
++TLS1.2 ciphers: user is ok with any cipher
++ERROR 2026 (HY000): SSL connection error: error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure
++ERROR 2026 (HY000): SSL connection error: error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure
++TLS1.2 ciphers: user requires SSLv3 cipher RC4-SHA
++ERROR 2026 (HY000): SSL connection error: error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure
++ERROR 2026 (HY000): SSL connection error: error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure
++TLS1.2 ciphers: user requires TLSv1.2 cipher AES128-SHA256
++ERROR 2026 (HY000): SSL connection error: error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure
++ERROR 2026 (HY000): SSL connection error: error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure
++SSLv3 ciphers: user is ok with any cipher
++Variable_name  Value
++Ssl_cipher RC4-SHA
++Variable_name  Value
++Ssl_cipher DHE-RSA-AES256-SHA
++SSLv3 ciphers: user requires SSLv3 cipher RC4-SHA
++Variable_name  Value
++Ssl_cipher RC4-SHA
++ERROR 1045 (28000): Access denied for user 'ssl_sslv3'@'localhost' (using password: NO)
++SSLv3 ciphers: user requires TLSv1.2 cipher AES128-SHA256
++ERROR 1045 (28000): Access denied for user 'ssl_tls12'@'localhost' (using password: NO)
++ERROR 1045 (28000): Access denied for user 'ssl_tls12'@'localhost' (using password: NO)
++drop user ssl_sslv3@localhost;
++drop user ssl_tls12@localhost;
+diff -rupN mysql-5.1.73.orig/mysql-test/r/openssl_6975,tlsv12.result mysql-5.1.73/mysql-test/r/openssl_6975,tlsv12.result
+--- mysql-5.1.73.orig/mysql-test/r/openssl_6975,tlsv12.result	1970-01-01 01:00:00.000000000 +0100
++++ mysql-5.1.73/mysql-test/r/openssl_6975,tlsv12.result	2016-02-25 16:34:45.356539140 +0100
+@@ -0,0 +1,25 @@
++grant select on test.* to ssl_sslv3@localhost require cipher "RC4-SHA";
++grant select on test.* to ssl_tls12@localhost require cipher "AES128-SHA256";
++TLS1.2 ciphers: user is ok with any cipher
++Variable_name  Value
++Ssl_cipher AES128-SHA256
++Variable_name  Value
++Ssl_cipher DHE-RSA-AES256-GCM-SHA384
++TLS1.2 ciphers: user requires SSLv3 cipher RC4-SHA
++ERROR 1045 (28000): Access denied for user 'ssl_sslv3'@'localhost' (using password: NO)
++ERROR 1045 (28000): Access denied for user 'ssl_sslv3'@'localhost' (using password: NO)
++TLS1.2 ciphers: user requires TLSv1.2 cipher AES128-SHA256
++Variable_name  Value
++Ssl_cipher AES128-SHA256
++ERROR 1045 (28000): Access denied for user 'ssl_tls12'@'localhost' (using password: NO)
++SSLv3 ciphers: user is ok with any cipher
++ERROR 2026 (HY000): SSL connection error: error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure
++ERROR 2026 (HY000): SSL connection error: error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure
++SSLv3 ciphers: user requires SSLv3 cipher RC4-SHA
++ERROR 2026 (HY000): SSL connection error: error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure
++ERROR 2026 (HY000): SSL connection error: error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure
++SSLv3 ciphers: user requires TLSv1.2 cipher AES128-SHA256
++ERROR 2026 (HY000): SSL connection error: error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure
++ERROR 2026 (HY000): SSL connection error: error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure
++drop user ssl_sslv3@localhost;
++drop user ssl_tls12@localhost;
+diff -rupN mysql-5.1.73.orig/mysql-test/r/ssl_8k_key.result mysql-5.1.73/mysql-test/r/ssl_8k_key.result
+--- mysql-5.1.73.orig/mysql-test/r/ssl_8k_key.result	2013-11-04 20:07:39.000000000 +0100
++++ mysql-5.1.73/mysql-test/r/ssl_8k_key.result	2016-02-25 17:28:26.913129053 +0100
+@@ -1,2 +1,2 @@
+ Variable_name	Value
+-Ssl_cipher	DHE-RSA-AES256-SHA
++Ssl_cipher	DHE-RSA-AES256-GCM-SHA384
+diff -rupN mysql-5.1.73.orig/mysql-test/t/openssl_1.test mysql-5.1.73/mysql-test/t/openssl_1.test
+--- mysql-5.1.73.orig/mysql-test/t/openssl_1.test	2016-02-25 16:34:16.098559321 +0100
++++ mysql-5.1.73/mysql-test/t/openssl_1.test	2016-02-25 16:37:32.668423736 +0100
+@@ -14,10 +14,10 @@ create table t1(f1 int);
+ insert into t1 values (5);
+ 
+ grant select on test.* to ssl_user1@localhost require SSL;
+-grant select on test.* to ssl_user2@localhost require cipher "DHE-RSA-AES256-SHA";
+-grant select on test.* to ssl_user3@localhost require cipher "DHE-RSA-AES256-SHA" AND SUBJECT "/C=SE/ST=Uppsala/O=MySQL AB";
+-grant select on test.* to ssl_user4@localhost require cipher "DHE-RSA-AES256-SHA" AND SUBJECT "/C=SE/ST=Uppsala/O=MySQL AB" ISSUER "/C=SE/ST=Uppsala/L=Uppsala/O=MySQL AB";
+-grant select on test.* to ssl_user5@localhost require cipher "DHE-RSA-AES256-SHA" AND SUBJECT "xxx";
++grant select on test.* to ssl_user2@localhost require cipher "DHE-RSA-AES256-GCM-SHA384";
++grant select on test.* to ssl_user3@localhost require cipher "DHE-RSA-AES256-GCM-SHA384" AND SUBJECT "/C=SE/ST=Uppsala/O=MySQL AB";
++grant select on test.* to ssl_user4@localhost require cipher "DHE-RSA-AES256-GCM-SHA384" AND SUBJECT "/C=SE/ST=Uppsala/O=MySQL AB" ISSUER "/C=SE/ST=Uppsala/L=Uppsala/O=MySQL AB";
++grant select on test.* to ssl_user5@localhost require cipher "DHE-RSA-AES256-GCM-SHA384" AND SUBJECT "xxx";
+ flush privileges;
+ 
+ connect (con1,localhost,ssl_user1,,,,,SSL);
+@@ -125,6 +125,7 @@ drop table t1;
+ # verification of servers certificate by setting both ca certificate
+ # and ca path to NULL
+ #
++--replace_result DHE-RSA-AES256-GCM-SHA384 DHE-RSA-AES256-SHA
+ --exec $MYSQL --ssl --ssl-key=$MYSQL_TEST_DIR/std_data/client-key.pem --ssl-cert=$MYSQL_TEST_DIR/std_data/client-cert.pem -e "SHOW STATUS LIKE 'ssl_Cipher'" 2>&1
+ --echo End of 5.0 tests
+ 
+@@ -250,6 +251,7 @@ select 'is still running; no cipher requ
+ GRANT SELECT ON test.* TO bug42158@localhost REQUIRE X509;
+ FLUSH PRIVILEGES;
+ connect(con1,localhost,bug42158,,,,,SSL);
++--replace_result DHE-RSA-AES256-GCM-SHA384 DHE-RSA-AES256-SHA
+ SHOW STATUS LIKE 'Ssl_cipher';
+ disconnect con1;
+ connection default;
+diff -rupN mysql-5.1.73.orig/mysql-test/t/openssl_6975.combinations mysql-5.1.73/mysql-test/t/openssl_6975.combinations
+--- mysql-5.1.73.orig/mysql-test/t/openssl_6975.combinations	1970-01-01 01:00:00.000000000 +0100
++++ mysql-5.1.73/mysql-test/t/openssl_6975.combinations	2016-02-25 16:34:45.356539140 +0100
+@@ -0,0 +1,6 @@
++[tlsv12]
++loose-ssl-cipher=TLSv1.2
++
++[tlsv10]
++loose-ssl-cipher=SSLv3
++
+diff -rupN mysql-5.1.73.orig/mysql-test/t/openssl_6975.test mysql-5.1.73/mysql-test/t/openssl_6975.test
+--- mysql-5.1.73.orig/mysql-test/t/openssl_6975.test	1970-01-01 01:00:00.000000000 +0100
++++ mysql-5.1.73/mysql-test/t/openssl_6975.test	2016-02-25 16:57:03.081601243 +0100
+@@ -0,0 +1,37 @@
++#
++# MDEV-6975 Implement TLS protocol
++#
++# test SSLv3 and TLSv1.2 ciphers when OpenSSL is restricted to SSLv3 or TLSv1.2
++#
++
++# this is OpenSSL test.
++
++grant select on test.* to ssl_sslv3@localhost require cipher "RC4-SHA";
++grant select on test.* to ssl_tls12@localhost require cipher "AES128-SHA256";
++
++let $mysql=$MYSQL --ssl-key=$MYSQL_TEST_DIR/std_data/client-key.pem --ssl-cert=$MYSQL_TEST_DIR/std_data/client-cert.pem -e "SHOW STATUS LIKE 'ssl_Cipher'" 2>&1;
++
++disable_abort_on_error;
++echo TLS1.2 ciphers: user is ok with any cipher;
++exec $mysql                  --ssl-cipher=AES128-SHA256;
++exec $mysql                  --ssl-cipher=TLSv1.2;
++echo TLS1.2 ciphers: user requires SSLv3 cipher RC4-SHA;
++exec $mysql --user ssl_sslv3 --ssl-cipher=AES128-SHA256;
++exec $mysql --user ssl_sslv3 --ssl-cipher=TLSv1.2;
++echo TLS1.2 ciphers: user requires TLSv1.2 cipher AES128-SHA256;
++exec $mysql --user ssl_tls12 --ssl-cipher=AES128-SHA256;
++exec $mysql --user ssl_tls12 --ssl-cipher=TLSv1.2;
++
++echo SSLv3 ciphers: user is ok with any cipher;
++exec $mysql                  --ssl-cipher=RC4-SHA;
++exec $mysql                  --ssl-cipher=SSLv3;
++echo SSLv3 ciphers: user requires SSLv3 cipher RC4-SHA;
++exec $mysql --user ssl_sslv3 --ssl-cipher=RC4-SHA;
++exec $mysql --user ssl_sslv3 --ssl-cipher=SSLv3;
++echo SSLv3 ciphers: user requires TLSv1.2 cipher AES128-SHA256;
++exec $mysql --user ssl_tls12 --ssl-cipher=RC4-SHA;
++exec $mysql --user ssl_tls12 --ssl-cipher=SSLv3;
++
++drop user ssl_sslv3@localhost;
++drop user ssl_tls12@localhost;
++
+diff -rupN mysql-5.1.73.orig/mysql-test/t/ssl_compress.test mysql-5.1.73/mysql-test/t/ssl_compress.test
+--- mysql-5.1.73.orig/mysql-test/t/ssl_compress.test	2013-11-04 20:07:29.000000000 +0100
++++ mysql-5.1.73/mysql-test/t/ssl_compress.test	2016-02-25 16:34:45.356539140 +0100
+@@ -10,6 +10,7 @@
+ connect (ssl_compress_con,localhost,root,,,,,SSL COMPRESS);
+ 
+ # Check ssl turned on
++--replace_result DHE-RSA-AES256-GCM-SHA384 DHE-RSA-AES256-SHA
+ SHOW STATUS LIKE 'Ssl_cipher';
+ 
+ # Check compression turned on
+@@ -19,6 +20,7 @@ SHOW STATUS LIKE 'Compression';
+ -- source include/common-tests.inc
+ 
+ # Check ssl turned on
++--replace_result DHE-RSA-AES256-GCM-SHA384 DHE-RSA-AES256-SHA
+ SHOW STATUS LIKE 'Ssl_cipher';
+ 
+ # Check compression turned on
+diff -rupN mysql-5.1.73.orig/mysql-test/t/ssl.test mysql-5.1.73/mysql-test/t/ssl.test
+--- mysql-5.1.73.orig/mysql-test/t/ssl.test	2013-11-04 20:07:29.000000000 +0100
++++ mysql-5.1.73/mysql-test/t/ssl.test	2016-02-25 16:34:45.356539140 +0100
+@@ -9,12 +9,14 @@
+ connect (ssl_con,localhost,root,,,,,SSL);
+ 
+ # Check ssl turned on
++--replace_result DHE-RSA-AES256-GCM-SHA384 DHE-RSA-AES256-SHA
+ SHOW STATUS LIKE 'Ssl_cipher';
+ 
+ # Source select test case
+ -- source include/common-tests.inc
+ 
+ # Check ssl turned on
++--replace_result DHE-RSA-AES256-GCM-SHA384 DHE-RSA-AES256-SHA
+ SHOW STATUS LIKE 'Ssl_cipher';
+ 
+ connection default;
+diff -rupN mysql-5.1.73.orig/vio/viossl.c mysql-5.1.73/vio/viossl.c
+--- mysql-5.1.73.orig/vio/viossl.c	2013-11-04 19:52:27.000000000 +0100
++++ mysql-5.1.73/vio/viossl.c	2016-02-25 16:34:45.357539140 +0100
+@@ -147,7 +147,7 @@ int vio_ssl_close(Vio *vio)
+       break;
+     default: /* Shutdown failed */
+       DBUG_PRINT("vio_error", ("SSL_shutdown() failed, error: %d",
+-                               SSL_get_error(ssl, r)));
++                               (int)SSL_get_error(ssl, r)));
+       break;
+     }
+   }
+@@ -176,6 +176,7 @@ void vio_ssl_delete(Vio *vio)
+ static int ssl_do(struct st_VioSSLFd *ptr, Vio *vio, long timeout,
+                   int (*connect_accept_func)(SSL*))
+ {
++  long options;
+   SSL *ssl;
+   my_bool unused;
+   my_bool was_blocking;
+@@ -199,7 +200,11 @@ static int ssl_do(struct st_VioSSLFd *pt
+   SSL_SESSION_set_timeout(SSL_get_session(ssl), timeout);
+   SSL_set_fd(ssl, vio->sd);
+ #ifndef HAVE_YASSL
+-  SSL_set_options(ssl, SSL_OP_NO_COMPRESSION);
++  options = SSL_OP_ALL;
++  options |= SSL_OP_NO_SSLv2;
++  options |= SSL_OP_NO_SSLv3;
++  options |= SSL_OP_NO_COMPRESSION;
++  SSL_set_options(ssl, options);
+ #endif
+ 
+   if (connect_accept_func(ssl) < 1)
+diff -rupN mysql-5.1.73.orig/vio/viosslfactories.c mysql-5.1.73/vio/viosslfactories.c
+--- mysql-5.1.73.orig/vio/viosslfactories.c	2016-02-25 16:34:16.095559323 +0100
++++ mysql-5.1.73/vio/viosslfactories.c	2016-02-25 16:34:45.357539140 +0100
+@@ -245,8 +245,8 @@ new_VioSSLFd(const char *key_file, const
+     DBUG_RETURN(0);
+ 
+   if (!(ssl_fd->ssl_context= SSL_CTX_new(is_client_method ? 
+-                                         TLSv1_client_method() :
+-                                         TLSv1_server_method())))
++                                         SSLv23_client_method() :
++                                         SSLv23_server_method())))
+   {
+     *error= SSL_INITERR_MEMFAIL;
+     DBUG_PRINT("error", ("%s", sslGetErrString(*error)));
+@@ -255,6 +255,8 @@ new_VioSSLFd(const char *key_file, const
+     DBUG_RETURN(0);
+   }
+ 
++  SSL_CTX_set_options(ssl_fd->ssl_context, SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3);
++
+   /*
+     Set the ciphers that can be used
+     NOTE: SSL_CTX_set_cipher_list will return 0 if

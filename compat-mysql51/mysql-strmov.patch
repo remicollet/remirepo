@@ -13,9 +13,10 @@ of any real performance gain from optimizing these calls.  So I'm keeping
 this patch.
 
 
---- mysql-5.1.54/include/m_string.h.orig	2010-11-29 11:38:01.000000000 +0100
-+++ mysql-5.1.54/include/m_string.h	2010-12-16 17:52:57.914976701 +0100
-@@ -73,14 +73,6 @@
+diff -Naur mysql-5.1.61.orig/include/m_string.h mysql-5.1.61/include/m_string.h
+--- mysql-5.1.61.orig/include/m_string.h	2011-12-16 14:06:02.000000000 -0500
++++ mysql-5.1.61/include/m_string.h	2012-02-03 15:33:26.044959627 -0500
+@@ -75,15 +75,6 @@
  extern void *(*my_str_malloc)(size_t);
  extern void (*my_str_free)(void *);
  
@@ -27,6 +28,7 @@ this patch.
 -extern char *stpcpy(char *, const char *);	/* For AIX with gcc 2.95.3 */
 -#endif
 -#endif
- 
+-
  /* Declared in int2str() */
  extern char NEAR _dig_vec_upper[];
+ extern char NEAR _dig_vec_lower[];

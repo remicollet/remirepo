@@ -1,24 +1,51 @@
 Name: compat-mysql51
-Version: 5.1.54
+Version: 5.1.73
 Release: 1%{dist}
 Summary: MySQL shared libraries.
 License: GPL
 Group: Applications/Databases
 URL: http://www.mysql.com
 
-Source0: http://dev.mysql.com/get/Downloads/MySQL-5.1/mysql-%{version}%{-srctype}.tar.gz
+# Upstream has a mirror redirector for downloads, so the URL is hard to
+# represent statically.  You can get the tarball by following a link from
+# http://dev.mysql.com/downloads/mysql/
+Source0: mysql-%{version}-nodocs.tar.gz
+# The upstream tarball includes non-free documentation that we cannot ship.
+# To remove the non-free documentation, run this script after downloading
+# the tarball into the current directory:
+# ./generate-tarball.sh $VERSION
+Source1: generate-tarball.sh
 Source5: my_config.h
+Source6: README.mysql-docs
+Source7: README.mysql-license
 # Working around perl dependency checking bug in rpm FTTB. Remove later.
 Source999: filter-requires-mysql.sh 
 
 Patch1: mysql-ssl-multilib.patch
 Patch2: mysql-errno.patch
+# Patch3: mysql-stack.patch
+Patch4: mysql-testing.patch
+Patch5: mysql-install-test.patch
 Patch6: mysql-stack-guard.patch
-# add by a simple echo - Patch7: mysql-disable-test.patch
+Patch7: mysql-disable-test.patch
 Patch8: mysql-setschedparam.patch
+Patch9: mysql-no-docs.patch
 Patch10: mysql-strmov.patch
 Patch12: mysql-cve-2008-7247.patch
+Patch13: mysql-expired-certs.patch
 Patch16: mysql-chain-certs.patch
+Patch17: mysql-cve-2012-5611.patch
+Patch18: mysql-dump-log-tables.patch
+Patch19: mysql-logrotate.patch
+Patch20: mysql-rhbz1059545.patch
+Patch21: mysql-dh1024.patch
+Patch22: mysql-openssl-test.patch
+Patch23: mysql-test-events_1.patch
+Patch24: mysql-tls.patch
+Patch25: mysql-relay-logging.patch
+Patch26: mysql-cve-2016-6663.patch
+Patch27: mysql-cve-2016-6662-b-1ebbc61e.patch
+Patch28: mysql-cve-2016-6662-c-2135853b.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 BuildRequires: gperf, perl, readline-devel, openssl-devel
@@ -61,16 +88,39 @@ developing MySQL applications using client libraries.
 
 %patch1 -p1
 %patch2 -p1
+# %%patch3 -p1
+%patch4 -p1
+%patch5 -p1
 %patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
 %patch10 -p1
 %patch12 -p1
+%patch13 -p1
 %patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1
+%patch21 -p1
+%patch22 -p1
+%patch23 -p1
+%patch24 -p1
+%patch25 -p1
+%patch26 -p1
+%patch27 -p1
+%patch28 -p1
 
 libtoolize --force
 aclocal
 automake --add-missing -Wno-portability
 autoconf
 autoheader
+
+cp %{SOURCE6} README.mysql-docs
+cp %{SOURCE7} README.mysql-license
+
 
 %build
 CFLAGS="%{optflags} -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
@@ -160,7 +210,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc README COPYING
+%doc README COPYING README.mysql-license
+%doc README.mysql-docs
 %{_origlibdir}/mysql/libmysqlclient*.so.*
 /etc/ld.so.conf.d/*
 
@@ -170,6 +221,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}
 
 %changelog
+* Sat Feb 11 2017 Remi Collet <remi@remirepo.net> 5.1.73-1
+- update to 5.1.73
+- sync patch with mysql-5.1.73-8.el6_8
+
 * Tue Dec 21 2010 Remi Collet <RPMS@FamilleCollet.com> 5.1.54-1
 - update to 5.1.54
 
