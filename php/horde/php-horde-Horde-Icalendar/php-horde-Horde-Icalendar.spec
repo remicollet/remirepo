@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Icalendar
-Version:        2.1.4
+Version:        2.1.5
 Release:        1%{?dist}
 Summary:        iCalendar API
 
@@ -102,11 +102,13 @@ done | tee ../%{pear_name}.lang
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-%{_bindir}/phpunit --verbose .
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose .
-fi
+ret=0
+for cmd in php56 php70 php71 php; do
+  if which $cmd; then
+    $cmd %{_bindir}/phpunit --verbose . || ret=1
+  fi
+done
+exit $ret
 
 
 %post
@@ -132,6 +134,9 @@ fi
 
 
 %changelog
+* Sat Feb 11 2017 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
+- Update to 2.1.5
+
 * Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
 - Update to 2.1.4
 
