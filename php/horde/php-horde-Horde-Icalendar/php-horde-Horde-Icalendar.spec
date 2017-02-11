@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Icalendar
-Version:        2.1.5
+Version:        2.1.6
 Release:        1%{?dist}
 Summary:        iCalendar API
 
@@ -20,9 +20,6 @@ Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-
-# https://github.com/horde/horde/pull/213
-Patch0:         %{pear_name}-pr213.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -66,13 +63,11 @@ An API for dealing with iCalendar data.
 %prep
 %setup -q -c
 cd %{pear_name}-%{version}
-%patch0 -p3 -b .pr213
 
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
-    -e '/Icalendar.php/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 touch -r ../package.xml %{name}.xml
 
@@ -147,6 +142,9 @@ fi
 
 
 %changelog
+* Sat Feb 11 2017 Remi Collet <remi@fedoraproject.org> - 2.1.6-1
+- Update to 2.1.6
+
 * Sat Feb 11 2017 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
 - Update to 2.1.5
 - open https://github.com/horde/horde/pull/213 - PHP 5.3 compatibility
