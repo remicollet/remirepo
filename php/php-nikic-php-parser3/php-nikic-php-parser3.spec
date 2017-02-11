@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5b8182cc0abb4b0ff290ba9df6c0e1323286013a
+%global gh_commit    0bf561dfe75ba80441c22adecc0529056671a7d2
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nikic
 %global gh_project   PHP-Parser
@@ -14,7 +14,7 @@
 %global php_home     %{_datadir}/php
 %global with_tests   0%{!?_without_tests:1}
 %global major        3
-%global minor        0.3
+%global minor        0.4
 
 %global eolv1   0
 %global eolv2   0
@@ -178,7 +178,10 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Sat Feb 4  2017 Remi Collet <remi@fedoraproject.org> - 3.0.3-1
+* Sat Feb 11 2017 Remi Collet <remi@fedoraproject.org> - 3.0.4-1
+- update to 3.0.4
+
+* Sat Feb  4 2017 Remi Collet <remi@fedoraproject.org> - 3.0.3-1
 - update to 3.0.3
 
 * Wed Dec 7  2016 Remi Collet <remi@fedoraproject.org> - 3.0.2-1
