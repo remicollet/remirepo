@@ -7,11 +7,11 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    4d0136b21185eea5fc2ee638f77b291e6c537100
+%global gh_commit    421aafc829d0a1120422ddc3fe5872ae1814add9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 
 Name:           atoum
-Version:        2.8.2
+Version:        2.9.0
 Release:        1%{?dist}
 Summary:        PHP Unit Testing framework
 
@@ -168,14 +168,18 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license COPYING
-%doc ABOUT composer.json CREDITS.md FAQ.md README.md
+%license LICENSE
+%doc ABOUT *.md
+%doc composer.json
 %{_bindir}/%{name}
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/*
 
 
 %changelog
+* Sat Feb 11 2017 Remi Collet <remi@fedoraproject.org> - 2.9.0-1
+- update to 2.9.0
+
 * Sat Aug 13 2016 Remi Collet <remi@fedoraproject.org> - 2.8.2-1
 - update to 2.8.2
 
