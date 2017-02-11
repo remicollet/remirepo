@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Timezone
-Version:        1.0.11
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        Timezone library
 
@@ -78,11 +78,13 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-%{_bindir}/phpunit .
-
-if which php70; then
-   php70 %{_bindir}/phpunit .
-fi
+ret=0
+for cmd in php56 php70 php71 php; do
+  if which $cmd; then
+    $cmd %{_bindir}/phpunit --verbose . || ret=1
+  fi
+done
+exit $ret
 
 
 %post
@@ -106,6 +108,9 @@ fi
 
 
 %changelog
+* Sat Feb 11 2017 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Update to 1.1.0
+
 * Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 1.0.11-1
 - Update to 1.0.11
 - raise dependency on Horde_Date >= 2.3.0
