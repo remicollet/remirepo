@@ -1,0 +1,31 @@
+From 7daa8bb0e41a35337e3181001e980e99ffca745d Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sat, 11 Feb 2017 18:53:57 +0100
+Subject: [PATCH] fix PHP 5.3 compatibility
+
+---
+ framework/Icalendar/lib/Horde/Icalendar.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/framework/Icalendar/lib/Horde/Icalendar.php b/framework/Icalendar/lib/Horde/Icalendar.php
+index ddb860d..ab5155b 100644
+--- a/framework/Icalendar/lib/Horde/Icalendar.php
++++ b/framework/Icalendar/lib/Horde/Icalendar.php
+@@ -1289,7 +1289,7 @@ function($a, $b) {
+                 if (!$b['end']) {
+                     return -1;
+                 }
+-                return $this->_getEndDifference($a['end'], $b['end']);
++                return Horde_Icalendar::_getEndDifference($a['end'], $b['end']);
+             }
+         );
+ 
+@@ -1365,7 +1365,7 @@ protected function _checkEndDate($t, $times)
+      *
+      * @return boolean  True if $a < $b otherwise false.
+      */
+-    protected function _getEndDifference($a, $b)
++    public static function _getEndDifference($a, $b)
+     {
+         if (strlen($a) == 4) {
+             $a = @gmmktime(0, 0, 0, 1, 1, $a);
