@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    d90a91626d60fd947a7b8a3618670b724cdcebef
+%global gh_commit    e07e2f3c0f8391f8b13a24f32c9f3ec2edd4bef4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.3.4
+Version:        1.3.5
 Release:        1%{?dist}
 Summary:        PHP library containing Unicode methods
 
@@ -90,9 +90,14 @@ require '%{php_project}/Data/autoload.php';
 EOF
 
 ret=0
-for cmd in php56 php70 php71 php; do
+for cmd in php56 php; do
    if which $cmd; then
-      $cmd %{_bindir}/phpunit --verbose || ret=1
+      $cmd %{_bindir}/phpunit --no-coverage --verbose || ret=1
+   fi
+done
+for cmd in php70 php71; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit6 --no-coverage --verbose || ret=1
    fi
 done
 exit $ret
@@ -115,6 +120,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 12 2017 Remi Collet <remi@remirepo.net> - 1.3.5-1
+- update to 1.3.5 (no change)
+
 * Mon Feb  6 2017 Remi Collet <remi@remirepo.net> - 1.3.4-1
 - update to 1.3.4 (no change)
 
