@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    25883874ca399300d2b631034c6a89817204631d
+%global gh_commit    69a5aed25e0a98b1f7c86b2aa9ede38ff18146ee
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.6.4
+Version:        1.6.5
 Release:        1%{?dist}
 Summary:        PHP library to read byte-level data from files
 
@@ -86,9 +86,14 @@ EOF
 sed -i 's:src:File:g' -i test/DirTest.php
 
 ret=0
-for cmd in php56 php70 php71 php; do
+for cmd in php56 php; do
    if which $cmd; then
-      $cmd %{_bindir}/phpunit --verbose || ret=1
+      $cmd %{_bindir}/phpunit --no-coverage --verbose || ret=1
+   fi
+done
+for cmd in php70 php71; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit6 --no-coverage --verbose || ret=1
    fi
 done
 exit $ret
@@ -113,6 +118,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 12 2017 Remi Collet <remi@remirepo.net> - 1.6.5-1
+- update to 1.6.5 (no change)
+
 * Mon Feb  6 2017 Remi Collet <remi@remirepo.net> - 1.6.4-1
 - update to 1.6.4 (no change)
 
