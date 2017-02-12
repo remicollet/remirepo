@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    ac065f9ad2964b660fb8d5e7deda59049d6e44b0
+%global gh_commit    f401208fc32b2856ecf21b666cc221c847019f78
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.6.4
+Version:        1.6.5
 Release:        1%{?dist}
 Summary:        PHP library containing UTF-8 font definitions
 
@@ -80,9 +80,14 @@ require '%{buildroot}%{php_project}/autoload.php';
 EOF
 
 ret=0
-for cmd in php56 php70 php71 php; do
+for cmd in php56 php; do
    if which $cmd; then
-      $cmd %{_bindir}/phpunit --verbose || ret=1
+      $cmd %{_bindir}/phpunit --no-coverage --verbose || ret=1
+   fi
+done
+for cmd in php70 php71; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit6 --no-coverage --verbose || ret=1
    fi
 done
 exit $ret
@@ -108,6 +113,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 12 2017 Remi Collet <remi@remirepo.net> - 1.6.5-1
+- update to 1.6.5 (no change)
+
 * Mon Feb  6 2017 Remi Collet <remi@remirepo.net> - 1.6.4-1
 - update to 1.6.4 (no change)
 
