@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5ab2f3207c623c191ac6d2acebde7e6701e0b526
+%global gh_commit    e841cb6be3747ad27cd7c4523b96787abfc390a7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.4
+Version:        2.3.5
 Release:        1%{?dist}
 Summary:        PHP library to parse PDF documents
 
@@ -93,9 +93,14 @@ require '%{php_project}/../Filter/autoload.php';
 EOF
 
 ret=0
-for cmd in php56 php70 php71 php; do
+for cmd in php56 php; do
    if which $cmd; then
       $cmd %{_bindir}/phpunit --verbose || ret=1
+   fi
+done
+for cmd in php70 php71; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit6 --verbose || ret=1
    fi
 done
 exit $ret
@@ -118,8 +123,8 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Mon Feb  6 2017 Remi Collet <remi@remirepo.net> - 2.3.4-1
-- update to 2.3.4 (no change)
+* Sun Feb 12 2017 Remi Collet <remi@remirepo.net> - 2.3.5-1
+- update to 2.3.5 (no change)
 
 * Fri Sep  2 2016 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
 - update to 2.3.3 (no change)
