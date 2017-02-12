@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e62193cc9d415136514b9e7abf99c46abdc526cc
+%global gh_commit    da4b7871ca1ddf5db103378dde23f3c747619689
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.4.1
+Version:        2.4.2
 Release:        1%{?dist}
 Summary:        PHP library containing PDF page formats and definitions
 
@@ -93,9 +93,14 @@ require '%{php_project}/../../Color/autoload.php';
 EOF
 
 ret=0
-for cmd in php56 php70 php71 php; do
+for cmd in php56 php; do
    if which $cmd; then
-      $cmd %{_bindir}/phpunit --verbose || ret=1
+      $cmd %{_bindir}/phpunit --no-coverage --verbose || ret=1
+   fi
+done
+for cmd in php70 php71; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit6 --no-coverage --verbose || ret=1
    fi
 done
 exit $ret
@@ -118,6 +123,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 12 2017 Remi Collet <remi@remirepo.net> - 2.4.2-1
+- update to 2.4.2
+
 * Mon Feb  6 2017 Remi Collet <remi@remirepo.net> - 2.4.1-1
 - update to 2.4.1
 
