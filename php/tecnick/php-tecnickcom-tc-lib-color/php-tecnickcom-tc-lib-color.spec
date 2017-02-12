@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    ba1c4a9debecb0da843c13861b602a23127aeabf
+%global gh_commit    8921acc8e9c26bdc32c9b08989d42e428af6c660
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.12.4
+Version:        1.12.6
 Release:        1%{?dist}
 Summary:        PHP library to manipulate various color representations
 
@@ -87,9 +87,14 @@ require '%{buildroot}%{php_project}/autoload.php';
 EOF
 
 ret=0
-for cmd in php56 php70 php71 php; do
+for cmd in php56 php; do
    if which $cmd; then
       $cmd %{_bindir}/phpunit --verbose || ret=1
+   fi
+done
+for cmd in php70 php71; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit6 --verbose || ret=1
    fi
 done
 exit $ret
@@ -114,6 +119,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 12 2017 Remi Collet <remi@fedoraproject.org> - 1.12.6-1
+- update to 1.12.6 (no change)
+
 * Mon Feb  6 2017 Remi Collet <remi@fedoraproject.org> - 1.12.4-1
 - update to 1.12.4 (no change)
 
