@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    66db26ddb3d1a0204b9113dbc594750f4d5448ae
+%global gh_commit    0da81c1f2ec073781e1650bc64915d26ff19ebe9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.5.0
+Version:        1.5.2
 Release:        1%{?dist}
 Summary:        PHP library to encrypt data for PDF
 
@@ -94,9 +94,14 @@ require '%{buildroot}%{php_project}/autoload.php';
 EOF
 
 ret=0
-for cmd in php56 php70 php71 php; do
+for cmd in php56 php; do
    if which $cmd; then
-      $cmd %{_bindir}/phpunit --verbose || ret=1
+      $cmd %{_bindir}/phpunit --no-coverage --verbose || ret=1
+   fi
+done
+for cmd in php70 php71; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit6 --no-coverage --verbose || ret=1
    fi
 done
 exit $ret
@@ -122,6 +127,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 12 2017 Remi Collet <remi@fedoraproject.org> - 1.5.2-1
+- update to 1.5.2 (no change)
+
 * Wed Feb  8 2017 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
 - update to 1.5.0
 - drop dependency on php-mcrypt
