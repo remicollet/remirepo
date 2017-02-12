@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    476b2a31563ea094cb345687d6aa33efd00e107f
+%global gh_commit    1025362d49d228264661c0886493310b819d0385
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.3.4
+Version:        1.3.5
 Release:        1%{?dist}
 Summary:        PHP library to decode PDF compression and encryption filters
 
@@ -84,9 +84,14 @@ require '%{buildroot}%{php_project}/autoload.php';
 EOF
 
 ret=0
-for cmd in php56 php70 php71 php; do
+for cmd in php56 php; do
    if which $cmd; then
-      $cmd %{_bindir}/phpunit --verbose || ret=1
+      $cmd %{_bindir}/phpunit --no-coverage --verbose || ret=1
+   fi
+done
+for cmd in php70 php71; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit6 --no-coverage --verbose || ret=1
    fi
 done
 exit $ret
@@ -112,6 +117,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 12 2017 Remi Collet <remi@remirepo.net> - 1.3.5-1
+- update to 1.3.5 (no change)
+
 * Mon Feb  6 2017 Remi Collet <remi@remirepo.net> - 1.3.4-1
 - update to 1.3.4 (no change)
 
