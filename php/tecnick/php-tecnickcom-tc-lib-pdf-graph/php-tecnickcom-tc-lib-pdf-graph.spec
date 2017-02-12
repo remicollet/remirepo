@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    4b488e21b65cf9d7df9daf071c18acf5c1bc9d32
+%global gh_commit    264bed779bdb1f4e2ab17cfb611256e37a042d2d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.4.3
+Version:        1.4.4
 Release:        1%{?dist}
 Summary:        PHP library containing PDF graphic and geometric methods
 
@@ -30,8 +30,8 @@ BuildArch:      noarch
 # For tests
 BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php(language) >= 5.4
-BuildRequires:  php-composer(%{c_vendor}/tc-lib-color) >= 1.12.1
-BuildRequires:  php-composer(%{c_vendor}/tc-lib-pdf-encrypt) >= 1.4.3
+BuildRequires:  php-composer(%{c_vendor}/tc-lib-color) >= 1.12.6
+BuildRequires:  php-composer(%{c_vendor}/tc-lib-pdf-encrypt) >= 1.5.2
 %endif
 
 # From composer.json, "require": {
@@ -41,9 +41,9 @@ BuildRequires:  php-composer(%{c_vendor}/tc-lib-pdf-encrypt) >= 1.4.3
 #        "tecnickcom/tc-lib-pdf-encrypt": "^1.4.4"
 Requires:       php(language) >= 5.4
 Requires:       php-zlib
-Requires:       php-composer(%{c_vendor}/tc-lib-color) >= 1.12.1
+Requires:       php-composer(%{c_vendor}/tc-lib-color) >= 1.12.6
 Requires:       php-composer(%{c_vendor}/tc-lib-color) <  2
-Requires:       php-composer(%{c_vendor}/tc-lib-pdf-encrypt) >= 1.4.3
+Requires:       php-composer(%{c_vendor}/tc-lib-pdf-encrypt) >= 1.5.2
 Requires:       php-composer(%{c_vendor}/tc-lib-pdf-encrypt) <  2
 # From phpcompatinfo report for version 1.4.2
 # none
@@ -89,9 +89,14 @@ require '%{php_project}/../../Color/autoload.php';
 EOF
 
 ret=0
-for cmd in php56 php70 php71 php; do
+for cmd in php56 php; do
    if which $cmd; then
-      $cmd %{_bindir}/phpunit --verbose || ret=1
+      $cmd %{_bindir}/phpunit --no-coverage --verbose || ret=1
+   fi
+done
+for cmd in php70 php71; do
+   if which $cmd; then
+      $cmd %{_bindir}/phpunit6 --no-coverage --verbose || ret=1
    fi
 done
 exit $ret
@@ -115,6 +120,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 12 2017 Remi Collet <remi@remirepo.net> - 1.4.4-1
+- update to 1.4.4 (no change)
+
 * Mon Feb  6 2017 Remi Collet <remi@remirepo.net> - 1.4.3-1
 - update to 1.4.3 (no change)
 
