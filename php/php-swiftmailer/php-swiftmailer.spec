@@ -6,7 +6,7 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    cd142238a339459b10da3d8234220963f392540c
+%global gh_commit    81fdccfaf8bdc5d5d7a1ef6bb3a61bbb1a6c4a3e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     swiftmailer
 %global gh_project   swiftmailer
@@ -14,7 +14,7 @@
 %global php_home     %{_datadir}/php
 
 Name:           php-%{gh_project}
-Version:        5.4.5
+Version:        5.4.6
 Release:        1%{?dist}
 Summary:        Free Feature-rich PHP Mailer
 
@@ -149,6 +149,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 13 2017 Remi Collet <remi@fedoraproject.org> - 5.4.6-1
+- update to 5.4.6
+
 * Thu Dec 29 2016 Remi Collet <remi@fedoraproject.org> - 5.4.5-1
 - update to 5.4.5
 - fix Remote Code Execution CVE-2016-10074
