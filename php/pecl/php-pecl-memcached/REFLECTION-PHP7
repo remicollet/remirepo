@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #166 memcached version 3.0.1 ] {
+Extension [ <persistent> extension #167 memcached version 3.0.2 ] {
 
   - Dependencies {
     Dependency [ session (Required) ]
