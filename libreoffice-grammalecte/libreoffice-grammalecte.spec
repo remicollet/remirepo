@@ -17,8 +17,8 @@
 # arch-independent extension location
 
 Name:          libreoffice-%{extname}
-Version:       0.5.14
-Release:       5%{?dist}
+Version:       0.5.15
+Release:       1%{?dist}
 Summary:       French grammar corrector
 Summary(fr):   Correcteur grammatical Français
 Group:         System Environment/Libraries
@@ -28,9 +28,6 @@ License:       GPLv3+ and MPLv2.0
 URL:           http://www.dicollecte.org/grammalecte/
 Source0:       http://www.dicollecte.org/grammalecte/oxt/Grammalecte-v%{version}.7z
 Source1:       %{name}.metainfo.xml
-
-# Don't use lowercase
-Patch0:        %{name}-make.patch
 
 BuildRequires: p7zip
 BuildRequires: python3-devel
@@ -75,7 +72,6 @@ Ce paquet fournit l'extension pour LibreOffice Writer.
 %prep
 %setup -qcT
 7za x %{SOURCE0}
-%patch0 -b .rpm
 
 for file in $(find . -name \*.py)
 do
@@ -85,12 +81,12 @@ done
 
 %build
 export LANG=fr_FR.UTF-8
-python3 ./make.py -b fr
+%{__python} ./make.py -b fr
 
 
 %install
 install -d -m 0755 %{buildroot}%{_libdir}/libreoffice/share/extensions/%{extname}
-unzip -d %{buildroot}%{_libdir}/libreoffice/share/extensions/%{extname} _build/Grammalecte-fr-v0.5.14.oxt
+unzip -d %{buildroot}%{_libdir}/libreoffice/share/extensions/%{extname} _build/Grammalecte-fr-v%{version}.oxt
 chmod -R +rX %{buildroot}%{_libdir}/libreoffice/share/extensions/%{extname}
 
 DESTDIR=%{buildroot} appstream-util install %{SOURCE1}
@@ -98,6 +94,10 @@ DESTDIR=%{buildroot} appstream-util install %{SOURCE1}
 
 %check
 appstream-util validate-relax -v %{buildroot}%{_datadir}/appdata/%{name}.metainfo.xml
+
+export LANG=fr_FR.UTF-8
+%{__python} ./make.py -t fr
+
 
 
 %files
@@ -107,6 +107,11 @@ appstream-util validate-relax -v %{buildroot}%{_datadir}/appdata/%{name}.metainf
 
 
 %changelog
+* Mon Feb 13 2017 Remi Collet <remi@fremirepo.net> - 0.5.15-1
+- update to 0.5.15
+- run upstream tests during the build
+- drop patch merged upstream
+
 * Thu Dec 29 2016 Remi Collet <remi@fedoraproject.org> - 0.5.14-5
 - build from sources
 
