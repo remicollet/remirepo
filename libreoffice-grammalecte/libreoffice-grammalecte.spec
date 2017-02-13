@@ -1,4 +1,4 @@
-# remirepo spec file for libreoffice-grammalecte
+# remirepo/fedora spec file for libreoffice-grammalecte
 #
 # Copyright (c) 2016-2017 Remi Collet
 # License: CC-BY-SA
@@ -107,7 +107,7 @@ export LANG=fr_FR.UTF-8
 
 
 %changelog
-* Mon Feb 13 2017 Remi Collet <remi@fremirepo.net> - 0.5.15-1
+* Mon Feb 13 2017 Remi Collet <remi@remirepo.net> - 0.5.15-1
 - update to 0.5.15
 - run upstream tests during the build
 - drop patch merged upstream
