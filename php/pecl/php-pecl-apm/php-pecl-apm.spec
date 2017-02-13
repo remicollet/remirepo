@@ -37,19 +37,17 @@
 
 Name:           %{?sub_prefix}php-pecl-apm
 Summary:        Alternative PHP Monitor
-Version:        2.1.1
+Version:        2.1.2
 %if 0%{?gh_date:1}
 Release:        7.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 %endif
 
 # Disable the extension and drivers by default
 Patch0:         %{proj_name}-config.patch
-# See https://github.com/patrickallaert/php-apm/pull/44
-Patch1:         %{proj_name}-pr44.patch
 
 License:        PHP
 Group:          Development/Languages
@@ -144,7 +142,6 @@ mv %{proj_name}-%{version} NTS
 cd NTS
 %patch0 -p0 -b .rpm
 sed -e 's:/var/php/apm/db:%{_localstatedir}/lib/php/apm/db:' -i apm.ini
-%patch1 -p1 -b .pr44
 
 : Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APM_VERSION/{s/.* "//;s/".*$//;p}' php_apm.h)
@@ -161,6 +158,8 @@ cp -pr NTS ZTS
 
 
 %build
+%{?dtsenable}
+
 peclconf() {
 %configure \
   --enable-apm \
@@ -190,6 +189,7 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
+%{?dtsenable}
 
 # Install the NTS stuff
 make -C NTS install INSTALL_ROOT=%{buildroot}
@@ -278,6 +278,11 @@ fi
 
 
 %changelog
+* Mon Feb 13 2017 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
+- Update to 2.1.2 (stable)
+- open https://github.com/patrickallaert/php-apm/issues/50
+  PHP 5 build is broken
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 2.1.1-4
 - rebuild with PHP 7.1.0 GA
 
