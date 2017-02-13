@@ -29,8 +29,8 @@
 
 Summary:        Data Structures for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.1.6
-Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.1.7
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -113,6 +113,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 peclbuild() {
 %configure \
     --enable-ds \
@@ -133,6 +135,8 @@ peclbuild %{_bindir}/zts-php-config
 
 
 %install
+%{?dtsenable}
+
 make -C NTS \
      install INSTALL_ROOT=%{buildroot}
 
@@ -225,6 +229,9 @@ cd ..
 
 
 %changelog
+* Mon Feb 13 2017 Remi Collet <remi@fedoraproject.org> - 1.1.7-1
+- Update to 1.1.7
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.1.6-3
 - rebuild with PHP 7.1.0 GA
 
