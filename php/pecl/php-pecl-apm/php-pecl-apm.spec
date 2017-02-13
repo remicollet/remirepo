@@ -37,7 +37,7 @@
 
 Name:           %{?sub_prefix}php-pecl-apm
 Summary:        Alternative PHP Monitor
-Version:        2.1.2
+Version:        2.1.3
 %if 0%{?gh_date:1}
 Release:        7.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
@@ -48,8 +48,6 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 
 # Disable the extension and drivers by default
 Patch0:         %{proj_name}-config.patch
-# See https://github.com/patrickallaert/php-apm/pull/51
-Patch1:         %{proj_name}-pr51.patch
 
 License:        PHP
 Group:          Development/Languages
@@ -143,7 +141,6 @@ mv %{proj_name}-%{version} NTS
 
 cd NTS
 %patch0 -p0 -b .rpm
-%patch1 -p1 -b .pr51
 sed -e 's:/var/php/apm/db:%{_localstatedir}/lib/php/apm/db:' -i apm.ini
 
 : Sanity check, really often broken
@@ -281,8 +278,13 @@ fi
 
 
 %changelog
+* Mon Feb 13 2017 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
+- Update to 2.1.3 (stable)
+- drop patch merged upstream
+
 * Mon Feb 13 2017 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
 - Update to 2.1.2 (stable)
+- drop patch merged upstream
 - open https://github.com/patrickallaert/php-apm/issues/50
   PHP 5 build is broken
 - add patch from https://github.com/patrickallaert/php-apm/pull/51
