@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    b315ea9269ea3ee2e5fd3adb712fc278a2904eb1
+%global gh_commit    985cff68f16f0b5da3bdb3eaf7c6101781ff5638
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.0.6
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        PSR-7 Middleware Microframework based on Stratigility
 
@@ -40,18 +40,19 @@ BuildRequires:  php-composer(psr/http-message)                       >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-diactoros)             >= 1.1
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)     >= 1.1
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0.1
-BuildRequires:  php-composer(%{gh_owner}/zend-stratigility)          >= 1.1
+BuildRequires:  php-composer(%{gh_owner}/zend-stratigility)          >= 1.3.3
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
 # From composer, "require-dev": {
 #        "filp/whoops": "^1.1 || ^2.0",
 #        "phpunit/phpunit": "^4.7",
 #        "zendframework/zend-coding-standard": "~1.0.0",
-#        "zendframework/zend-expressive-aurarouter": "^1.0",
-#        "zendframework/zend-expressive-fastroute": "^1.0",
-#        "zendframework/zend-expressive-zendrouter": "^1.0",
+#        "zendframework/zend-expressive-aurarouter": "^1.0 || ^2.0",
+#        "zendframework/zend-expressive-fastroute": "^1.0 || ^2.0",
+#        "zendframework/zend-expressive-zendrouter": "^1.0 || ^2.0",
 #        "zendframework/zend-servicemanager": "^2.6",
-#        "malukenho/docheader": "^0.1.5"
+#        "malukenho/docheader": "^0.1.5",
+#        "mockery/mockery": "^0.9.5"
 BuildRequires:  php-composer(phpunit/phpunit)                        >= 4.7
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
@@ -59,6 +60,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-expressive-aurarouter) >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-fastroute)  >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-zendrouter) >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)        >= 2.6
+BuildRequires:  php-composer(mockery/mockery)                        >= 0.9.5
 # For dependencies autoloader
 BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 %endif
@@ -68,9 +70,9 @@ BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 #        "container-interop/container-interop": "^1.1",
 #        "psr/http-message": "^1.0",
 #        "zendframework/zend-diactoros": "^1.1",
-#        "zendframework/zend-expressive-router": "^1.1",
+#        "zendframework/zend-expressive-router": "^1.1 || ^2.0",
 #        "zendframework/zend-expressive-template": "^1.0.1",
-#        "zendframework/zend-stratigility": ">=1.1.0 < 1.3.0 || >=1.3.1 <2.0.0"
+#        "zendframework/zend-stratigility": "^1.3.3"
 Requires:       php(language) >= 5.6
 Requires:       php-composer(container-interop/container-interop)    >= 1.1
 Requires:       php-composer(container-interop/container-interop)    <  2
@@ -79,10 +81,10 @@ Requires:       php-composer(psr/http-message)                       <  2
 Requires:       php-composer(%{gh_owner}/zend-diactoros)             >= 1.1
 Requires:       php-composer(%{gh_owner}/zend-diactoros)             <  2
 Requires:       php-composer(%{gh_owner}/zend-expressive-router)     >= 1.1
-Requires:       php-composer(%{gh_owner}/zend-expressive-router)     <  2
+Requires:       php-composer(%{gh_owner}/zend-expressive-router)     <  3
 Requires:       php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0.1
 Requires:       php-composer(%{gh_owner}/zend-expressive-template)   <  2
-Requires:       php-composer(%{gh_owner}/zend-stratigility)          >= 1.1
+Requires:       php-composer(%{gh_owner}/zend-stratigility)          >= 1.3.3
 Requires:       php-composer(%{gh_owner}/zend-stratigility)          <  2
 # From phpcompatinfo report for version 1.2.0
 Requires:       php-reflection
@@ -172,6 +174,7 @@ Zend\Loader\AutoloaderFactory::factory(array(
            'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
+require_once '%{php_home}/Mockery/autoload.php';
 EOF
 
 # remirepo:11
@@ -210,6 +213,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 14 2017 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- update to 1.1.0
+- allow zend-expressive-router 2.0
+- raise dependency on zend-stratigility 1.3.3
+
 * Tue Jan 10 2017 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
 - update to 1.0.6
 
