@@ -181,7 +181,6 @@ rm -rf %{buildroot}
 %changelog
 * Tue Feb 14 2017 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0
-- add dependency on http-interop/http-middleware
 
 * Wed Dec 14 2016 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
 - update to 1.3.2
