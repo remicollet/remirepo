@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    e97009e4fd0f2d91d02c719bc94e60ea4fe461f2
+%global gh_commit    f076b045481a931086d3b11eb7ebc3f0f66c041d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-aurarouter
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.3
+Version:        2.0.0
 Release:        1%{?dist}
 Summary:        Aura.Router integration for %{library}
 
@@ -38,7 +38,7 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-composer(aura/router)                            >= 3.0
 BuildRequires:  php-composer(psr/http-message)                       >= 1.0
-BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
+BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)     >= 2.0
 BuildRequires:  php-composer(fig/http-message-util)                  >= 1.1
 # From composer, "require-dev": {
 #        "phpunit/phpunit": "^4.7 || ^5.6",
@@ -55,15 +55,15 @@ BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 #        "php": "^5.6 || ^7.0",
 #        "aura/router": "^3.0",
 #        "psr/http-message": "^1.0",
-#        "zendframework/zend-expressive-router": "^1.3.2"
+#        "zendframework/zend-expressive-router": "^2.0"
 #        "fig/http-message-util": "^1.1"
 Requires:       php(language) >= 5.6
 Requires:       php-composer(aura/router)                            >= 3.0
 Requires:       php-composer(aura/router)                            <  4
 Requires:       php-composer(psr/http-message)                       >= 1.0
 Requires:       php-composer(psr/http-message)                       <  2
-Requires:       php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
-Requires:       php-composer(%{gh_owner}/zend-expressive-router)     <  2
+Requires:       php-composer(%{gh_owner}/zend-expressive-router)     >= 2.0
+Requires:       php-composer(%{gh_owner}/zend-expressive-router)     <  3
 Requires:       php-composer(fig/http-message-util)                  >= 1.1
 Requires:       php-composer(fig/http-message-util)                  <  2
 # From phpcompatinfo report for version 1.0.0
@@ -162,6 +162,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 14 2017 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- update to 2.0.0
+- raise dependency on zend-expressive-router 2.0
+
 * Fri Dec 16 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - update to 1.1.3
 
