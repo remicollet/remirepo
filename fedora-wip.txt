@@ -4,7 +4,6 @@
 php-tecnickcom-tc-lib-color 1.12.6
 php-tecnickcom-tc-lib-barcode 1.15.6
 PHP 7.0.16
-php-zendframework-zend-expressive 1.1.1
 
 =================
  Pending
@@ -61,6 +60,7 @@ php-zendframework-zend-expressive 1.1.1
 =================
  Feb, 2017
 =================
+14/2	14/2	php-zendframework-zend-expressive-1.1.1-1.fc26
 14/2	7/2	php-phpunit-git-2.1.4-1.fc24
 14/2	14/2	php-zendframework-zend-expressive-1.1.0-1.fc26
 14/2	14/2	php-zendframework-zend-expressive-router-2.0.0-1.fc26
