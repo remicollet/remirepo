@@ -50,22 +50,22 @@ php-tecnickcom-tc-lib-barcode 1.15.6
 10/2	php-pecl-zendopcache-7.0.5-2.el7
 9/2	php-phpunit-phpcpd-3.0.0-1.fc25
 7/2	php-phpunit-git-2.1.4-1.fc24
-7/2	php-phpunit-git-2.1.4-1.fc25
 7/2	php-pear-1.10.1-9.fc25
-7/2	php-nette-database-2.4.2-1.fc25
-7/2	php-nette-caching-2.5.3-1.fc25
-7/2	php-nette-application-2.4.5-1.fc25
 3/2	php-solarium-3.8.1-1.el7
 3/2	php-solarium-3.8.1-1.el6
 3/2	php-pear-PHP-CodeSniffer-2.8.0-1.el7
-31/1	php-myclabs-deep-copy-1.6.0-1.el7
-31/1	php-phpunit-comparator-1.2.4-1.el7
 31/1	php-phpunit-PHPUnit-4.8.35-1.el7
 =================
  Stable
 =================
  Feb, 2017
 =================
+14/2	7/2	php-phpunit-git-2.1.4-1.fc25
+14/2	7/2	php-nette-database-2.4.2-1.fc25
+14/2	7/2	php-nette-caching-2.5.3-1.fc25
+14/2	7/2	php-nette-application-2.4.5-1.fc25
+14/2	31/1	php-myclabs-deep-copy-1.6.0-1.el7
+14/2	31/1	php-phpunit-comparator-1.2.4-1.el7
 13/2	13/2	php-swiftmailer-5.4.6-1.fc26
 13/2	13/2	php-pecl-memcached-3.0.2-1.fc26
 obso	9/2	php-pecl-memcached-3.0.1-1.fc25
