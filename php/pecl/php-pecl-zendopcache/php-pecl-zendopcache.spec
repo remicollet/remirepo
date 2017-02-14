@@ -15,7 +15,7 @@
 
 Name:          %{?scl_prefix}php-pecl-%{pecl_name}
 Version:       7.0.5
-Release:       3%{?dist}
+Release:       3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:       The Zend OPcache
 
 Group:         Development/Libraries
