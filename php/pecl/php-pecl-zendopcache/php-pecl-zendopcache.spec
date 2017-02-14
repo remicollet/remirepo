@@ -15,7 +15,7 @@
 
 Name:          %{?scl_prefix}php-pecl-%{pecl_name}
 Version:       7.0.5
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       The Zend OPcache
 
 Group:         Development/Libraries
@@ -26,6 +26,9 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # So "opcache" if before "xdebug"
 Source1:       %{plug_name}.ini
 Source2:       %{plug_name}-default.blacklist
+
+# see https://bugs.php.net/69090
+Patch0:        %{pecl_name}-bug69090.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel >= 5.2.0
@@ -80,6 +83,7 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 pushd NTS
+%patch0 -p3 -b .bug69090
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_ZENDOPCACHE_VERSION/{s/.*"7/7/;s/".*$//;p}' ZendAccelerator.h)
@@ -213,6 +217,9 @@ fi
 
 
 %changelog
+* Thu Feb  9 2017 Remi Collet <remi@fedoraproject.org> - 7.0.5-3
+- backport security fix for bug #69090, rhbz#1409317
+
 * Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> - 7.0.5-2
 - adapt for F24
 
