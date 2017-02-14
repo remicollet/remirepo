@@ -3,6 +3,8 @@
 =================
 php-tecnickcom-tc-lib-color 1.12.6
 php-tecnickcom-tc-lib-barcode 1.15.6
+PHP 7.0.16
+php-zendframework-zend-expressive 1.1.1
 
 =================
  Pending
