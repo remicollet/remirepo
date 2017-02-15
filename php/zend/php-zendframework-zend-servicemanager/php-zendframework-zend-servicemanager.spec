@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    596a2cde85a92c3366514ae0f55ea32ef59536ac
+%global gh_commit    fe608d85457449889750fc6bf8d0859af59f56ec
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-servicemanager
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        3.2.0
+Version:        3.2.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -44,10 +44,10 @@ BuildRequires:  php-spl
 # From composer, "require-dev": {
 #        "ocramius/proxy-manager": "^1.0 || ^2.0",
 #        "phpbench/phpbench": "^0.10.0",
-#        "phpunit/phpunit": "^4.6 || ^5.2.10",
+#        "phpunit/phpunit": "^5.7 || ^6.0.6"
 #        "mikey179/vfsStream": "^1.6",
 #        "zendframework/zend-coding-standard": "~1.0.0"
-BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.6
+BuildRequires:  php-composer(phpunit/phpunit)                   >= 5.7
 BuildRequires:  php-composer(ocramius/proxy-manager)            >= 1.0
 BuildRequires:  php-composer(mikey179/vfsStream)                >= 1.6
 # Autoloader
@@ -149,7 +149,7 @@ if which php56; then
    run=1
 fi
 if which php71; then
-   php71 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php71 %{_bindir}/phpunit6 --include-path=%{buildroot}%{php_home} || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -177,6 +177,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb 15 2017 Remi Collet <remi@fedoraproject.org> - 3.2.1-1
+- update to 3.2.1
+
 * Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
 - update to 3.2.0
 - raise dependency on PHP 5.6

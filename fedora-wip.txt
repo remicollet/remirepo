@@ -7,11 +7,11 @@ php-tecnickcom-tc-lib-barcode 1.15.6
 =================
  Pending
 =================
-php-7.0.16-1.fc25
 
 =================
  Testing
 =================
+15/2	php-7.0.16-1.fc25
 15/2	php-zendframework-zend-mail-2.7.3-1.fc25
 15/2	php-zendframework-zend-mail-2.7.3-1.fc24
 13/2	php-swiftmailer-5.4.6-1.fc25
@@ -62,6 +62,8 @@ php-7.0.16-1.fc25
 =================
  Feb, 2017
 =================
+15/2	15/2	php-zendframework-zend-servicemanager-3.2.1-1.fc26
+15/2	15/2	php-pecl-event-2.3.0-0.3.RC1.fc26
 15/2	15/2	php-zendframework-zend-mail-2.7.3-1.fc26
 15/2	15/2	php-7.1.2-1.fc26.1
 14/2	14/2	php-zendframework-zend-expressive-1.1.1-1.fc26

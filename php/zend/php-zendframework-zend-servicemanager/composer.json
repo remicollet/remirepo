@@ -21,7 +21,7 @@
     "require-dev": {
         "ocramius/proxy-manager": "^1.0 || ^2.0",
         "phpbench/phpbench": "^0.10.0",
-        "phpunit/phpunit": "^4.6 || ^5.2.10",
+        "phpunit/phpunit": "^5.7 || ^6.0.6",
         "mikey179/vfsStream": "^1.6",
         "zendframework/zend-coding-standard": "~1.0.0"
     },
