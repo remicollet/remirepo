@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    11ba8e9400d9c3aad8541c6dc19f5f888d9f0804
+%global gh_commit    e987775e619728f12205606c9cc3ee565ffb1516
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-dav
@@ -18,7 +18,7 @@
 
 Name:           php-%{gh_project}
 Summary:        WebDAV Framework for PHP
-Version:        3.2.1
+Version:        3.2.2
 Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
@@ -52,7 +52,7 @@ BuildRequires:  php-composer(psr/log)       >= 1.0.1
 BuildRequires:  php-curl
 BuildRequires:  php-pdo
 # From composer.json, "require-dev" : {
-#        "phpunit/phpunit" : "> 4.8, <=6.0.0",
+#        "phpunit/phpunit" : "> 4.8, <6.0.0",
 #        "evert/phpdoc-md" : "~0.1.0",
 #        "squizlabs/php_codesniffer": "~1.5.3"
 #        "sabre/cs"        : "^1.0.0",
@@ -205,6 +205,9 @@ exit $ret
 
 
 %changelog
+* Wed Feb 15 2017 Remi Collet <remi@fedoraproject.org> - 3.2.2-1
+- update to 3.2.2
+
 * Sun Jan 29 2017 Remi Collet <remi@fedoraproject.org> - 3.2.1-1
 - update to 3.2.1
 
