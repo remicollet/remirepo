@@ -120,8 +120,8 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver         RC1
-%global rpmrel        2
+#global rcver         RC1
+%global rpmrel        1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -1811,11 +1811,7 @@ rm -f README.{Zeus,QNX,CVS-RULES}
 
 
 %pre common
-echo -e "\nWARNING : These %{name}-* RPMs are not official Fedora / Red Hat build and"
-echo -e "overrides the official ones. Don't file bugs on Fedora Project nor Red Hat.\n"
-echo -e "Use dedicated forum at http://forum.remirepo.net/\n"
-
-%if %{?fedora}%{!?fedora:99} < 22
+%if %{?fedora}%{!?fedora:99} < 24
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -2051,6 +2047,9 @@ fi
 
 
 %changelog
+* Wed Feb 15 2017 Remi Collet <remi@fedoraproject.org> 7.1.2-1
+- Update to 7.1.2 - http://www.php.net/releases/7_1_2.php
+
 * Thu Feb  2 2017 Remi Collet <remi@fedoraproject.org> - 7.1.2-0.2.RC1
 - Update to 7.1.2RC1 (new sources)
 
