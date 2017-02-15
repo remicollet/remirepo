@@ -4,7 +4,6 @@
 php-tecnickcom-tc-lib-color 1.12.6
 php-tecnickcom-tc-lib-barcode 1.15.6
 php-sabre-dav 3.2.2
-php-zendframework-zend-mail 2.7.3
 
 =================
  Pending
@@ -14,6 +13,8 @@ php-7.0.16-1.fc25
 =================
  Testing
 =================
+15/2	php-zendframework-zend-mail-2.7.3-1.fc25
+15/2	php-zendframework-zend-mail-2.7.3-1.fc24
 13/2	php-swiftmailer-5.4.6-1.fc25
 13/2	php-swiftmailer-5.4.6-1.fc24
 13/2	php-swiftmailer-5.4.6-1.el7
@@ -62,6 +63,7 @@ php-7.0.16-1.fc25
 =================
  Feb, 2017
 =================
+15/2	15/2	php-zendframework-zend-mail-2.7.3-1.fc26
 15/2	15/2	php-7.1.2-1.fc26.1
 14/2	14/2	php-zendframework-zend-expressive-1.1.1-1.fc26
 14/2	7/2	php-phpunit-git-2.1.4-1.fc24
