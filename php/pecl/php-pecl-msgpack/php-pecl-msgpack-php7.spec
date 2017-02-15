@@ -111,6 +111,11 @@ Summary:       MessagePack developer files (header)
 Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 Requires:      %{?scl_prefix}php-devel%{?_isa}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}-devel         = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}-devel%{?_isa} = %{version}-%{release}
+%endif
+
 
 %description devel
 These are the files needed to compile programs using MessagePack serializer.
@@ -126,7 +131,7 @@ sed -e '/release/s/0.5.6/%{version}%{?gh_date:dev}/' -i package.xml
 mv %{pecl_name}-%{version} NTS
 %endif
 
-%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml} \
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
 %if %{with_msgpack}
