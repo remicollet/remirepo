@@ -1,4 +1,4 @@
-# remirepo spec/Fedora file for php-kukulich-fshl
+# remirepo/fedora spec file for php-kukulich-fshl
 #
 # Copyright (c) 2015-2017 Remi Collet
 # License: CC-BY-SA
@@ -16,7 +16,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.1.0
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        FSHL: fast syntax highlighter
 
 Group:          Development/Libraries
@@ -25,6 +25,9 @@ URL:            http://fshl.kukulich.cz/
 # git snashop to get upstream test suite
 Source0:        %{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
+
+# https://github.com/kukulich/fshl/pull/13
+Patch0:         %{name}-php71.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -58,6 +61,7 @@ To use this library, you just have to add, in your project:
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+%patch0 -p1 -b .pr13
 
 
 %build
@@ -79,7 +83,13 @@ cp -pr %{ns_project} %{buildroot}%{php_home}/%{ns_project}
 sed -e '/bootstrap/s:^.*$:require_once "%{buildroot}%{php_home}/%{ns_project}/autoload.php";:' \
     -i tests/%{ns_project}/*Test.php
 
-%{_bindir}/phpunit --verbose tests
+ret=0
+for cmd in php56 php70 php71 php; do
+  if which $cmd; then
+    $cmd %{_bindir}/phpunit --verbose tests || ret=1
+  fi
+done
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -99,6 +109,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb 16 2017 Remi Collet <remi@fedoraproject.org> - 2.1.0-4
+- open https://github.com/kukulich/fshl/issues/12 failed tests
+- add patch from https://github.com/kukulich/fshl/pull/13
+  workaround for failed test with PHP 7.1, fix FTBFS
+
 * Wed Nov  4 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-2
 - License is GPLv2+, from review #1277487
 
