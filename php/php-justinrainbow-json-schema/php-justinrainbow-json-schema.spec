@@ -25,7 +25,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.0.5
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A library to validate a json schema
 
 Group:          Development/Libraries
@@ -185,7 +185,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Feb 16 2017 Remi Collet <remi@fedoraproject.org> - 2.0.5-5
+* Thu Feb 16 2017 Remi Collet <remi@fedoraproject.org> - 2.0.5-6
 - always provide the command as validate-json2
 
 * Wed Dec  7 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-4

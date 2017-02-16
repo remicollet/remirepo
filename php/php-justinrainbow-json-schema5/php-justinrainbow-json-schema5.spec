@@ -1,4 +1,4 @@
-# remirepo/fedora spec file for php-justinrainbow-json-schema4
+# remirepo/fedora spec file for php-justinrainbow-json-schema5
 #
 # Copyright (c) 2016-2017 Remi Collet
 # License: CC-BY-SA
@@ -6,14 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    d39c56a46b3ebe1f3696479966cd2b9f50aaa24f
+%global gh_commit    9b6ebfeece6efaaeacb6cc061beb69cd007b75c1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     justinrainbow
 %global gh_project   json-schema
 %global php_home     %{_datadir}/php
 %global with_tests   0%{!?_without_tests:1}
-%global major        4
-%global minor        1.0
+%global major        5
+%global minor        0.0
 
 
 # Some sample files, only used for tests
@@ -29,7 +29,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}%{major}
 Version:        %{major}.%{minor}
-Release:        3%{?dist}
+Release:        1%{?dist}
 Summary:        A library to validate a json schema
 
 Group:          Development/Libraries
@@ -189,7 +189,11 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Feb 16 2017 Remi Collet <remi@fedoraproject.org> - 4.1.0-3
+* Thu Feb 16 2017 Remi Collet <remi@fedoraproject.org> - 5.0.0-1
+- rename to php-justinrainbow-json-schema5
+- update to 5.0.0
+
+* Thu Feb 16 2017 Remi Collet <remi@fedoraproject.org> - 4.1.0-2
 - always provide the command as validate-json4
 
 * Fri Dec 23 2016 Remi Collet <remi@fedoraproject.org> - 4.1.0-1
