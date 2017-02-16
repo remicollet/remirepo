@@ -1,0 +1,57 @@
+From 19dcb9039ec3df9776af23aebd9de5c8d0de3946 Mon Sep 17 00:00:00 2001
+From: oittaa <oittaa@users.noreply.github.com>
+Date: Thu, 6 Oct 2016 23:59:25 +0300
+Subject: [PATCH] [UuidTest.php] Don't use mt_srand() directly.
+
+---
+ test/Faker/Provider/UuidTest.php | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/test/Faker/Provider/UuidTest.php b/test/Faker/Provider/UuidTest.php
+index fceb8df..22f9efb 100644
+--- a/test/Faker/Provider/UuidTest.php
++++ b/test/Faker/Provider/UuidTest.php
+@@ -2,6 +2,7 @@
+ 
+ namespace Faker\Test\Provider;
+ 
++use Faker\Generator;
+ use Faker\Provider\Uuid as BaseProvider;
+ 
+ class UuidTest extends \PHPUnit_Framework_TestCase
+@@ -14,7 +15,8 @@ public function testUuidReturnsUuid()
+ 
+     public function testUuidExpectedSeed()
+     {
+-        mt_srand(123);
++        $faker = new Generator();
++        $faker->seed(123);
+         $this->assertEquals("8e2e0c84-50dd-367c-9e66-f3ab455c78d6", BaseProvider::uuid());
+         $this->assertEquals("073eb60a-902c-30ab-93d0-a94db371f6c8", BaseProvider::uuid());
+     }
+From 89135d0fe594ec7f3e82ef084242df09b88f6fd8 Mon Sep 17 00:00:00 2001
+From: oittaa <oittaa@users.noreply.github.com>
+Date: Thu, 6 Oct 2016 23:32:59 +0300
+Subject: [PATCH] [Generator.php] mt_rand() changed in PHP 7.1
+
+---
+ src/Faker/Generator.php | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/Faker/Generator.php b/src/Faker/Generator.php
+index cb13cd0..9496bca 100644
+--- a/src/Faker/Generator.php
++++ b/src/Faker/Generator.php
+@@ -188,7 +188,11 @@ public function seed($seed = null)
+         if ($seed === null) {
+             mt_srand();
+         } else {
+-            mt_srand((int) $seed);
++            if (PHP_VERSION_ID < 70100) {
++                mt_srand((int) $seed);
++            } else {
++                mt_srand((int) $seed, MT_RAND_PHP);
++            }
+         }
+     }
+ 
