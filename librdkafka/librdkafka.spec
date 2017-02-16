@@ -7,21 +7,22 @@
 # Please, preserve the changelog entries
 #
 %global libname      librdkafka
-%global gh_commit    2f153ea92a521bf7d2eb6b3108f393caafab3809
+%global gh_commit    6c9582c82f625962dd5a62b7788cc574353a18f9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     edenhill
 %global gh_project   %{libname}
+%global prever       RC1
 
 Name:    %{libname}
-Version: 0.9.3
-Release: 1%{?dist}
+Version: 0.9.4
+Release: 0.1.%{prever}%{?dist}
 Group:   System Environment/Libraries
 Summary: Apache Kafka C/C++ client library
 
 # librdkafka is BSD-2, pycrc is MIT, snappy is BSD-3
 License: BSD and MIT
 URL:     https://github.com/%{gh_owner}/%{gh_project}
-Source0: https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+Source0: https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
 
 # i686 required
 ExcludeArch:    i386
@@ -95,6 +96,9 @@ rm %{buildroot}%{_libdir}/*.a
 
 
 %changelog
+* Thu Feb 16 2017 Remi Collet <remi@remirepo.net> - 0.9.4-0.1.RC1
+- update to 0.9.4RC1 for test
+
 * Mon Jan 23 2017 Remi Collet <remi@fedoraproject.org> - 0.9.3-1
 - update to 0.9.3
 
