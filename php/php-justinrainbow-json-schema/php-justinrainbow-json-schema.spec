@@ -22,16 +22,10 @@
 %global ts_version   1.2.0
 
 %global eolv1        0
-%global with_script  0
-%if 0%{?fedora} >= 24 && 0%{?fedora} < 26
-%global with_script  1
-%endif
-# remirepo:1
-%global with_script  0
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.0.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A library to validate a json schema
 
 Group:          Development/Libraries
@@ -87,23 +81,15 @@ Requires:       php-composer(fedora/autoloader)
 %if %{eolv1}
 Obsoletes:      php-JsonSchema < 2
 %endif
-%if %{with_script}
 Requires:       php-cli
-# previous version provides the validate-json command
-Conflicts:      php-JsonSchema < 1.6.1-3
-%endif
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
 %description
 A PHP Implementation for validating JSON Structures against a given Schema.
-%if %{with_script}
-This package provides the library version 2 and the validate-json command.
-%else
+
 This package provides the library version 2.
-%endif
-The php-JsonSchema package provides the library version 1.
 
 See http://json-schema.org/
 
@@ -130,10 +116,6 @@ find vendor/json-schema/JSON-Schema-Test-Suite/tests \
    -exec rm {} \; \
    -print
 
-%if ! %{with_script}
-chmod -x bin/validate-json
-%endif
-
 
 %build
 # Empty build section, most likely nothing required.
@@ -146,10 +128,8 @@ rm -rf %{buildroot}
 mkdir -p              %{buildroot}%{php_home}
 cp -pr src/JsonSchema %{buildroot}%{php_home}/JsonSchema2
 
-%if %{with_script}
 : Command
-install -Dpm 0755 bin/validate-json %{buildroot}%{_bindir}/validate-json
-%endif
+install -Dpm 0755 bin/validate-json %{buildroot}%{_bindir}/validate-json2
 
 
 %check
@@ -200,15 +180,14 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc composer.json
 %doc *.md
-%if %{with_script}
-%{_bindir}/validate-json
-%else
-%doc bin/validate-json
-%endif
+%{_bindir}/validate-json2
 %{php_home}/JsonSchema2
 
 
 %changelog
+* Thu Feb 16 2017 Remi Collet <remi@fedoraproject.org> - 2.0.5-5
+- always provide the command as validate-json2
+
 * Wed Dec  7 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-4
 - drop the validate-json command, provided by php-nikic-php-parser3
 
