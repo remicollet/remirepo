@@ -26,16 +26,10 @@
 
 %global eolv1        0
 %global eolv2        0
-%global with_script  0
-%if 0%{?fedora} >= 26
-%global with_script  1
-%endif
-# remirepo:1
-%global with_script  1
 
 Name:           php-%{gh_owner}-%{gh_project}%{major}
 Version:        %{major}.%{minor}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A library to validate a json schema
 
 Group:          Development/Libraries
@@ -92,25 +86,15 @@ Obsoletes:      php-JsonSchema < 2
 %if %{eolv2}
 Obsoletes:      php-justinrainbow-json-schema < 3
 %endif
-%if %{with_script}
 Requires:       php-cli
-# previous version provides the validate-json command
-Conflicts:      php-JsonSchema < 1.6.1-3
-Conflicts:      php-justinrainbow-json-schema < 2.0.5-4
-%endif
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
 %description
 A PHP Implementation for validating JSON Structures against a given Schema.
-%if %{with_script}
-This package provides the library version 4 and the validate-json command.
-%else
-This package provides the library version 4.
-%endif
-The php-JsonSchema package provides the library version 1.
-The php-justinrainbow-json-schema package provides the library version 2.
+
+This package provides the library version %{major}.
 
 See http://json-schema.org/
 
@@ -136,10 +120,6 @@ find vendor/json-schema/JSON-Schema-Test-Suite/tests \
    -exec rm {} \; \
    -print
 
-%if ! %{with_script}
-chmod -x bin/validate-json
-%endif
-
 
 %build
 # Empty build section, most likely nothing required.
@@ -152,10 +132,8 @@ rm -rf %{buildroot}
 mkdir -p              %{buildroot}%{php_home}
 cp -pr src/JsonSchema %{buildroot}%{php_home}/JsonSchema%{major}
 
-%if %{with_script}
 : Command
-install -Dpm 0755 bin/validate-json %{buildroot}%{_bindir}/validate-json
-%endif
+install -Dpm 0755 bin/validate-json %{buildroot}%{_bindir}/validate-json%{major}
 
 
 %check
@@ -206,15 +184,14 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc composer.json
 %doc *.md
-%if %{with_script}
-%{_bindir}/validate-json
-%else
-%doc bin/validate-json
-%endif
+%{_bindir}/validate-json%{major}
 %{php_home}/JsonSchema%{major}
 
 
 %changelog
+* Thu Feb 16 2017 Remi Collet <remi@fedoraproject.org> - 4.1.0-2
+- always provide the command as validate-json4
+
 * Fri Dec 23 2016 Remi Collet <remi@fedoraproject.org> - 4.1.0-1
 - update to 4.1.0
 - drop patch merged upstream
