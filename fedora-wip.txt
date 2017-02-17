@@ -4,6 +4,7 @@
 php-tecnickcom-tc-lib-color 1.12.6
 php-tecnickcom-tc-lib-barcode 1.15.6
 php-pecl-amqp 1.8.0
+php-mongodb 1.1.2
 
 =================
  Pending

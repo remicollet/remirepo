@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    318d4b95438a2ea68a550c2878678097f63fb9fe
+%global gh_commit    a307dd60e71e1291c60927ea4f3a1905146063f5
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     mongodb
 #global gh_date      20151102
@@ -22,7 +22,7 @@
 #global prever       beta2
 
 Name:           php-%{gh_owner}
-Version:        1.1.1
+Version:        1.1.2
 %if 0%{?gh_date}
 Release:        0.2.%{gh_date}git%{gh_short}%{?dist}
 %else
@@ -165,6 +165,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 17 2017 Remi Collet <remi@remirepo.net> - 1.1.2-1
+- update to 1.1.2
+
 * Thu Jan 19 2017 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - update to 1.1.1
 
