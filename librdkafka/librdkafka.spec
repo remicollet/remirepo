@@ -15,7 +15,7 @@
 
 Name:    %{libname}
 Version: 0.9.4
-Release: 0.1.%{prever}%{?dist}
+Release: 0.2.%{prever}%{?dist}
 Group:   System Environment/Libraries
 Summary: Apache Kafka C/C++ client library
 
@@ -31,6 +31,7 @@ BuildRequires:  openssl-devel
 BuildRequires:  cyrus-sasl-devel
 BuildRequires:  zlib-devel
 BuildRequires:  libstdc++-devel
+BuildRequires:  lz4-devel
 BuildRequires:  gcc-c++
 BuildRequires:  python
 
@@ -62,7 +63,10 @@ cp -pr examples rpmdocs/examples
 
 
 %build
-%configure
+%configure \
+    --enable-lz4 \
+    --enable-ssl \
+    --enable-sasl
 
 make %{?_smp_mflags}
 
@@ -96,6 +100,9 @@ rm %{buildroot}%{_libdir}/*.a
 
 
 %changelog
+* Fri Feb 17 2017 Remi Collet <remi@remirepo.net> - 0.9.4-0.2.RC1
+- enable lz4
+
 * Thu Feb 16 2017 Remi Collet <remi@remirepo.net> - 0.9.4-0.1.RC1
 - update to 0.9.4RC1 for test
 
