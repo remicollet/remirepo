@@ -7,6 +7,7 @@ php-tecnickcom-tc-lib-barcode 1.15.6
 =================
  Pending
 =================
+17/2	php-hamcrest-1.2.2-4.fc25
 
 =================
  Testing
@@ -56,6 +57,7 @@ php-tecnickcom-tc-lib-barcode 1.15.6
 =================
  Feb, 2017
 =================
+17/2	17/2	php-hamcrest-1.2.2-4.fc26
 17/2	17/2	php-mongodb-1.1.2-1.fc26
 17/2	17/2	php-pecl-amqp-1.8.0-1.fc26
 17/2	10/2	php-fig-http-message-util-1.1.2-1.fc25

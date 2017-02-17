@@ -14,7 +14,7 @@
 
 Name:           php-hamcrest
 Version:        1.2.2
-Release:        1%{?dist}
+Release:        4%{?dist}
 Summary:        PHP port of Hamcrest Matchers
 
 Group:          Development/Libraries
@@ -24,10 +24,12 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 # Use generated autoloader instead of composer one
 Patch0:         bootstrap-autoload.patch
+# Upstream patch for PHP 7+
+Patch1:         %{name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-composer(theseer/autoload)
+BuildRequires:  php-fedora-autoloader-devel
 %if %{with_tests}
 BuildRequires:  php-composer(phpunit/phpunit)
 # composer.json
@@ -44,6 +46,8 @@ Requires:       php(language) >= 5.3.2
 Requires:       php-dom
 Requires:       php-pcre
 Requires:       php-spl
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(hamcrest/hamcrest-php) = %{version}
 
@@ -64,6 +68,8 @@ To use this library, you just have to add, in your project:
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p0 -b .rpm
+%patch1 -p1 -b .upstream
+find . -name \*.upstream -exec rm {} \;
 
 # Move to Library tree
 mv hamcrest/Hamcrest.php hamcrest/Hamcrest/Hamcrest.php
@@ -72,6 +78,7 @@ mv hamcrest/Hamcrest.php hamcrest/Hamcrest/Hamcrest.php
 %build
 # Library autoloader
 %{_bindir}/phpab \
+    --template fedora \
     --output hamcrest/Hamcrest/autoload.php \
     hamcrest/Hamcrest
 
@@ -97,7 +104,13 @@ cp -pr hamcrest/* %{buildroot}%{_datadir}/php
 %check
 %if %{with_tests}
 cd tests
-%{_bindir}/phpunit --verbose
+ret=0
+for cmd in php56 php70 php71 php; do
+  if which $cmd; then
+    $cmd %{_bindir}/phpunit --verbose || ret=1
+  fi
+done
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -117,6 +130,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 17 2017 Remi Collet <remi@fedoraproject.org> - 1.2.2-4
+- add upstream patch for PHP 7, fix FTBFS
+- switch to fedora/autoloader
+
 * Thu Oct 15 2015 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
 - update to 1.2.2
 
