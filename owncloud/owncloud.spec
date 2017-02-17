@@ -9,7 +9,7 @@
 #
 Name:           owncloud
 Version:        9.1.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
 
@@ -427,6 +427,7 @@ work with an SQLite 3 database stored on the local system.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
@@ -746,6 +747,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 17 2017 Remi Collet <remi@remirepo.net> - 9.1.4-2
+- apply missing patch (integrity check)
+
 * Fri Feb 03 2017 James Hogarth <james.hogarth@gmail.com> - 9.1.4-1
 - Update to 9.1.4
 - Fix guzzle autoloader ordering dependency issue
