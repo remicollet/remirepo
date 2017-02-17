@@ -10,7 +10,7 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%global sub_prefix %{scl_prefix}
+%global sub_prefix  %{scl_prefix}
 %scl_package        php-pecl-amqp
 %endif
 
@@ -22,12 +22,12 @@
 %else
 %global ini_name    40-%{pecl_name}.ini
 %endif
-%global prever      beta2
+#global prever      beta2
 
 Summary:       Communicate with any AMQP compliant server
 Name:          %{?sub_prefix}php-pecl-amqp
 Version:       1.8.0
-Release:       0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
@@ -172,6 +172,8 @@ cp -pr NTS ZTS
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure --with-php-config=%{_bindir}/php-config
@@ -187,6 +189,8 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
+%{?dtsenable}
+
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
@@ -300,6 +304,9 @@ fi
 
 
 %changelog
+* Fri Feb 17 2017 Remi Collet <remi@remirepo.net> - 1.8.0-1
+- update to 1.8.0 (stable)
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.8.0-0.3.beta2
 - rebuild with PHP 7.1.0 GA
 
