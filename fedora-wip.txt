@@ -3,8 +3,6 @@
 =================
 php-tecnickcom-tc-lib-color 1.12.6
 php-tecnickcom-tc-lib-barcode 1.15.6
-php-pecl-amqp 1.8.0
-php-mongodb 1.1.2
 
 =================
  Pending
@@ -13,6 +11,8 @@ php-mongodb 1.1.2
 =================
  Testing
 =================
+17/2	php-pecl-amqp-1.8.0-1.fc25
+17/2	php-pecl-amqp-1.8.0-1.fc24
 15/2	php-7.0.16-1.fc25
 15/2	php-zendframework-zend-mail-2.7.3-1.fc25
 15/2	php-zendframework-zend-mail-2.7.3-1.fc24
@@ -56,6 +56,8 @@ php-mongodb 1.1.2
 =================
  Feb, 2017
 =================
+17/2	17/2	php-mongodb-1.1.2-1.fc26
+17/2	17/2	php-pecl-amqp-1.8.0-1.fc26
 17/2	10/2	php-fig-http-message-util-1.1.2-1.fc25
 17/2	10/2	php-league-flysystem-1.0.35-1.fc24
 17/2	10/2	php-league-flysystem-1.0.35-1.fc25
