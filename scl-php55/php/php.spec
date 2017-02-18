@@ -140,7 +140,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.5.38
-Release: 6%{?dist}
+Release: 7%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -242,6 +242,11 @@ Patch146: bug73144.patch
 Patch147: bug73418.patch
 Patch148: bug73356.patch
 Patch149: bug73631.patch
+Patch150: bug73737.patch
+Patch151: bug73764.patch
+Patch152: bug73768.patch
+Patch153: bug73773.patch
+Patch154: bug69090.patch
 
 # Security fixes (200+)
 
@@ -984,6 +989,11 @@ support for using the enchant library to PHP.
 %patch147 -p1 -b .bug73418
 %patch148 -p1 -b .bug73356
 %patch149 -p1 -b .bug73631
+%patch150 -p1 -b .bug73737
+%patch151 -p1 -b .bug73767
+%patch152 -p1 -b .bug73768
+%patch153 -p1 -b .bug73773
+%patch154 -p1 -b .bug69090
 : ------------------------
 
 # Fixes for tests
@@ -1889,6 +1899,15 @@ EOF
 
 
 %changelog
+* Sat Feb 18 2017 Remi Collet <remi@remirepo.net> - 5.5.38-7
+- fix #73737: FPE when parsing a tag format
+  CVE-2016-10158
+- fix #73764: int overflows in phar
+  CVE-2016-10159
+- fix #73768: Memory corruption when loading hostile phar
+  CVE-2016-10160
+- fix #69090: check cached files permissions
+
 * Sat Dec 10 2016 Remi Collet <remi@remirepo.net> - 5.5.38-6
 - fix #73631: Invalid read when wddx decodes empty boolean element
   CVE-2016-9935
