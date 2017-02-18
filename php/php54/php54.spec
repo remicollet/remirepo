@@ -51,7 +51,7 @@
 %endif
 
 %if 0%{?__isa:1}
-%if 0%{?rhel} == 7
+%if 0%{?rhel} == 7 || 0%{?fedora} > 0
 %global isasuffix -%{__isa_bits}
 %else
 %global isasuffix -%{__isa}
@@ -98,7 +98,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.45
-Release: 12%{?dist}
+Release: 13%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -218,6 +218,10 @@ Patch257: bug72627.patch
 Patch258: bug72926.patch
 Patch259: bug73035.patch
 Patch260: bug72928.patch
+Patch261: bug73737.patch
+Patch262: bug73764.patch
+Patch263: bug73768.patch
+Patch264: bug73773.patch
 
 # Fixes for tests
 # no_NO issue
@@ -986,6 +990,10 @@ rm -f ext/json/utf8_to_utf16.*
 %patch258 -p1 -b .bug72926
 %patch259 -p1 -b .bug73035
 %patch260 -p1 -b .bug72928
+%patch261 -p1 -b .bug73737
+%patch262 -p1 -b .bug73764
+%patch263 -p1 -b .bug73768
+%patch264 -p1 -b .bug73773
 
 # Fixes for tests
 %patch301 -p1 -b .datetests2
@@ -1651,11 +1659,7 @@ cat << EOF
  backported from 5.5 or 5.6,
  The UPGRADE to a maintained version is very strongly RECOMMENDED.
 
- WARNING : These php-* RPMs are not official Fedora / Red Hat build and
- overrides the official ones. Don't file bugs on Fedora Project nor Red Hat.
-
- Use dedicated forum at http://forum.remirepo.net/
-%if %{?fedora}%{!?fedora:99} < 23
+%if %{?fedora}%{!?fedora:99} < 24
  WARNING : Fedora %{fedora} is now EOL :
  You should consider upgrading to a supported release
 %endif
@@ -1876,6 +1880,14 @@ fi
 
 
 %changelog
+* Sat Feb 18 2017 Remi Collet <remi@remirepo.net> - 5.4.45-13
+- fix #73737: FPE when parsing a tag format
+  CVE-2016-10158
+- fix #73764: int overflows in phar
+  CVE-2016-10159
+- fix #73768: Memory corruption when loading hostile phar
+  CVE-2016-10160
+
 * Mon Sep 19 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-12
 - fix #72627: Memory Leakage In exif_process_IFD_in_TIFF
   CVE-2016-7128

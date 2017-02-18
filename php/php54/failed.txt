@@ -1,20 +1,21 @@
-===== 5.5.45-12 (2016-09-19)
+===== 5.5.45-13 (2017-02-18)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
-/var/lib/mock/el5i/build.log:Tests failed    :    9
-/var/lib/mock/el5x/build.log:Tests failed    :    3
-/var/lib/mock/el6i/build.log:Tests failed    :    5
-/var/lib/mock/el6x/build.log:Tests failed    :    1
-/var/lib/mock/el7x/build.log:Tests failed    :    0
+/var/lib/mock/el5i/build.log:Tests failed    :    11
+/var/lib/mock/el5x/build.log:Tests failed    :    5
+/var/lib/mock/el6i/build.log:Tests failed    :    8
+/var/lib/mock/el6x/build.log:Tests failed    :    4
+/var/lib/mock/el7x/build.log:Tests failed    :    3
+
 
 el5i
 	IPv4 Loopback test [ext/sockets/tests/ipv4loop.phpt]
 	ext/sockets - socket_getpeername_ipv4loop - basic test [ext/sockets/tests/socket_getpeername_ipv4loop.phpt]
-el5i, el5x
-	Bug #33414 [1] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-1.phpt]
-	Bug #66501: EC private key support in openssl_sign [ext/openssl/tests/bug66501.phpt]
+el5i
 	Bug #64802: openssl_x509_parse fails to parse subject properly in some cases [ext/openssl/tests/bug64802.phpt]
+	Bug #66501: EC private key support in openssl_sign [ext/openssl/tests/bug66501.phpt]
+el5i, el5x
 el5i, el6i
 	Bug #41523 (strtotime('0000-00-00 00:00:00') is parsed as 1999-11-30) (32 bit) [ext/date/tests/bug41523.phpt]
 	Bug #53437 DateInterval unserialize bad data, 32 bit [ext/date/tests/bug53437_var3.phpt]
@@ -22,6 +23,11 @@ el5i, el6i
 	Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
 el6i, el6x
 	Bug #32001 (xml_parse*() goes into infinite loop when autodetection in effect), using UTF-* [ext/xml/tests/bug32001.phpt]
-el6x
-	Implement Req #60850 (Built in web server does not set $_SERVER['SCRIPT_FILENAME'] when using router) [sapi/cli/tests/php_cli_server_017.phpt]
+el5i, el5x, el6i, el6x, el7x
+	Bug #20382 [2] (strtotime ("Monday", $date) produces wrong result on DST changeover) [ext/date/tests/bug20382-2.phpt]
+	Bug #33414 [1] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-1.phpt]
+	Bug #33415 [1] (Possibly invalid non-one-hour DST or timezone shifts) [ext/date/tests/bug33415-1.phpt]
+
+
+* "date" test failures are only tzdata related
 
