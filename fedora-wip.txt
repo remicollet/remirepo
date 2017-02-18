@@ -44,11 +44,7 @@ php-tecnickcom-tc-lib-barcode 1.15.6
 11/2	php-deepend-Mockery-0.9.8-1.fc24
 11/2	php-deepend-Mockery-0.9.8-1.el7
 11/2	php-deepend-Mockery-0.9.8-1.fc25
-11/2	php-phpunit-PHPUnit-5.7.13-1.fc24
-11/2	php-phpunit-PHPUnit-5.7.13-1.fc25
-10/2	php-pecl-sphinx-1.4.0-0.1.20170203git201eb00.fc25
 10/2	php-fig-http-message-util-1.1.2-1.el7
-10/2	php-fig-http-message-util-1.1.2-1.fc24
 10/2	php-pecl-zendopcache-7.0.5-2.el6
 10/2	php-pecl-zendopcache-7.0.5-2.el7
 31/1	php-phpunit-PHPUnit-4.8.35-1.el7
@@ -57,6 +53,10 @@ php-tecnickcom-tc-lib-barcode 1.15.6
 =================
  Feb, 2017
 =================
+18/2	11/2	php-phpunit-PHPUnit-5.7.13-1.fc24
+18/2	11/2	php-phpunit-PHPUnit-5.7.13-1.fc25
+18/2	10/2	php-pecl-sphinx-1.4.0-0.1.20170203git201eb00.fc25
+18/2	10/2	php-fig-http-message-util-1.1.2-1.fc24
 17/2	17/2	php-hamcrest-1.2.2-4.fc26
 17/2	17/2	php-mongodb-1.1.2-1.fc26
 17/2	17/2	php-pecl-amqp-1.8.0-1.fc26
