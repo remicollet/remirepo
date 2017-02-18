@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    96f8a3f257b69e8128ad74d3a7fd464bcbaa3b35
+%global gh_commit    1311872ac850040a79c3c058bea3e22d0f09cbb7
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -22,7 +22,7 @@
 %endif
 
 Name:           php-sebastian-%{gh_project}
-Version:        2.0.0
+Version:        2.0.1
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Traverses array and object to enumerate all referenced objects
@@ -73,7 +73,7 @@ Autoloader: %{php_home}/%{ns_vendor}/%{ns_project}/autoload.php
 # Generate the Autoloader, from composer.json "autoload": {
 #        "classmap": [
 #            "src/"
-phpab --template fedora --output src/autoload.php src
+%{_bindir}/phpab --template fedora --output src/autoload.php src
 cat << 'EOF' | tee -a src/autoload.php
 // Dependencies
 require_once 'SebastianBergmann/RecursionContext/autoload.php';
@@ -88,23 +88,26 @@ cp -pr src %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}
 
 %check
 %if %{with_tests}
+mkdir vendor
+%{_bindir}/phpab --template fedora --output vendor/autoload.php tests
+
 : Run upstream test suite
 # remirepo:13
 run=0
 ret=0
 if which php56; then
   php56 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
-  %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php tests || ret=1
+  %{_bindir}/phpunit || ret=1
    run=1
 fi
 if which php71; then
   php71 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
-  %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php tests || ret=1
+  %{_bindir}/phpunit || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
 %{_bindir}/php -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
-%{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php tests --verbose
+%{_bindir}/phpunit --verbose
 # remirepo:2
 fi
 exit $ret
@@ -126,6 +129,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Feb 18 2017 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- update to 2.0.1
+
 * Tue Nov 22 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0 (no change)
 - raise dependency on sebastian/recursion-context 2.0
