@@ -10,6 +10,7 @@
 #
 %global multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
 %global libname libzip
+%global soname  5
 %if 0%{?rhel} == 5
 # Perl is too old
 %global with_tests     0
@@ -21,12 +22,12 @@
 %endif
 %endif
 
-%if 0%{?fedora} < 23
-Name:    %{libname}-last
-%else
+%if 0%{?fedora} >= 99
 Name:    %{libname}
+%else
+Name:    %{libname}%{soname}
 %endif
-Version: 1.1.3
+Version: 1.2.0
 Release: 1%{?dist}
 Group:   System Environment/Libraries
 Summary: C library for reading, creating, and modifying zip archives
@@ -53,7 +54,11 @@ BuildRequires:  perl(UNIVERSAL)
 BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
 %if "%{name}" == "%{libname}"
-Obsoletes:      %{libname}-last <= %{version}
+Obsoletes:      %{libname}%{soname} <= %{version}
+%if 0%{?rhel}
+# RHEL have commands in main package
+Provides:  %{libname} =  %{version}-%{release}
+%endif
 %endif
 
 
@@ -72,10 +77,12 @@ Group:    Development/Libraries
 Summary:  Development files for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %if "%{name}" != "%{libname}"
-Conflicts: %{libname}-devel < %{version}
-Provides:  %{libname}-devel = %{version}-%{release}
+Conflicts: %{libname}-last-devel     <  %{version}
+Conflicts: %{libname}-devel          <  %{version}
+Provides:  %{libname}-devel          =  %{version}-%{release}
 %else
-Obsoletes: %{libname}-last-devel <= %{version}
+Obsoletes: %{libname}-last-devel     <= %{version}
+Obsoletes: %{libname}%{soname}-devel <= %{version}
 %endif
 
 %description devel
@@ -88,10 +95,15 @@ Summary:  Command line tools from %{name}
 Group:    Applications/System
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %if "%{name}" != "%{libname}"
-Conflicts: %{libname} < %{version}
-Provides:  %{libname} = %{version}-%{release}
+Conflicts: %{libname}-last-tools     <  %{version}
+# Fedora 23 have sub package
+Conflicts: %{libname}-tools          <  %{version}
+Provides:  %{libname}-tools          =  %{version}-%{release}
+# RHEL have commands in main package
+Conflicts: %{libname}                <  1.1
 %else
-Obsoletes: %{libname}-last-tools <= %{version}
+Obsoletes: %{libname}-last-tools     <= %{version}
+Obsoletes: %{libname}%{soname}-tools <= %{version}
 %endif
 
 %description tools
@@ -153,7 +165,7 @@ make check
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%{_libdir}/libzip.so.4*
+%{_libdir}/libzip.so.%{soname}*
 
 %files tools
 %defattr(-,root,root,-)
@@ -177,6 +189,10 @@ make check
 
 
 %changelog
+* Sun Feb 19 2017 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0
+- rename to libzip5 for new soname
+
 * Sat May 28 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - update to 1.1.3
 
