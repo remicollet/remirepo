@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e702506af102d0dc5312dd24b8e97fd6e58ce3ba
+%global gh_commit    4601a46c162eccadffc7d5a6b1f5334df5d99713
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_vendor    sebastianbergmann
@@ -20,8 +20,8 @@
 %global php_home     %{_datadir}/php
 %global ver_major    6
 %global ver_minor    0
-%global ver_patch    6
-%global specrel      2
+%global ver_patch    7
+%global specrel      1
 
 Name:           %{pk_project}%{ver_major}
 Version:        %{ver_major}.%{ver_minor}.%{ver_patch}
@@ -234,6 +234,9 @@ php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
 
 
 %changelog
+* Sun Feb 19 2017 Remi Collet <remi@fedoraproject.org> - 6.0.7-1
+- update to 6.0.7
+
 * Wed Feb  8 2017 Remi Collet <remi@fedoraproject.org> - 6.0.6-2
 - cleanup autoloader (Symfony no more used)
 - fix autoloader for dbunit
