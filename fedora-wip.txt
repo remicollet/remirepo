@@ -3,6 +3,7 @@
 =================
 php-tecnickcom-tc-lib-color 1.12.6
 php-tecnickcom-tc-lib-barcode 1.15.6
+phpunit 5.7.14
 
 =================
  Pending

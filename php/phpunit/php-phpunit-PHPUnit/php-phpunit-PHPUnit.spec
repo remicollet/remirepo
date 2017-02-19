@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    60ebeed87a35ea46fd7f7d8029df2d6f013ebb34
+%global gh_commit    4906b8faf23e42612182fd212eb6f4c0f2954b57
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.7
-%global minor        13
+%global minor        14
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -61,7 +61,7 @@ BuildRequires:  php-composer(sebastian/recursion-context) >= 2.0
 BuildRequires:  php-composer(sebastian/global-state) >= 1.1
 BuildRequires:  php-composer(sebastian/object-enumerator) >= 2.0
 BuildRequires:  php-composer(sebastian/resource-operations) >= 1.0
-BuildRequires:  php-composer(sebastian/version) >= 1.0
+BuildRequires:  php-composer(sebastian/version) >= 1.0.3
 BuildRequires:  php-composer(myclabs/deep-copy) >= 1.3
 BuildRequires:  php-composer(symfony/yaml) <  3
 BuildRequires:  php-composer(symfony/yaml) >= 2.1
@@ -86,7 +86,7 @@ BuildRequires:  php-composer(fedora/autoloader)
 #        "sebastian/global-state": "^1.1",
 #        "sebastian/object-enumerator": "~2.0",
 #        "sebastian/resource-operations": "~1.0",
-#        "sebastian/version": "~1.0|~2.0",
+#        "sebastian/version": "~1.0.3|~2.0",
 #        "myclabs/deep-copy": "~1.3",
 #        "ext-dom": "*",
 #        "ext-json": "*",
@@ -121,7 +121,7 @@ Requires:       php-composer(sebastian/object-enumerator) >= 2.0
 Requires:       php-composer(sebastian/object-enumerator) <  3
 Requires:       php-composer(sebastian/resource-operations) >= 1.0
 Requires:       php-composer(sebastian/resource-operations) <  2
-Requires:       php-composer(sebastian/version) >= 1.0
+Requires:       php-composer(sebastian/version) >= 1.0.3
 Requires:       php-composer(sebastian/version) <  3
 Requires:       php-composer(myclabs/deep-copy) >= 1.3
 Requires:       php-composer(myclabs/deep-copy) <  2
@@ -233,6 +233,9 @@ fi
 
 
 %changelog
+* Sun Feb 19 2017 Remi Collet <remi@fedoraproject.org> - 5.7.14-1
+- update to 5.7.14
+
 * Fri Feb 10 2017 Remi Collet <remi@fedoraproject.org> - 5.7.13-1
 - update to 5.7.13
 
