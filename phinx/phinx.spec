@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    6d9b6dcc55ee4d85adf5f6c1d7773271f458d19d
+%global gh_commit    4e058f2df00f58f654d7983f3943b327bf046c7c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     robmorgan
 #global gh_date      20150820
@@ -20,7 +20,7 @@
 %endif
 
 Name:           %{gh_project}
-Version:        0.7.0
+Version:        0.7.1
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        Manage the database migrations for your PHP app
 
@@ -159,6 +159,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 19 2017 Remi Collet <remi@remirepo.net> - 0.7.1-1
+- update to 0.7.1
+
 * Fri Feb 10 2017 Remi Collet <remi@remirepo.net> - 0.7.0-1
 - update to 0.7.0
 
