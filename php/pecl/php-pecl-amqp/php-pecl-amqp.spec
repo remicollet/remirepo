@@ -24,10 +24,12 @@
 %endif
 #global prever      beta2
 
+%global buildver %(pkg-config --silence-errors --modversion librabbitmq 2>/dev/null || echo 65536)
+
 Summary:       Communicate with any AMQP compliant server
 Name:          %{?sub_prefix}php-pecl-amqp
 Version:       1.8.0
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
@@ -36,11 +38,13 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 5.3.0
 BuildRequires: %{?scl_prefix}php-pear
-%if "%{?vendor}" == "Remi Collet"
 # Upstream requires 0.5.2, set 0.8.0 to ensure "last" is used.
+%if 0%{?fedora} >= 23
 BuildRequires: librabbitmq-devel >= 0.8.0
+Requires:      librabbitmq       >= %{buildver}
 %else
-BuildRequires: librabbitmq-devel >= 0.5.2
+BuildRequires: librabbitmq-last-devel >= 0.8.0
+Requires:      librabbitmq-last       >= %{buildver}
 %endif
 %if %{with_tests}
 BuildRequires: rabbitmq-server
@@ -304,6 +308,9 @@ fi
 
 
 %changelog
+* Sun Feb 19 2017 Remi Collet <remi@remirepo.net> - 1.8.0-2
+- ensure proper librabbitmq version is used
+
 * Fri Feb 17 2017 Remi Collet <remi@remirepo.net> - 1.8.0-1
 - update to 1.8.0 (stable)
 
