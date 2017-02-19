@@ -40,11 +40,11 @@ BuildRequires: %{?scl_prefix}php-devel > 5.3.0
 BuildRequires: %{?scl_prefix}php-pear
 # Upstream requires 0.5.2, set 0.8.0 to ensure "last" is used.
 %if 0%{?fedora} >= 23
-BuildRequires: librabbitmq-devel >= 0.8.0
-Requires:      librabbitmq       >= %{buildver}
+BuildRequires: librabbitmq-devel   >= 0.8.0
+Requires:      librabbitmq%{?_isa} >= %{buildver}
 %else
-BuildRequires: librabbitmq-last-devel >= 0.8.0
-Requires:      librabbitmq-last       >= %{buildver}
+BuildRequires: librabbitmq-last-devel   >= 0.8.0
+Requires:      librabbitmq-last%{?_isa} >= %{buildver}
 %endif
 %if %{with_tests}
 BuildRequires: rabbitmq-server
