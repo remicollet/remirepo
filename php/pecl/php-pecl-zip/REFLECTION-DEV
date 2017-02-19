@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #140 zip version 1.13.5 ] {
+Extension [ <persistent> extension #158 zip version 1.14.0-dev ] {
 
   - Functions {
     Function [ <internal:zip> function zip_open ] {
@@ -69,7 +69,7 @@ Extension [ <persistent> extension #140 zip version 1.13.5 ] {
   - Classes [1] {
     Class [ <internal:zip> class ZipArchive ] {
 
-      - Constants [75] {
+      - Constants [79] {
         Constant [ integer CREATE ] { 1 }
         Constant [ integer EXCL ] { 2 }
         Constant [ integer CHECKCONS ] { 4 }
@@ -145,6 +145,10 @@ Extension [ <persistent> extension #140 zip version 1.13.5 ] {
         Constant [ integer OPSYS_OS_400 ] { 18 }
         Constant [ integer OPSYS_OS_X ] { 19 }
         Constant [ integer OPSYS_DEFAULT ] { 3 }
+        Constant [ integer EM_NONE ] { 0 }
+        Constant [ integer EM_AES_128 ] { 257 }
+        Constant [ integer EM_AES_192 ] { 258 }
+        Constant [ integer EM_AES_256 ] { 259 }
       }
 
       - Static properties [0] {
@@ -156,7 +160,7 @@ Extension [ <persistent> extension #140 zip version 1.13.5 ] {
       - Properties [0] {
       }
 
-      - Methods [37] {
+      - Methods [39] {
         Method [ <internal:zip> public method open ] {
 
           - Parameters [2] {
@@ -449,6 +453,24 @@ Extension [ <persistent> extension #140 zip version 1.13.5 ] {
             Parameter #0 [ <required> $index ]
             Parameter #1 [ <required> $method ]
             Parameter #2 [ <optional> $compflags ]
+          }
+        }
+
+        Method [ <internal:zip> public method setEncryptionName ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $method ]
+            Parameter #2 [ <optional> $password ]
+          }
+        }
+
+        Method [ <internal:zip> public method setEncryptionIndex ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $index ]
+            Parameter #1 [ <required> $method ]
+            Parameter #2 [ <optional> $password ]
           }
         }
       }

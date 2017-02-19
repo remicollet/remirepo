@@ -25,13 +25,13 @@
 %else
 %global ini_name  40-%{pecl_name}.ini
 %endif
-#global prever    dev
+%global prever    dev
 
 Summary:      A ZIP archive management extension
 Summary(fr):  Une extension de gestion des ZIP
 Name:         %{?scl_prefix}php-pecl-zip
-Version:      1.13.5
-Release:      2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:      1.14.0
+Release:      0.1.20170219dev%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %if %{with_libzip}
 License:      PHP
 %else
@@ -46,7 +46,8 @@ Source:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel
 %if %{with_libzip}
-BuildRequires: pkgconfig(libzip) >= 1.0.0
+# Version 1.2.0 for encryption support
+BuildRequires: pkgconfig(libzip) >= 1.2.0
 %endif
 BuildRequires: zlib-devel
 BuildRequires: %{?scl_prefix}php-pear
@@ -119,7 +120,7 @@ cd NTS
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_ZIP_VERSION/{s/.* "//;s/".*$//;p}' php5/php_zip.h)
-if test "x${extver}" != "x%{version}%{?prever}"; then
+if test "x${extver}" != "x%{version}-%{?prever}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
@@ -144,6 +145,8 @@ cp -pr NTS ZTS
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -171,6 +174,7 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
+%{?dtsenable}
 
 make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
@@ -263,6 +267,10 @@ fi
 
 
 %changelog
+* Sun Feb 19 2017 Remi Collet <remi@fedoraproject.org> - 1.14.0-0.1.20170219dev
+- update to 1.4.0-dev with encryption support
+- raise dependency on libzip 1.2.0
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.13.5-2
 - rebuild with PHP 7.1.0 GA
 
