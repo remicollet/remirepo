@@ -21,8 +21,8 @@
 
 Summary:        Named and unnamed synchronization objects
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.1.0
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.1.1
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -116,6 +116,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -133,9 +135,9 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
+%{?dtsenable}
 
-make -C NTS \
-     install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
@@ -144,8 +146,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
-make -C ZTS \
-     install INSTALL_ROOT=%{buildroot}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
 
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
@@ -185,7 +186,7 @@ cd NTS
 
 : Upstream test suite  for NTS extension
 export TEST_PHP_EXECUTABLE=%{__php}
-export TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so"
+export TEST_PHP_ARGS="-n -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so"
 export NO_INTERACTION=1
 export REPORT_EXIT_STATUS=1
 %{__php} -n run-tests.php --show-diff
@@ -199,7 +200,7 @@ cd ../ZTS
 
 : Upstream test suite  for ZTS extension
 export TEST_PHP_EXECUTABLE=%{_bindir}/zts-php
-export TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so"
+export TEST_PHP_ARGS="-n -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so"
 %{_bindir}/zts-php -n run-tests.php --show-diff
 %endif
 
@@ -224,6 +225,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 20 2017 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- Update to 1.1.1
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-2
 - rebuild with PHP 7.1.0 GA
 
