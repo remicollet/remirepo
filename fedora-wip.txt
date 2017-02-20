@@ -3,7 +3,6 @@
 =================
 php-tecnickcom-tc-lib-color 1.12.6
 php-tecnickcom-tc-lib-barcode 1.15.6
-phpunit 5.7.14
 
 =================
  Pending
@@ -12,6 +11,8 @@ phpunit 5.7.14
 =================
  Testing
 =================
+20/2	php-phpunit-PHPUnit-5.7.14-1.fc25
+20/2	php-phpunit-PHPUnit-5.7.14-1.fc24
 20/2	php-nette-di-2.4.7-1.fc25
 20/2	php-nette-bootstrap-2.4.3-1.fc25
 20/2	php-pecl-memcached-3.0.3-1.fc25
@@ -48,6 +49,7 @@ phpunit 5.7.14
 =================
  Feb, 2017
 =================
+20/2	20/2	php-phpunit-PHPUnit-5.7.14-1.fc26
 20/2	20/2	php-nette-bootstrap-2.4.3-1.fc26
 20/2	20/2	php-nette-di-2.4.7-1.fc26
 20/2	20/2	php-pecl-memcached-3.0.3-1.fc26
