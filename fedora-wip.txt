@@ -4,7 +4,6 @@
 php-tecnickcom-tc-lib-color 1.12.6
 php-tecnickcom-tc-lib-barcode 1.15.6
 phpunit 5.7.14
-pecl/memcached 3.0.3
 php-nette-bootstrap 2.4.3
 php-nette-di 2.4.7
 
@@ -15,6 +14,7 @@ php-nette-di 2.4.7
 =================
  Testing
 =================
+20/2	php-pecl-memcached-3.0.3-1.fc25
 19/2	php-sebastian-object-enumerator-2.0.1-1.fc25
 19/2	php-sebastian-object-enumerator-2.0.1-1.fc24
 17/2	php-hamcrest-1.2.2-4.fc25
@@ -48,6 +48,7 @@ php-nette-di 2.4.7
 =================
  Feb, 2017
 =================
+20/2	20/2	php-pecl-memcached-3.0.3-1.fc26
 20/2	11/2	php-smbclient-0.9.0-1.fc24
 20/2	11/2	php-smbclient-0.9.0-1.fc25
 20/2	11/2	php-nikic-php-parser3-3.0.4-1.fc24
