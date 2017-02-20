@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    9a1197bc5b8aa4fad104c22f6d9b2a3d4bdda0c6
+%global gh_commit    d2809f1dc4bad4d00613398dd0db14d74335ad7a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-captcha
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.0
+Version:        2.7.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
