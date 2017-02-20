@@ -44,13 +44,14 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 #        "zendframework/zend-session": "^2.6",
 #        "zendframework/zend-text": "^2.6",
 #        "zendframework/zend-validator": "^2.6",
-#        "zendframework/zendservice-recaptcha": "*",
-#        "squizlabs/php_codesniffer": "^2.3.1",
+#        "zendframework/zendservice-recaptcha": "^3.0",
+#        "zendframework/zend-coding-standard": "~1.0.0",
 #        "phpunit/PHPUnit": "~4.8"
 BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-text)             >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.6
-#BuildRequires:  php-composer(%%{gh_owner}/zendservice-recaptcha) >= 2.5
+# remirepo:1
+BuildRequires:  php-composer(%{gh_owner}/zendservice-recaptcha) >= 3.0
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.8
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
@@ -77,7 +78,7 @@ Suggests:       php-composer(%{gh_owner}/zend-i18n-resources)
 Suggests:       php-composer(%{gh_owner}/zend-session)
 Suggests:       php-composer(%{gh_owner}/zend-text)
 Suggests:       php-composer(%{gh_owner}/zend-validator)
-#Suggests:       php-composer(%%{gh_owner}/zendservice-recaptcha)
+Suggests:       php-composer(%{gh_owner}/zendservice-recaptcha)
 %endif
 %endif
 # From phpcompatinfo report for version 2.5.2
@@ -131,25 +132,27 @@ Zend\Loader\AutoloaderFactory::factory(array(
            'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
+# remirepo:1
+require_once '%{php_home}/ZendService/ReCaptcha/autoload.php';
 EOF
 
 # remirepo:15
 run=0
 ret=0
 if which php56; then
-   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php56 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php70 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if which php71; then
-   php71 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php71 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+%{_bindir}/phpunit --verbose
 # remirepo:2
 fi
 exit $ret
@@ -172,6 +175,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 20 2017 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
+- update to 2.7.0
+
 * Wed Jun 22 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - update to 2.6.0
 - raise dependency on PHP 5.6
