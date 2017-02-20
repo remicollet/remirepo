@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    4db37e6d42ddf41b50417950741113b5dfc86e27
+%global gh_commit    2c27747f5aff2e436ebf542e0ea566bea1db2d53
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.4.2
+Version:        2.4.3
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Bootstrap
@@ -37,7 +37,7 @@ BuildRequires:  php(language) >= 5.3.1
 BuildRequires:  php-tokenizer
 BuildRequires:  php-pcre
 BuildRequires:  php-reflection
-BuildRequires:  php-composer(%{gh_owner}/di) >= 2.4.0
+BuildRequires:  php-composer(%{gh_owner}/di) >= 2.4.7
 BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.4
 # From composer.json, "require-dev": {
 #        "nette/application": "~2.3",
@@ -46,7 +46,7 @@ BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.4
 #        "nette/forms": "~2.3",
 #        "nette/http": "~2.4.0",
 #        "nette/mail": "~2.3",
-#        "nette/robot-loader": "~2.2",
+#        "nette/robot-loader": "^2.4.2 || ^3.0",
 #        "nette/safe-stream": "~2.2",
 #        "nette/security": "~2.3",
 #        "nette/tester": "~2.0",
@@ -59,7 +59,7 @@ BuildRequires:  php-composer(%{gh_owner}/database) >= 2.3
 BuildRequires:  php-composer(%{gh_owner}/forms) >= 2.3
 BuildRequires:  php-composer(%{gh_owner}/http) >= 2.4.0
 BuildRequires:  php-composer(%{gh_owner}/mail) >= 2.3
-BuildRequires:  php-composer(%{gh_owner}/robot-loader) >= 2.2
+BuildRequires:  php-composer(%{gh_owner}/robot-loader) >= 2.4.2
 BuildRequires:  php-composer(%{gh_owner}/safe-stream) >= 2.2
 BuildRequires:  php-composer(%{gh_owner}/security) >= 2.3
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
@@ -69,11 +69,11 @@ BuildRequires:  php-composer(tracy/tracy) >= 2.4.1
 
 # from composer.json, "require": {
 #        "php": ">=5.6.0"
-#        "nette/di": "~2.4.0",
+#        "nette/di": "~2.4.7",
 #        "nette/utils": "~2.4"
 Requires:       php(language) >= 5.3.1
 Requires:       php-tokenizer
-Requires:       php-composer(%{gh_owner}/di) >= 2.4.0
+Requires:       php-composer(%{gh_owner}/di) >= 2.4.7
 Requires:       php-composer(%{gh_owner}/di) <  2.5
 Requires:       php-composer(%{gh_owner}/utils) >= 2.4
 Requires:       php-composer(%{gh_owner}/utils) <  3
@@ -179,6 +179,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 20 2017 Remi Collet <remi@fedoraproject.org> - 2.4.3-1
+- update to 2.4.3
+- raise dependency on nette/di 2.4.7
+
 * Wed Dec 21 2016 Remi Collet <remi@fedoraproject.org> - 2.4.2-1
 - update to 2.4.2
 
