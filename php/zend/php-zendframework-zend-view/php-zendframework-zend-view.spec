@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.8.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -83,12 +83,16 @@ BuildRequires:  php-composer(%{gh_owner}/zend-mvc)              >= 2.7
 BuildRequires:  php-composer(%{gh_owner}/zend-navigation)       >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-paginator)        >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-permissions-acl)  >= 2.6
-#BuildRequires:  php-composer(%{gh_owner}/zend-router)           >= 3.0.1
+BuildRequires:  php-composer(%{gh_owner}/zend-router)           >= 3.0.1
 BuildRequires:  php-composer(%{gh_owner}/zend-serializer)       >= 2.6.1
 BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.6.2
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
 BuildRequires:  php-composer(%{gh_owner}/zend-uri)              >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.5
+# Not in composer.json
+BuildRequires:  php-composer(%{gh_owner}/zend-mvc-plugin-flashmessenger)
+BuildRequires:  php-composer(%{gh_owner}/zend-mvc-i18n)
+BuildRequires:  php-composer(%{gh_owner}/zend-mvc-console)
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
@@ -236,6 +240,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 21 2017 Remi Collet <remi@fedoraproject.org> - 2.8.1-2
+- add missing BR, fix FTBFS #1424088
+
 * Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 2.8.1-1
 - version 2.8.1
 

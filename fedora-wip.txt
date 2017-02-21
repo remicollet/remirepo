@@ -22,7 +22,6 @@ php-zendframework-zend-captcha 2.7.0 (when recaptcha approved)
 17/2	php-hamcrest-1.2.2-4.fc25
 17/2	php-pecl-amqp-1.8.0-1.fc25
 17/2	php-pecl-amqp-1.8.0-1.fc24
-15/2	php-7.0.16-1.fc25
 15/2	php-zendframework-zend-mail-2.7.3-1.fc25
 15/2	php-zendframework-zend-mail-2.7.3-1.fc24
 13/2	php-swiftmailer-5.4.6-1.el7
@@ -46,6 +45,8 @@ php-zendframework-zend-captcha 2.7.0 (when recaptcha approved)
 =================
  Feb, 2017
 =================
+21/2	21/2	php-zendframework-zend-view-2.8.1-2.fc26
+21/2	15/2	php-7.0.16-1.fc25
 21/2	21/2	php-sabre-uri-1.2.1-1.fc26
 21/2	13/2	php-swiftmailer-5.4.6-1.fc25
 21/2	13/2	php-swiftmailer-5.4.6-1.fc24
