@@ -20,7 +20,7 @@
 
 # Get commit from PHP_PHALCON_ZEPVERSION in 
 # https://github.com/phalcon/cphalcon/blob/master/ext/php_phalcon.h
-%global gh_commit    cae68c4205a93a7a1ea6165bcd5ce5cb470f5bdd
+%global gh_commit    72dbb2063e835ffa860dcf235dcbf6ec0f821fa5
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20161126
 %global gh_owner     phalcon
@@ -28,7 +28,7 @@
 %global ext_name     zephir_parser
 
 Name:           %{?scl_prefix}%{gh_project}-parser
-Version:        0.9.5
+Version:        0.9.6
 Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Zephir parser extension
 
@@ -121,10 +121,6 @@ Compiler design goals:
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-: Fix versions
-sed -e 's/0.9.4a-dev/%{version}/' -i Library/Compiler.php
-sed -e '/PHP_ZEPHIR_PARSER_VERSION/s/0.1.0/%{version}/' -i parser/php_zephir_parser.h
-
 %patch0 -p0 -b .rpm
 sed -e 's:@DATADIR@:%{_datadir}:;s:@BINDIR@:%{_bindir}:' \
     -i bin/%{gh_project}
@@ -200,6 +196,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 21 2017 Remi Collet <remi@fedoraproject.org> - 0.9.6-1
+- version 0.9.6
+
 * Sun Nov 27 2016 Remi Collet <remi@fedoraproject.org> - 0.9.5-1
 - version 0.9.5
 
