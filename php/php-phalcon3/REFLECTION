@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #160 phalcon version 3.0.3 ] {
+Extension [ <persistent> extension #170 phalcon version 3.0.4 ] {
 
   - INI {
     Entry [ phalcon.db.escape_identifiers <ALL> ]
