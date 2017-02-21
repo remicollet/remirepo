@@ -44,7 +44,7 @@
 Name:           %{gh_project}
 Version:        9.1.2
 %global schema  9.1.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 

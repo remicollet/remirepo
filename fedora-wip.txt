@@ -1,7 +1,7 @@
 =================
  TODO
 =================
-php-tecnickcom-tc-lib-color 1.12.6
+php-tecnickcom-tc-lib-color 1.12.6 (waiting for phpunit6)
 php-tecnickcom-tc-lib-barcode 1.15.6
 php-zendframework-zend-captcha 2.7.0 (when recaptcha approved)
 
@@ -12,6 +12,10 @@ php-zendframework-zend-captcha 2.7.0 (when recaptcha approved)
 =================
  Testing
 =================
+21/2	glpi-9.1.2-3.fc25
+21/2	php-sabre-xml-1.5.0-1.fc24
+21/2	php-sabre-vobject4-4.1.2-1.fc25
+21/2	php-sabre-vobject4-4.1.2-1.fc24
 20/2	php-phpunit-PHPUnit-5.7.14-1.fc25
 20/2	php-phpunit-PHPUnit-5.7.14-1.fc24
 20/2	php-nette-di-2.4.7-1.fc25
@@ -45,6 +49,8 @@ php-zendframework-zend-captcha 2.7.0 (when recaptcha approved)
 =================
  Feb, 2017
 =================
+21/2	21/2	glpi-9.1.2-3.fc26
+21/2	21/2	php-sabre-vobject4-4.1.2-1.fc26
 21/2	21/2	php-zendframework-zend-view-2.8.1-2.fc26
 21/2	15/2	php-7.0.16-1.fc25
 21/2	21/2	php-sabre-uri-1.2.1-1.fc26
