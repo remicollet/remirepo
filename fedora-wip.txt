@@ -25,14 +25,10 @@ php-zendframework-zend-captcha 2.7.0 (when recaptcha approved)
 15/2	php-7.0.16-1.fc25
 15/2	php-zendframework-zend-mail-2.7.3-1.fc25
 15/2	php-zendframework-zend-mail-2.7.3-1.fc24
-13/2	php-swiftmailer-5.4.6-1.fc25
-13/2	php-swiftmailer-5.4.6-1.fc24
 13/2	php-swiftmailer-5.4.6-1.el7
 13/2	php-pecl-memcached-3.0.2-1.fc25
 12/2	php-horde-Horde-Timezone-1.1.0-1.el7
-12/2	php-horde-Horde-Timezone-1.1.0-1.fc25
 12/2	php-horde-Horde-Timezone-1.1.0-1.el6
-12/2	php-horde-Horde-Timezone-1.1.0-1.fc24
 11/2	php-horde-Horde-Icalendar-2.1.6-1.el6
 11/2	php-horde-Horde-Icalendar-2.1.6-1.fc25
 11/2	php-horde-Horde-Icalendar-2.1.6-1.el7
@@ -50,6 +46,10 @@ php-zendframework-zend-captcha 2.7.0 (when recaptcha approved)
 =================
  Feb, 2017
 =================
+21/2	13/2	php-swiftmailer-5.4.6-1.fc25
+21/2	13/2	php-swiftmailer-5.4.6-1.fc24
+21/2	12/2	php-horde-Horde-Timezone-1.1.0-1.fc25
+21/2	12/2	php-horde-Horde-Timezone-1.1.0-1.fc24
 20/2	20/2	php-phpunit-PHPUnit-5.7.14-1.fc26
 20/2	20/2	php-nette-bootstrap-2.4.3-1.fc26
 20/2	20/2	php-nette-di-2.4.7-1.fc26
