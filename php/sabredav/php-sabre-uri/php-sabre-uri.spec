@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    258b72540fe3f2c0bb395cb40e56f9ae409f93b5
+%global gh_commit    ada354d83579565949d80b2e15593c2371225e61
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-uri
@@ -14,8 +14,8 @@
 
 Name:           php-%{gh_project}
 Summary:        Functions for making sense out of URIs
-Version:        1.1.1
-Release:        2%{?dist}
+Version:        1.2.1
+Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 License:        BSD
@@ -29,7 +29,7 @@ BuildArch:      noarch
 BuildRequires:  php(language) > 5.4.7
 # From composer.json, "require-dev": {
 #        "sabre/cs": "~1.0.0",
-#        "phpunit/phpunit" : "*"
+#        "phpunit/phpunit" : ">=4.0,<6.0"
 BuildRequires:  php-pcre
 BuildRequires:  php-composer(phpunit/phpunit)
 # Autoloader
@@ -126,6 +126,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 21 2017 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- update to 1.2.1
+
 * Sat Oct 29 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-2
 - switch from symfony/class-loader to fedora/autoloader
 

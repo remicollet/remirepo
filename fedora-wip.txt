@@ -46,6 +46,7 @@ php-zendframework-zend-captcha 2.7.0 (when recaptcha approved)
 =================
  Feb, 2017
 =================
+21/2	21/2	php-sabre-uri-1.2.1-1.fc26
 21/2	13/2	php-swiftmailer-5.4.6-1.fc25
 21/2	13/2	php-swiftmailer-5.4.6-1.fc24
 21/2	12/2	php-horde-Horde-Timezone-1.1.0-1.fc25
