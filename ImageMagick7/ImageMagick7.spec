@@ -8,8 +8,8 @@
 #
 # Please preserve changelog entries
 #
-%global VER        7.0.4
-%global Patchlevel 10
+%global VER        7.0.5
+%global Patchlevel 0
 %global incsuffixe -7
 %global libsuffixe -7.Q16HDRI
 %global with_tests 0%{!?_without_tests:1}
@@ -494,7 +494,10 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Sat Feb 18 2017 Remi Collet <remi@remirepo.net> - 7.0.4.410-1
+* Tue Feb 21 2017 Remi Collet <remi@remirepo.net> - 7.0.5.0-1
+- update to version 7.0.8
+
+* Sat Feb 18 2017 Remi Collet <remi@remirepo.net> - 7.0.4.10-1
 - update to version 7.0.4 patchlevel 10
 - libMagick++ soname bump to 2
 
