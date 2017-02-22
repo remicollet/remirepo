@@ -18,10 +18,11 @@
 %else
 %global with_tests   0%{!?_without_tests:1}
 %endif
+%global php_version  %(php -r 'echo PHP_VERSION;')
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.7.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -38,6 +39,7 @@ BuildRequires:  php(language) >= 5.5
 BuildRequires:  php-date
 BuildRequires:  php-iconv
 BuildRequires:  php-mbstring
+BuildRequires:  php-mcrypt
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 BuildRequires:  php-zip
@@ -130,21 +132,29 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-# For mcrypt and PHP 7.1
-sed -e '/error_reporting/s/. E_STRICT/- E_DEPRECATED/' -i test/bootstrap.php
-
-# remirepo:11
+# remirepo:18
 run=0
 ret=0
 if which php56; then
    php56 %{_bindir}/phpunit || ret=1
    run=1
 fi
+if which php70; then
+   php70 %{_bindir}/phpunit || ret=1
+   run=1
+fi
 if which php71; then
+   # For mcrypt and PHP 7.1
+   sed -e '/error_reporting/s/. E_STRICT/- E_DEPRECATED/' -i test/bootstrap.php
+   sed -e 's/colors=/convertErrorsToExceptions="false" colors=/' phpunit.xml.dist > phpunit.xml
    php71 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
+%if "%{php_version}" > "7.1"
+   sed -e '/error_reporting/s/. E_STRICT/- E_DEPRECATED/' -i test/bootstrap.php
+   sed -e 's/colors=/convertErrorsToExceptions="false" colors=/' phpunit.xml.dist > phpunit.xml
+%endif
 %{_bindir}/phpunit --verbose
 # remirepo:2
 fi
@@ -168,6 +178,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb 22 2017 Remi Collet <remi@fedoraproject.org> - 2.7.1-3
+- don't convertErrorsToExceptions, fix FTBFS #1424085
+
 * Fri Nov 25 2016 Remi Collet <remi@fedoraproject.org> - 2.7.1-2
 - fix FTBFS, disable E_DEPRECATED during test suite
 
