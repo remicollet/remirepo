@@ -40,7 +40,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.10.1
-Release: 10%{?dist}
+Release: 11%{?dist}
 Epoch: 1
 # PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -64,6 +64,8 @@ Source25: http://pear.php.net/get/PEAR_Manpages-%{manpages}.tgz
 
 # https://github.com/pear/pear-core/pull/51
 Patch0:   pear-proxy.patch
+# https://github.com/pear/XML_Util/pull/8
+Patch1:   XML_Util-pr8.patch
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -162,7 +164,7 @@ done
 cp %{SOURCE1} .
 
 # apply patches on used PEAR during install
-# Patch0 applied on installation tree
+# Patches applied on installation tree
 
 sed -e 's/@SCL@/%{?scl:%{scl}_}/' \
     -e 's:@VARDIR@:%{_localstatedir}:' \
@@ -246,6 +248,7 @@ install -m 644 -D macros.pear \
 # apply patches on installed PEAR tree
 pushd $RPM_BUILD_ROOT%{peardir} 
 patch --no-backup --fuzz 0 -p1 < %{PATCH0}
+patch --no-backup --fuzz 0 -p1 < %{PATCH1}
 popd
 
 # Why this file here ?
@@ -429,6 +432,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb 22 2017 Remi Collet <remi@fedoraproject.org> 1:1.10.1-11
+- add patch to fix XML_Serializer with XML_Util 1.4.1
+  from https://github.com/pear/XML_Util/pull/8
+
 * Wed Feb  8 2017 Remi Collet <remi@fedoraproject.org> 1:1.10.1-10
 - update XML_Util to 1.4.1
 
