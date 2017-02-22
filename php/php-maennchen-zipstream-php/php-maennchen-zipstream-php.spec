@@ -44,7 +44,7 @@ zip file downloader for PHP.
 
 
 %prep
-%autosetup -n ZipStream-PHP-%{version}
+%setup -n ZipStream-PHP-%{version}
 
 
 %build
