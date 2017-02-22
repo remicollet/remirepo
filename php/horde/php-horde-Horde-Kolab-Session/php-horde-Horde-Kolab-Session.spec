@@ -12,13 +12,15 @@
 
 Name:           php-horde-Horde-Kolab-Session
 Version:        2.0.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A package managing an active Kolab session
 
 Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://%{pear_channel}/
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+
+Patch0:         %{pear_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -55,7 +57,9 @@ This package stores Kolab specific user data in the session.
 %prep
 %setup -q -c
 cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
+%patch0 -p3 -b .upstream
+sed -e '/role="test"/s/md5sum=.*name=/name=/' \
+    ../package.xml >%{name}.xml
 
 
 %build
@@ -78,11 +82,26 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-%{_bindir}/phpunit .
-
-if which php70; then
-   php70 %{_bindir}/phpunit .
+# remirepo:15
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit . || ret=1
+   run=1
 fi
+if which php70; then
+   php70 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose .
+# remirepo:2
+fi
+exit $ret
 
 
 %clean
@@ -110,6 +129,9 @@ fi
 
 
 %changelog
+* Wed Feb 22 2017 Remi Collet <remi@fedoraproject.org> - 2.0.3-2
+- add upstream fix for tests, fix FTBFS #1424067
+
 * Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3
 - PHP 7 compatible version

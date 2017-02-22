@@ -120,7 +120,7 @@ sed -e 's/testOfficeNamespace/SKIP_testOfficeNamespace/' \
     -i MsofficeTest.php
 %endif
 
-# remirepo:11
+# remirepo:15
 run=0
 ret=0
 if which php56; then
