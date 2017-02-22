@@ -1,13 +1,24 @@
+# remirepo spec file for php-maennchen-zipstream-php, from
+#
+# Fedora spec file for php-maennchen-zipstream-php
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 Name:       php-maennchen-zipstream-php
 Version:    0.4.1
 Release:    2%{?dist}
 BuildArch:  noarch
 
 License:    MIT
+Group:      Development/Libraries
 Summary:    A fast and simple streaming zip file downloader for PHP
 URL:        https://github.com/maennchen/ZipStream-PHP
 Source0:    %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-composer(fedora/autoloader)
 BuildRequires: php-fedora-autoloader-devel
 BuildRequires: php-zip
@@ -41,6 +52,8 @@ zip file downloader for PHP.
 
 
 %install
+rm -rf %{buildroot}
+
 install -d -p -m 0755 %{buildroot}/%{_datadir}/php
 install -d -p -m 0755 %{buildroot}/%{_datadir}/php/ZipStream
 
@@ -50,10 +63,21 @@ cp -ar src/* %{buildroot}/%{_datadir}/php/ZipStream
 %check
 sed -i "s:require.*:require('%{buildroot}/%{_datadir}/php/ZipStream/autoload.php');:" test/bootstrap.php
 
-phpunit --no-coverage
+ret=0
+for cmd in php56 php70 php71 php; do
+  if which $cmd; then
+    $cmd %{_bindir}/phpunit --no-coverage
+  fi
+done
+
+
+%clean
+rm -rf %{buildroot}
 
 
 %files
+%defattr(-,root,root,-)
+%{!?_licensedir:%global license %%doc}
 %license LICENSE.md
 %doc composer.json
 %doc README.md
@@ -61,6 +85,9 @@ phpunit --no-coverage
 
 
 %changelog
+* Wed Feb 22 2017 Remi Collet <remi@remirepo.net> - 0.4.1-2
+- backport for remi repository
+
 * Mon Feb 20 2017 Randy Barlow <bowlofeggs@fedoraproject.org> - 0.4.1-2
 - Use ZipStream instead of maennchen/zipstream-php for the package location.
 - Use --no-coverage on phpunit and drop --bootstrap.
