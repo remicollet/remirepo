@@ -7,11 +7,11 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    421aafc829d0a1120422ddc3fe5872ae1814add9
+%global gh_commit    decb381ef771ada37f8850774a9e9770a3da506f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 
 Name:           atoum
-Version:        2.9.0
+Version:        3.0.0
 Release:        1%{?dist}
 Summary:        PHP Unit Testing framework
 
@@ -23,7 +23,7 @@ Source0:        https://github.com/%{name}/%{name}/archive/%{gh_commit}/%{name}-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-BuildRequires:       php(language) >= 5.3.3
+BuildRequires:       php(language) >= 5.6
 BuildRequires:       php-hash
 BuildRequires:       php-json
 BuildRequires:       php-session
@@ -41,13 +41,13 @@ BuildRequires:       php-reflection
 BuildRequires:       php-spl
 
 # From composer.json, 	"require": {
-#        "php": ">=5.3.3",
+#        "php": "^5.6.0 || ^7.0.0",
 #        "ext-hash": "*",
 #        "ext-json": "*",
 #        "ext-session": "*",
 #        "ext-tokenizer": "*",
 #        "ext-xml": "*"
-Requires:       php(language) >= 5.3.3
+Requires:       php(language) >= 5.6
 Requires:       php-hash
 Requires:       php-json
 Requires:       php-session
@@ -55,8 +55,10 @@ Requires:       php-tokenizer
 Requires:       php-xml
 # From composer.json, 	"suggest": {
 #        "ext-mbstring": "Provides support for UTF-8 strings"
+#        "atoum/stubs": "Provides IDE support (like autocompletion) for atoum",
+#        "ext-xdebug": "Provides code coverage report (>= 2.3)"
 Requires:       php-mbstring
-# From phpcompatinfo report for version 2.5.0
+# From phpcompatinfo report for version 3.0.0
 Requires:       php-cli
 Requires:       php-date
 Requires:       php-dom
@@ -139,16 +141,15 @@ cd tests/units
 echo "date.timezone=UTC" >php.ini
 export PHPRC=$(pwd)/php.ini
 
-# remirepo:12
+# remirepo:11
 run=0
 ret=0
 if which php56; then
    php56 runner.php --directories . || ret=1
    run=1
 fi
-# Not ready for 7.1 (Fatal error: Cannot use 'void' as class name...)
-if which php70; then
-   php70 runner.php --directories . || ret=1
+if which php71; then
+   php71 runner.php --directories . || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -177,6 +178,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb 22 2017 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- update to 3.0.0
+- raise dependency on PHP 5.6
+
 * Sat Feb 11 2017 Remi Collet <remi@fedoraproject.org> - 2.9.0-1
 - update to 2.9.0
 
