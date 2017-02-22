@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.7.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -29,6 +29,9 @@ License:        BSD
 URL:            https://zendframework.github.io/%{gh_project}/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
+
+# https://github.com/zendframework/zend-modulemanager/pull/55
+Patch0:         %{name}-pr55.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -108,6 +111,7 @@ Documentation: https://zendframework.github.io/%{gh_project}/
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+%patch0 -p1
 
 mv LICENSE.md LICENSE
 
@@ -138,11 +142,22 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
-
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -162,6 +177,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb 22 2017 Remi Collet <remi@fedoraproject.org> - 2.7.2-2
+- add fix for tests against PHP 7.1, fix FTBFS #1424086
+  from https://github.com/zendframework/zend-modulemanager/pull/55
+
 * Tue May 17 2016 Remi Collet <remi@fedoraproject.org> - 2.7.2-1
 - update to 2.7.2
 - zend-config is now required

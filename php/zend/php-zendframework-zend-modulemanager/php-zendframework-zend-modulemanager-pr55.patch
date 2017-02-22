@@ -1,0 +1,39 @@
+From 2ab82cecf9743c738f191dcf6dc687fc867867fe Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Wed, 22 Feb 2017 08:04:40 +0100
+Subject: [PATCH] fix proto and enable php 7.1 in travis
+
+---
+ .travis.yml                                       | 5 +++++
+ test/Listener/TestAsset/SampleAbstractFactory.php | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/.travis.yml b/.travis.yml
+index 5a69e0a..a7cb6ab 100644
+--- a/.travis.yml
++++ b/.travis.yml
+@@ -47,6 +47,11 @@ matrix:
+       env:
+         - EVENT_MANAGER_VERSION="^2.6.2"
+         - SERVICE_MANAGER_VERSION="^2.7.5"
++    - php: 7.1
++    - php: 7.1
++      env:
++        - EVENT_MANAGER_VERSION="^2.6.2"
++        - SERVICE_MANAGER_VERSION="^2.7.5"
+     - php: hhvm 
+     - php: hhvm 
+       env:
+diff --git a/test/Listener/TestAsset/SampleAbstractFactory.php b/test/Listener/TestAsset/SampleAbstractFactory.php
+index a8aea3d..da555ee 100644
+--- a/test/Listener/TestAsset/SampleAbstractFactory.php
++++ b/test/Listener/TestAsset/SampleAbstractFactory.php
+@@ -26,7 +26,7 @@ public function canCreateServiceWithName(ServiceLocatorInterface $container, $na
+         return true;
+     }
+ 
+-    public function __invoke(ContainerInterface $container, $name, array $options = [])
++    public function __invoke(ContainerInterface $container, $name, array $options = NULL)
+     {
+         return new stdClass;
+     }
