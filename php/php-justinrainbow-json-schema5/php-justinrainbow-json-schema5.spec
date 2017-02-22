@@ -6,14 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9b6ebfeece6efaaeacb6cc061beb69cd007b75c1
+%global gh_commit    48817e5f95c9d29e11513f12e43cc0223fa5eb6c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     justinrainbow
 %global gh_project   json-schema
 %global php_home     %{_datadir}/php
 %global with_tests   0%{!?_without_tests:1}
 %global major        5
-%global minor        0.0
+%global minor        1.0
 
 
 # Some sample files, only used for tests
@@ -189,6 +189,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb 22 2017 Remi Collet <remi@fedoraproject.org> - 5.1.0-1
+- update to 5.1.0
+
 * Thu Feb 16 2017 Remi Collet <remi@fedoraproject.org> - 5.0.0-1
 - rename to php-justinrainbow-json-schema5
 - update to 5.0.0
