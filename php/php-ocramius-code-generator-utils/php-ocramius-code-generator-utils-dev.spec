@@ -31,7 +31,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       3%{?github_release}%{?dist}
 Summary:       A set of code generator utilities built on top of PHP-Parsers
 
 Group:         Development/Libraries
@@ -44,26 +44,25 @@ BuildArch:     noarch
 %if %{with_tests}
 # composer.json
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-composer(nikic/php-parser) >= %{php_parser_min_ver}
-BuildRequires: php-composer(nikic/php-parser) <  %{php_parser_max_ver}
+BuildRequires: php-nikic-php-parser
 BuildRequires: php-composer(phpunit/phpunit)  >= 5.0
 # phpcompatinfo (computed from version 0.4.0)
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
 # Autoloader
-BuildRequires: php-composer(symfony/class-loader)
+BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-Requires:      php-composer(nikic/php-parser) >= %{php_parser_min_ver}
-Requires:      php-composer(nikic/php-parser) <  %{php_parser_max_ver}
+# workaround for range version
+Requires:      php-nikic-php-parser
 # phpcompatinfo (computed from version 0.4.0)
 Requires:      php-pcre
 Requires:      php-spl
 # Autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:      php-composer(fedora/autoloader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -90,21 +89,12 @@ cat <<'AUTOLOAD' | tee src/CodeGenerationUtils/autoload.php
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('CodeGenerationUtils\\', dirname(__DIR__));
-
-// Required dependency
-require_once '%{phpdir}/PhpParser2/autoload.php';
-
-return $fedoraClassLoader;
+\Fedora\Autoloader\Autoload::addPsr4('CodeGenerationUtils\\', __DIR__);
+\Fedora\Autoloader\Dependencies::required(array(
+    '%{phpdir}/PhpParser2/autoload.php',
+));
 AUTOLOAD
 
 
@@ -119,9 +109,9 @@ cp -rp src/CodeGenerationUtils %{buildroot}%{phpdir}/
 : Create tests bootstrap
 cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
-$fedoraClassLoader = require '%{buildroot}%{phpdir}/CodeGenerationUtils/autoload.php';
-$fedoraClassLoader->addPrefix('CodeGenerationUtilsTest\\', __DIR__.'/tests');
-$fedoraClassLoader->addPrefix('CodeGenerationUtilsTestAsset\\', __DIR__.'/tests');
+require '%{buildroot}%{phpdir}/CodeGenerationUtils/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('CodeGenerationUtilsTest\\', __DIR__.'/tests/CodeGenerationUtilsTests');
+\Fedora\Autoloader\Autoload::addPsr4('CodeGenerationUtilsTestAsset\\', __DIR__.'/tests/CodeGenerationUtilsTestAsset');
 BOOTSTRAP
 
 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
@@ -144,6 +134,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb 22 2017 Remi Collet <remi@fedoraproject.org> - 0.4.0-3
+- switch to fedora-autoloader
+
+* Wed Feb 22 2017 Remi Collet <remi@fedoraproject.org> - 0.4.0-2
+- implicitly requires php-nikic-php-parser (v2)
+- fix FTBFS #1424073
+
 * Wed Oct 12 2016 Remi Collet <remi@fedoraproject.org> - 0.4.0-2
 - switch from classmap autoloader to PSR-0 one (symfony)
 
