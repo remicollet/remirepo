@@ -12,8 +12,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   3.22.8
-%global github_commit    b69d6ef0eb99ca1996d2b2e7ebf7e573415d0a18
+%global github_version   3.22.9
+%global github_commit    057fef15b8b5fe3661c290cac8bc5da49b39a60b
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -271,6 +271,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb 23 2017 Remi Collet <remi@remirepo.net> - 3.22.9-1
+- update to 3.22.9
+
 * Wed Feb 22 2017 Remi Collet <remi@remirepo.net> - 3.22.8-1
 - update to 3.22.8
 
