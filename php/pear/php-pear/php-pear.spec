@@ -24,7 +24,7 @@
 # https://pear.php.net/bugs/bug.php?id=19367
 # Structures_Graph 1.0.4 - incorrect FSF address
 %global structver 1.1.1
-%global xmlutil   1.4.1
+%global xmlutil   1.4.2
 %global manpages  1.10.0
 
 # Tests are only run with rpmbuild --with tests
@@ -40,7 +40,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.10.1
-Release: 11%{?dist}
+Release: 12%{?dist}
 Epoch: 1
 # PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -64,8 +64,6 @@ Source25: http://pear.php.net/get/PEAR_Manpages-%{manpages}.tgz
 
 # https://github.com/pear/pear-core/pull/51
 Patch0:   pear-proxy.patch
-# https://github.com/pear/XML_Util/pull/8
-Patch1:   XML_Util-pr8.patch
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -248,7 +246,6 @@ install -m 644 -D macros.pear \
 # apply patches on installed PEAR tree
 pushd $RPM_BUILD_ROOT%{peardir} 
 patch --no-backup --fuzz 0 -p1 < %{PATCH0}
-patch --no-backup --fuzz 0 -p1 < %{PATCH1}
 popd
 
 # Why this file here ?
@@ -432,6 +429,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Feb 23 2017 Remi Collet <remi@fedoraproject.org> 1:1.10.1-12
+- update XML_Util to 1.4.2
+- drop patch merged upstream
+
 * Wed Feb 22 2017 Remi Collet <remi@fedoraproject.org> 1:1.10.1-11
 - add patch to fix XML_Serializer with XML_Util 1.4.1
   from https://github.com/pear/XML_Util/pull/8
