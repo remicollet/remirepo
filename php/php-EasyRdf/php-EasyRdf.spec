@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-EasyRdf
 #
-# Copyright (c) 2013-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2017 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -36,7 +36,7 @@
 
 Name:          php-EasyRdf
 Version:       0.9.0
-Release:       4%{?dist}
+Release:       6%{?dist}
 Summary:       A PHP library designed to make it easy to consume and produce RDF
 
 Group:         Development/Libraries
@@ -49,13 +49,14 @@ BuildArch:     noarch
 # Tests
 %if %{with_tests}
 BuildRequires: graphviz
+BuildRequires: graphviz-gd
 BuildRequires: %{raptor_pkg}
 %if %{redland_support}
 BuildRequires: php-redland
 %endif
 ## composer.json
-BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language) >= %{php_min_ver}
+BuildRequires: php-composer(phpunit/phpunit)
 ## phpcompatinfo (computed from version 0.9.0)
 BuildRequires: php-ctype
 BuildRequires: php-date
@@ -69,7 +70,7 @@ BuildRequires: php-simplexml
 BuildRequires: php-spl
 BuildRequires: php-xml
 ## Autoloader
-BuildRequires: php-composer(symfony/class-loader)
+BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 # composer.json
@@ -86,7 +87,17 @@ Requires:      php-simplexml
 Requires:      php-spl
 Requires:      php-xml
 # Autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:      php-composer(fedora/autoloader)
+
+# Weak dependencies
+%if 0%{?fedora} >= 21
+Suggests:      graphviz
+Suggests:      graphviz-gd
+Suggests:      %{raptor_pkg}
+%if %{redland_support}
+Suggests:      php-redland
+%endif
+%endif
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -111,11 +122,8 @@ SPARQL queries can be made over HTTP to a Triplestore using the
 EasyRdf_Sparql_Client class. SELECT and ASK queries will return an
 EasyRdf_Sparql_Result object and CONSTRUCT and DESCRIBE queries will
 return an EasyRdf_Graph object.
-%if %{redland_support}
-Optional dependencies: graphviz, graphviz-gd, %{raptor_pkg}, php-redland
-%else
-Optional dependencies: graphviz, graphviz-gd, %{raptor_pkg}
-%endif
+
+Autoloader: %{phpdir}/EasyRdf/autoload.php
 
 
 %package doc
@@ -129,32 +137,19 @@ Group:   Documentation
 %prep
 %setup -qn easyrdf-%{version}
 
+
+%build
 : Create autoloader
 cat <<'AUTOLOAD' | tee lib/EasyRdf/autoload.php
 <?php
 /**
- * Autoloader created by %{name}-%{version}-%{release}
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
+ * Autoloader for %{name} and its' dependencies
+ * (created by %{name}-%{version}-%{release}).
  */
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
-
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('EasyRdf_', dirname(__DIR__));
-
-return $fedoraClassLoader;
+\Fedora\Autoloader\Autoload::addPsr0('EasyRdf_', dirname(__DIR__));
 AUTOLOAD
-
-
-%build
-# Empty build section, nothing to build
 
 
 %install
@@ -190,8 +185,32 @@ PHPUNIT
 rm -f test/EasyRdf/Parser/RedlandTest.php
 %endif
 
-: Run tests
+: Skip tests known to fail since PHP 7.1
+: See https://github.com/njh/easyrdf/issues/276
+%if 0%{?fedora} > 25
+sed \
+    -e 's/function testSerialiseDot/function SKIP_testSerialiseDot/' \
+    -e 's/function testSerialiseDotUseLabels/function SKIP_testSerialiseDotUseLabels/' \
+    -e 's/function testSerialiseDotOnlyLabelled/function SKIP_testSerialiseDotOnlyLabelled/' \
+    -e 's/function testSerialisePng/function SKIP_testSerialisePng/' \
+    -e 's/function testSerialiseGif/function SKIP_testSerialiseGif/' \
+    -e 's/function testSerialiseSvg/function SKIP_testSerialiseSvg/' \
+    -e 's/function testDotNotFound/function SKIP_testDotNotFound/' \
+    -i test/EasyRdf/Serialiser/GraphVizTest.php
+%endif
+
+: Upstream tests
 %{_bindir}/phpunit --verbose
+
+: Upstream tests with SCLs if available
+SCL_RETURN_CODE=0
+# Note: No php71 because of skipped tests above
+for SCL in %{?rhel:php54 php55} php56 php70; do
+    if which $SCL; then
+        $SCL %{_bindir}/phpunit  || SCL_RETURN_CODE=1
+    fi
+done
+exit $SCL_RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -219,6 +238,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb 22 2017 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.9.0-6
+- Fix FTBS in rawhide (RHBZ #1424061)
+- Skip tests known to fail since PHP 7.1 (see https://github.com/njh/easyrdf/issues/276)
+- Add SCL tests if available
+- Use php-composer(fedora/autoloader)
+- Move optional dependencies from description to weak dependencies (Suggests)
+
 * Sun Oct 09 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.9.0-4
 - No Redland support for Fedora 25+ (RHBZ #1350621)
 
