@@ -9,7 +9,7 @@
 
 %global bootstrap    1
 # Github
-%global gh_commit    e7d7a4acca58e45bdfd00221563d131cfb04ba96
+%global gh_commit    3f10a2c8eed68b29cbbb54e29cc58cb31b077553
 #global gh_date      20150924
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_vendor    sebastianbergmann
@@ -23,7 +23,7 @@
 %global php_home     %{_datadir}/php
 %global ver_major    5
 %global ver_minor    0
-%global ver_patch    0
+%global ver_patch    1
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   0%{?_with_tests:1}
@@ -63,7 +63,7 @@ BuildRequires:  php-pecl-xdebug  >= 2.5.0
 # From composer.json, require
 #        "php": "^7.0",
 #        "phpunit/php-file-iterator": "^1.3",
-#        "phpunit/php-token-stream": "^1.4.2",
+#        "phpunit/php-token-stream": "^1.4.2 || ^2.0",
 #        "phpunit/php-text-template": "^1.2",
 #        "sebastian/code-unit-reverse-lookup": "^1.0",
 #        "sebastian/environment": "^2.0",
@@ -72,7 +72,7 @@ Requires:       php(language) >= 7.0
 Requires:       php-composer(phpunit/php-file-iterator) >= 1.3
 Requires:       php-composer(phpunit/php-file-iterator) <  2
 Requires:       php-composer(phpunit/php-token-stream) >= 1.4.2
-Requires:       php-composer(phpunit/php-token-stream) <  2
+Requires:       php-composer(phpunit/php-token-stream) <  3
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
 Requires:       php-composer(sebastian/code-unit-reverse-lookup) >= 1.0
@@ -161,7 +161,11 @@ EOF
 
 
 %changelog
+* Thu Feb 23 2017 Remi Collet <remi@remirepo.net> - 5.0.1-1
+- update to 5.0.1
+
 * Tue Feb  7 2017 Remi Collet <remi@remirepo.net> - 5.0.0-1
+- update to 5.0.0
 - rename to php-phpunit-php-code-coverage5
 - move to /usr/share/php/SebastianBergmann/CodeCoverage5
 
