@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    2d076100e4c6a779b7676d098192e3d1cf74f34e
+%global gh_commit    ca2b2f9e1bdc5511d06967d755cbb793708a2d7b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-form
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.9.2
+Version:        2.10.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -47,7 +47,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 # From composer, "require-dev": {
 #        "doctrine/annotations": "~1.0",
 #        "zendframework/zend-cache": "^2.6.1",
-#        "zendframework/zend-captcha": "^2.5.4",
+#        "zendframework/zend-captcha": "^2.7.1",
 #        "zendframework/zend-code": "^2.6 || ^3.0",
 #        "zendframework/zend-escaper": "^2.5",
 #        "zendframework/zend-eventmanager": "^2.6.2 || ^3.0",
@@ -58,12 +58,12 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 #        "zendframework/zend-text": "^2.6",
 #        "zendframework/zend-validator": "^2.6",
 #        "zendframework/zend-view": "^2.6.2",
-#        "zendframework/zendservice-recaptcha": "*",
-#        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "~4.8"
+#        "zendframework/zendservice-recaptcha": "^3.0.0",
+#        "phpunit/phpunit": "^4.8",
+#        "zendframework/zend-coding-standard": "~1.0.0"
 BuildRequires:  php-composer(doctrine/annotations)              >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-cache)            >= 2.6.1
-BuildRequires:  php-composer(%{gh_owner}/zend-captcha)          >= 2.5.4
+BuildRequires:  php-composer(%{gh_owner}/zend-captcha)          >= 2.7.1
 BuildRequires:  php-composer(%{gh_owner}/zend-code)             >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-escaper)          >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.2
@@ -97,7 +97,7 @@ Requires:       php-composer(%{gh_owner}/zend-hydrator)         <  3
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 # From composer, "suggest": {
-#        "zendframework/zend-captcha": "^2.5.4, required for using CAPTCHA form elements",
+#        "zendframework/zend-captcha": "^2.7.1, required for using CAPTCHA form elements",
 #        "zendframework/zend-code": "^2.6 || ^3.0, required to use zend-form annotations support",
 #        "zendframework/zend-eventmanager": "^2.6.2 || ^3.0, reuired for zend-form annotations support",
 #        "zendframework/zend-i18n": "^2.6, required when using zend-form view helpers",
@@ -111,7 +111,7 @@ Suggests:       php-composer(%{gh_owner}/zend-eventmanager)
 Suggests:       php-composer(%{gh_owner}/zend-i18n)
 Suggests:       php-composer(%{gh_owner}/zend-servicemanager)
 Suggests:       php-composer(%{gh_owner}/zend-view)
-#Suggests:       php-composer(%{gh_owner}/zendservice-recaptcha)
+Suggests:       php-composer(%{gh_owner}/zendservice-recaptcha)
 %endif
 %endif
 # From phpcompatinfo report for version 2.6.0
@@ -209,6 +209,7 @@ rm -rf %{buildroot}
 %changelog
 * Fri Sep 23 2016 Remi Collet <remi@fedoraproject.org> - 2.9.2-1
 - update to 2.9.2
+- raise dependency on zend-captcha 2.7.1
 
 * Thu Sep 15 2016 Remi Collet <remi@fedoraproject.org> - 2.9.1-1
 - update to 2.9.1

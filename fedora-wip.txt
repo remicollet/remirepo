@@ -4,6 +4,7 @@
 php-tecnickcom-tc-lib-color 1.12.6 (waiting for phpunit6)
 php-tecnickcom-tc-lib-barcode 1.15.6
 php-zendframework-zend-captcha 2.7.1 (when recaptcha approved)
+php-zendframework-zend-form 2.10.0 (after zend-captcha 2.7.1)
 
 =================
  Pending
