@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    c19cfc7cbb0e9338d8c469c7eedecc2a428b0971
+%global gh_commit    ca060f645beeddebedb1885c97bf163e93264c35
 #global gh_date      20150924
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,8 +17,8 @@
 %global pear_name    PHP_CodeCoverage
 %global pear_channel pear.phpunit.de
 %global major        4.0
-%global minor        5
-%global specrel      2
+%global minor        6
+%global specrel      1
 %if %{bootstrap}
 %global with_tests   0%{?_with_tests:1}
 %else
@@ -34,8 +34,6 @@ Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-
-Patch0:         %{name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -54,7 +52,7 @@ BuildRequires:  php-pecl-xdebug  >= 2.4.0
 # From composer.json, require
 #        "php": "^5.6 || ^7.0",
 #        "phpunit/php-file-iterator": "~1.3",
-#        "phpunit/php-token-stream": "^1.4.2",
+#        "phpunit/php-token-stream": "^1.4.2 || ^2.0",
 #        "phpunit/php-text-template": "~1.2",
 #        "sebastian/code-unit-reverse-lookup": "~1.0",
 #        "sebastian/environment": "^1.3.2 || ^2.0",
@@ -63,7 +61,7 @@ Requires:       php(language) >= 5.6
 Requires:       php-composer(phpunit/php-file-iterator) >= 1.3
 Requires:       php-composer(phpunit/php-file-iterator) <  2
 Requires:       php-composer(phpunit/php-token-stream) >= 1.4.2
-Requires:       php-composer(phpunit/php-token-stream) <  2
+Requires:       php-composer(phpunit/php-token-stream) <  3
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
 Requires:       php-composer(sebastian/code-unit-reverse-lookup) >= 1
@@ -100,7 +98,6 @@ for PHP code coverage information.
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
-%patch0 -p1
 
 
 %build
@@ -187,6 +184,10 @@ fi
 
 
 %changelog
+* Thu Feb 23 2017 Remi Collet <remi@fedoraproject.org> - 4.0.6-1
+- Update to 4.0.6
+- drop patch merged upstream
+
 * Sun Jan 22 2017 Remi Collet <remi@fedoraproject.org> - 4.0.5-2
 - Update to 4.0.5
 - add upstream patch for test suite to fix

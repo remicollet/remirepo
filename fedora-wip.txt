@@ -12,6 +12,8 @@ php-zendframework-zend-captcha 2.7.0 (when recaptcha approved)
 =================
  Testing
 =================
+23/2	php-phpunit-PHP-CodeCoverage-4.0.6-1.fc25
+23/2	php-phpunit-PHP-CodeCoverage-4.0.6-1.fc24
 23/2	php-pear-1.10.1-11.fc25
 21/2	glpi-9.1.2-3.fc25
 21/2	php-sabre-xml-1.5.0-1.fc24
@@ -49,6 +51,7 @@ php-zendframework-zend-captcha 2.7.0 (when recaptcha approved)
 =================
  Feb, 2017
 =================
+23/2	23/2	php-phpunit-PHP-CodeCoverage-4.0.6-1.fc26
 23/2	23/2	php-phpunit-PHP-TokenStream-1.4.10-1.fc26
 23/2	23/2	php-pear-1.10.1-11.fc26
 obso	22/2	php-pear-1.10.1-10.fc25
