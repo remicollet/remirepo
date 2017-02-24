@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #128 swoole version 2.0.6 ] {
+Extension [ <persistent> extension #131 swoole version 2.0.6 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]

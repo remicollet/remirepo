@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #80 swoole version 1.9.5 ] {
+Extension [ <persistent> extension #80 swoole version 1.9.6 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -10,15 +10,15 @@ Extension [ <persistent> extension #80 swoole version 1.9.5 ] {
     Entry [ swoole.use_namespace <SYSTEM> ]
       Current = 'Off'
     }
-    Entry [ swoole.message_queue_key <ALL> ]
-      Current = '0'
+    Entry [ swoole.fast_serialize <ALL> ]
+      Current = 'Off'
     }
     Entry [ swoole.unixsock_buffer_size <ALL> ]
       Current = '8388608'
     }
   }
 
-  - Constants [59] {
+  - Constants [60] {
     Constant [ integer SWOOLE_BASE ] { 4 }
     Constant [ integer SWOOLE_THREAD ] { 2 }
     Constant [ integer SWOOLE_PROCESS ] { 3 }
@@ -63,7 +63,7 @@ Extension [ <persistent> extension #80 swoole version 1.9.5 ] {
     Constant [ integer SWOOLE_DTLSv1_CLIENT_METHOD ] { 17 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.9.5 }
+    Constant [ string SWOOLE_VERSION ] { 1.9.6 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 1 }
     Constant [ integer SWOOLE_FILELOCK ] { 2 }
@@ -78,6 +78,7 @@ Extension [ <persistent> extension #80 swoole version 1.9.5 ] {
     Constant [ integer WEBSOCKET_STATUS_HANDSHAKE ] { 2 }
     Constant [ integer WEBSOCKET_STATUS_FRAME ] { 3 }
     Constant [ integer WEBSOCKET_STATUS_ACTIVE ] { 3 }
+    Constant [ integer SWOOLE_FAST_PACK ] { 1 }
   }
 
   - Functions {
@@ -261,7 +262,7 @@ Extension [ <persistent> extension #80 swoole version 1.9.5 ] {
     }
   }
 
-  - Classes [26] {
+  - Classes [27] {
     Class [ <internal:swoole> class swoole_server ] {
 
       - Constants [0] {
@@ -2015,7 +2016,13 @@ Extension [ <persistent> extension #80 swoole version 1.9.5 ] {
       - Properties [0] {
       }
 
-      - Methods [9] {
+      - Methods [10] {
+        Method [ <internal:swoole> public method initHeader ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:swoole> public method cookie ] {
 
           - Parameters [7] {
@@ -2579,7 +2586,7 @@ Extension [ <persistent> extension #80 swoole version 1.9.5 ] {
       - Properties [0] {
       }
 
-      - Methods [6] {
+      - Methods [7] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [0] {
@@ -2597,6 +2604,14 @@ Extension [ <persistent> extension #80 swoole version 1.9.5 ] {
           - Parameters [2] {
             Parameter #0 [ <required> array $server_config ]
             Parameter #1 [ <required> $callback ]
+          }
+        }
+
+        Method [ <internal:swoole> public method escape ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $string ]
+            Parameter #1 [ <optional> $flags ]
           }
         }
 
@@ -2695,14 +2710,7 @@ Extension [ <persistent> extension #80 swoole version 1.9.5 ] {
       - Properties [0] {
       }
 
-      - Methods [1] {
-        Method [ <internal:swoole> public method __call ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $func ]
-            Parameter #1 [ <required> $params ]
-          }
-        }
+      - Methods [0] {
       }
     }
 
@@ -2778,6 +2786,39 @@ Extension [ <persistent> extension #80 swoole version 1.9.5 ] {
           - Parameters [0] {
           }
         }
+      }
+    }
+
+    Class [ <internal:swoole> class swoole_serialize ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [2] {
+        Method [ <internal:swoole> static public method pack ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $data ]
+            Parameter #1 [ <optional> $flag ]
+          }
+        }
+
+        Method [ <internal:swoole> static public method unpack ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $string ]
+            Parameter #1 [ <optional> $args ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
       }
     }
 

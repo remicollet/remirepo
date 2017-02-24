@@ -21,6 +21,13 @@
 %global ini_name    40-%{pecl_name}.ini
 %endif
 
+%if "%{php_version}" > "5.5"
+%global with_mysqlnd 1
+%else
+%global with_mysqlnd 0
+%endif
+
+
 %if 0%{?fedora} >= 22 || 0%{?rhel} >= 6
 %global with_nghttpd2 1
 %else
@@ -30,7 +37,7 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.9.5
+Version:        1.9.6
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
@@ -40,7 +47,7 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 BuildRequires:  %{?scl_prefix}php-devel >= 5.3.10
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-sockets
-BuildRequires:  %{?scl_prefix}php-mysqli
+BuildRequires:  %{?scl_prefix}php-mysqlnd
 BuildRequires:  pcre-devel
 BuildRequires:  openssl-devel
 %if %{with_nghttpd2}
@@ -53,6 +60,9 @@ BuildRequires:  hiredis-devel
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires:       %{?scl_prefix}php-sockets%{?_isa}
+%if %{with_mysqlnd}
+Requires:       %{?scl_prefix}php-mysqlnd%{?_isa}
+%endif
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
@@ -153,7 +163,7 @@ extension=%{pecl_name}.so
 ;swoole.aio_thread_num = 2
 ;swoole.display_errors = On
 ;swoole.use_namespace = Off
-;swoole.message_queue_key = 0
+;swoole.fast_serialize = Off
 ;swoole.unixsock_buffer_size = 8388608
 EOF
 
@@ -164,13 +174,18 @@ EOF
 peclbuild() {
 %configure \
     --with-swoole \
-    --enable-openssl \
     --enable-sockets \
+    --enable-ringbuffer \
+%if %{with_hiredis}
+    --enable-async-redis \
+%endif
+    --enable-openssl \
 %if %{with_nghttpd2}
     --enable-http2 \
 %endif
-%if %{with_hiredis}
-    --enable-async-redis \
+    --enable-thread \
+%if %{with_mysqlnd}
+    --enable-mysqlnd \
 %endif
     --with-php-config=$1
 
@@ -234,20 +249,22 @@ fi
 
 
 %check
-[ -f %{php_extdir}/sockets.so ] && modules="-d extension=sockets.so"
+OPT="--no-php-ini"
+[ -f %{php_extdir}/sockets.so ] && OPT="$OPT -d extension=sockets.so"
+%if %{with_mysqlnd}
+[ -f %{php_extdir}/mysqlnd.so ] && OPT="$OPT -d extension=mysqlnd.so"
+%endif
 
 cd NTS
 : Minimal load test for NTS extension
-%{__php} --no-php-ini \
-    $modules \
+%{__php} $OPT \
     --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 %if %{with_zts}
 cd ../ZTS
 : Minimal load test for ZTS extension
-%{__ztsphp} --no-php-ini \
-    $modules \
+%{__ztsphp} $OPT \
     --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 %endif
@@ -268,6 +285,11 @@ cd ../ZTS
 
 
 %changelog
+* Fri Feb 24 2017 Remi Collet <remi@remirepo.net> - 1.9.6-1
+- Update to 1.9.6 (stable)
+- add --enable-ringbuffer, --enable-thread build options
+- add --enable-mysqlnd build option (5.5+)
+
 * Tue Jan 24 2017 Remi Collet <remi@fedoraproject.org> - 1.9.5-1
 - Update to 1.9.5 (stable)
 
