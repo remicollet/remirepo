@@ -11,11 +11,11 @@
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     edenhill
 %global gh_project   %{libname}
-%global prever       RC1
+%global prever       RC2
 
 Name:    %{libname}
 Version: 0.9.4
-Release: 0.2.%{prever}%{?dist}
+Release: 0.3.%{prever}%{?dist}
 Group:   System Environment/Libraries
 Summary: Apache Kafka C/C++ client library
 
@@ -100,6 +100,9 @@ rm %{buildroot}%{_libdir}/*.a
 
 
 %changelog
+* Fri Feb 24 2017 Remi Collet <remi@remirepo.net> - 0.9.4-0.3.RC2
+- update to 0.9.4RC2 for test
+
 * Fri Feb 17 2017 Remi Collet <remi@remirepo.net> - 0.9.4-0.2.RC1
 - enable lz4
 
