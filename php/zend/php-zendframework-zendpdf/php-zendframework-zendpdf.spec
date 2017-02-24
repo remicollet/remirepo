@@ -16,7 +16,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.0.2
-Release:        1%{?dist}
+Release:        4%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -24,7 +24,6 @@ License:        BSD
 URL:            https://framework.zend.com/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
-Source2:        %{name}-autoload.php
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -75,6 +74,19 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 mv LICENSE.txt LICENSE
 
+# Generate autoloader for this framework extension
+cat << 'EOF' | tee autoload.php
+<?php
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
+        'namespaces' => array(
+            '%{library}' => dirname(__DIR__) . '/%{library}',
+))));
+EOF
+
+# Redirect to framework autoloader
+ln -s ../Zend/autoload.php library/ZendPdf/autoload.php
+
 
 %build
 # Empty build section, nothing required
@@ -86,7 +98,7 @@ rm -rf %{buildroot}
 mkdir -p   %{buildroot}%{php_home}
 cp -pr library/%{library} %{buildroot}%{php_home}/%{library}
 
-install -pm 644 %{SOURCE2} %{buildroot}%{php_home}/%{library}/autoload.php
+install -Dpm 644 autoload.php %{buildroot}%{php_home}/Zend/%{library}-autoload.php
 
 
 %check
@@ -94,16 +106,31 @@ install -pm 644 %{SOURCE2} %{buildroot}%{php_home}/%{library}/autoload.php
 mkdir vendor
 cat << EOF | tee vendor/autoload.php
 <?php
-require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
+require_once '%{php_home}/Zend/autoload.php';
 Zend\\Loader\\AutoloaderFactory::factory(array(
     'Zend\\Loader\\StandardAutoloader' => array(
         'namespaces' => array(
+            '%{library}' => '%{buildroot}%{php_home}/%{library}',
            'ZendTest\\\\%{library}' => dirname(__DIR__).'/tests/ZendXmlTest'
 ))));
-require_once '%{buildroot}%{php_home}/%{library}/autoload.php';
 EOF
 cd tests
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -120,8 +147,12 @@ rm -rf %{buildroot}
 %doc *.md
 %doc composer.json
 %{php_home}/%{library}
+%{php_home}/Zend/%{library}-autoload.php
 
 
 %changelog
+* Fri Feb 24 2017 Remi Collet <remi@fedoraproject.org> - 2.0.2-4
+- rewrite autoloader as framework extension
+
 * Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - initial package

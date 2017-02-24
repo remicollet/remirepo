@@ -9,6 +9,8 @@ php-zendframework-zend-form 2.10.0 (after zend-captcha 2.7.1)
 =================
  Pending
 =================
+24/2	php-zendframework-zendpdf-2.0.2-4.fc25
+24/2	php-zendframework-zendpdf-2.0.2-4.fc24
 
 =================
  Testing
@@ -48,6 +50,7 @@ php-zendframework-zend-form 2.10.0 (after zend-captcha 2.7.1)
 =================
  Feb, 2017
 =================
+24/2	24/2	php-zendframework-zendpdf-2.0.2-4.fc26
 24/2	15/2	php-zendframework-zend-mail-2.7.3-1.fc25
 24/2	10/2	php-pecl-zendopcache-7.0.5-2.el6
 24/2	10/2	php-pecl-zendopcache-7.0.5-2.el7
