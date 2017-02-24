@@ -18,7 +18,7 @@
 
 Name:           php-%{gh_owner}-%{pk_project}
 Version:        3.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -26,7 +26,6 @@ License:        BSD
 URL:            https://framework.zend.com/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
-Source2:        %{name}-autoload.php
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -77,6 +76,19 @@ Provides:       php-composer(%{gh_owner}/%{pk_project}) = %{version}
 
 mv LICENSE.md LICENSE
 
+# Generate autoloader for this framework extension
+cat << 'EOF' | tee autoload.php
+<?php
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
+        'namespaces' => array(
+            '%{namespace}\\%{library}' => dirname(__DIR__) . '/%{namespace}/%{library}',
+))));
+EOF
+
+# Redirect to framework autoloader
+ln -s ../../Zend/autoload.php src/autoload.php
+
 
 %build
 # Empty build section, nothing required
@@ -88,7 +100,7 @@ rm -rf %{buildroot}
 mkdir -p   %{buildroot}%{php_home}/%{namespace}
 cp -pr src %{buildroot}%{php_home}/%{namespace}/%{library}
 
-install -pm 644 %{SOURCE2}  %{buildroot}%{php_home}/%{namespace}/%{library}/autoload.php
+install -Dpm 644 autoload.php %{buildroot}%{php_home}/Zend/%{namespace}-%{library}-autoload.php
 
 
 %check
@@ -96,7 +108,12 @@ install -pm 644 %{SOURCE2}  %{buildroot}%{php_home}/%{namespace}/%{library}/auto
 mkdir vendor
 cat << EOF | tee vendor/autoload.php
 <?php
-require_once '%{buildroot}%{php_home}/%{namespace}/%{library}/autoload.php';
+require_once '%{php_home}/Zend/autoload.php';
+Zend\\Loader\\AutoloaderFactory::factory(array(
+    'Zend\\Loader\\StandardAutoloader' => array(
+        'namespaces' => array(
+            '%{namespace}\\%{library}' => '%{buildroot}%{php_home}/%{namespace}/%{library}',
+))));
 EOF
 # remirepo:11
 run=0
@@ -131,9 +148,13 @@ rm -rf %{buildroot}
 %doc composer.json
 %dir %{php_home}/%{namespace}
      %{php_home}/%{namespace}/%{library}
+     %{php_home}/Zend/%{namespace}-%{library}-autoload.php
 
 
 %changelog
+* Fri Feb 24 2017 Remi Collet <remi@fedoraproject.org> - 3.0.0-2
+- rewrite autoloader as framework extension
+
 * Mon Feb 20 2017 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - update to 3.0.0
 
