@@ -30,7 +30,6 @@ php-zendframework-zend-form 2.10.0 (after zend-captcha 2.7.1)
 17/2	php-hamcrest-1.2.2-4.fc25
 17/2	php-pecl-amqp-1.8.0-1.fc25
 17/2	php-pecl-amqp-1.8.0-1.fc24
-15/2	php-zendframework-zend-mail-2.7.3-1.fc25
 15/2	php-zendframework-zend-mail-2.7.3-1.fc24
 13/2	php-swiftmailer-5.4.6-1.el7
 13/2	php-pecl-memcached-3.0.2-1.fc25
@@ -44,14 +43,15 @@ php-zendframework-zend-form 2.10.0 (after zend-captcha 2.7.1)
 11/2	php-smbclient-0.9.0-1.el6
 11/2	php-deepend-Mockery-0.9.8-1.el7
 10/2	php-fig-http-message-util-1.1.2-1.el7
-10/2	php-pecl-zendopcache-7.0.5-2.el6
-10/2	php-pecl-zendopcache-7.0.5-2.el7
-31/1	php-phpunit-PHPUnit-4.8.35-1.el7
 =================
  Stable
 =================
  Feb, 2017
 =================
+24/2	15/2	php-zendframework-zend-mail-2.7.3-1.fc25
+24/2	10/2	php-pecl-zendopcache-7.0.5-2.el6
+24/2	10/2	php-pecl-zendopcache-7.0.5-2.el7
+24/2	31/1	php-phpunit-PHPUnit-4.8.35-1.el7
 23/2	23/2	php-phpunit-PHP-CodeCoverage-4.0.6-1.fc26
 23/2	23/2	php-phpunit-PHP-TokenStream-1.4.10-1.fc26
 23/2	23/2	php-pear-1.10.1-11.fc26
