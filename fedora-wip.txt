@@ -9,12 +9,15 @@ php-zendframework-zend-form 2.10.0 (after zend-captcha 2.7.1)
 =================
  Pending
 =================
-24/2	php-zendframework-zendpdf-2.0.2-4.fc25
-24/2	php-zendframework-zendpdf-2.0.2-4.fc24
 
 =================
  Testing
 =================
+24/2	php-bartlett-php-compatinfo-db-1.18.0-1.fc25
+24/2	php-bartlett-php-compatinfo-db-1.18.0-1.fc24
+24/2	php-bartlett-php-compatinfo-db-1.18.0-1.el7
+24/2	php-zendframework-zendpdf-2.0.2-4.fc25
+24/2	php-zendframework-zendpdf-2.0.2-4.fc24
 23/2	php-phpunit-PHP-CodeCoverage-4.0.6-1.fc25
 23/2	php-phpunit-PHP-CodeCoverage-4.0.6-1.fc24
 23/2	php-pear-1.10.1-11.fc25
@@ -50,6 +53,7 @@ php-zendframework-zend-form 2.10.0 (after zend-captcha 2.7.1)
 =================
  Feb, 2017
 =================
+24/2	24/2	php-bartlett-php-compatinfo-db-1.18.0-1.fc26
 24/2	24/2	php-zendframework-zendpdf-2.0.2-4.fc26
 24/2	15/2	php-zendframework-zend-mail-2.7.3-1.fc25
 24/2	10/2	php-pecl-zendopcache-7.0.5-2.el6
