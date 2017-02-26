@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    3f317dc211953cc93e9efa61598dc074adc3b0de
+%global gh_commit    eff05975fee1645471d4371b7a0a7acb62a25b15
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.0
+Version:        2.6.0
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette PHP Generator
@@ -36,9 +36,9 @@ BuildRequires:  php-composer(theseer/autoload)
 BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-pcre
 BuildRequires:  php-reflection
-BuildRequires:  php-composer(%{gh_owner}/utils)  >= 2.4
+BuildRequires:  php-composer(%{gh_owner}/utils)  >= 2.4.2
 # From composer.json, "require-dev": {
-#               "nette/tester": "~2.0",
+#               "nette/tester": "^2.0",
 #               "tracy/tracy": "^2.3"
 # ignore tracy (pass without)
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
@@ -46,10 +46,10 @@ BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
 
 # from composer.json, "require": {
 #               "php": ">=5.6.0",
-#               "nette/utils": "~2.4"
+#               "nette/utils": "^2.4.2 || ~3.0.0"
 Requires:       php(language) >= 5.6
-Requires:       php-composer(%{gh_owner}/utils) >= 2.4
-Requires:       php-composer(%{gh_owner}/utils) <  3
+Requires:       php-composer(%{gh_owner}/utils) >= 2.4.2
+Requires:       php-composer(%{gh_owner}/utils) <  4
 # from phpcompatinfo report for version 2.3.4
 Requires:       php-pcre
 Requires:       php-reflection
@@ -132,6 +132,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 26 2017 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0
+
 * Sun Jan 15 2017 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
 - update to 2.5.0
 
