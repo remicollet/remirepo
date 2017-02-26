@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    38e9124049cf1a164f1e4537caf19c99bf1eb260
+%global gh_commit    3dcf38ca72b158baf0bc245e9184d3fdffa9c46f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-timer
@@ -17,7 +17,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-PHP-Timer
-Version:        1.0.8
+Version:        1.0.9
 Release:        1%{?dist}
 Summary:        PHP Utility class for timing
 
@@ -29,18 +29,20 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-fedora-autoloader-devel
 %if %{with_tests}
 # From composer.json"require-dev": {
-#        "phpunit/phpunit": "~4|~5"
-BuildRequires:  php-composer(phpunit/phpunit) >= 4
+#        "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.0"
+BuildRequires:  php-composer(phpunit/phpunit) >= 4.8.35
 %endif
 
 # From composer.json
-#        "php": ">=5.3.3"
+#        "php": "^5.3.3 || ^7.0"
 Requires:       php(language) >= 5.3.3
 # From phpcompatinfo report for version 1.0.5
 Requires:       php-spl
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(phpunit/php-timer) = %{version}
 # For compatibility with PEAR mode
@@ -61,8 +63,8 @@ mkdir PHP/Timer
 
 %build
 phpab \
+   --template fedora \
    --output  PHP/Timer/Autoload.php \
-   --basedir PHP/Timer \
    PHP
 
 
@@ -74,14 +76,29 @@ cp -pr PHP %{buildroot}%{php_home}
 
 %if %{with_tests}
 %check
-: Run tests - set include_path to ensure PHPUnit autoloader use it
-%{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-%{_bindir}/phpunit .
+mkdir vendor
+touch vendor/autoload.php
 
-if which php70; then
-  php70 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-  %{_bindir}/phpunit .
+: Run tests - set include_path to ensure PHPUnit autoloader use it
+# remirepo:13
+run=0
+ret=0
+if which php56; then
+  php56 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+  %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+  php71 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+  %{_bindir}/phpunit6 || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %endif
 
 
@@ -106,6 +123,10 @@ fi
 
 
 %changelog
+* Sun Feb 26 2017 Remi Collet <remi@fedoraproject.org> - 1.0.9-1
+- update to 1.0.9
+- switch to fedora/autoloader
+
 * Fri May 13 2016 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
 - update to 1.0.8
 - run test with both PHP 5 and 7 when available
