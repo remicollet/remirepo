@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #166 xdebug version 2.5.0 ] {
+Extension [ <persistent> extension #177 xdebug version 2.5.1 ] {
 
   - INI {
     Entry [ xdebug.auto_trace <ALL> ]
@@ -196,80 +196,211 @@ Extension [ <persistent> extension #166 xdebug version 2.5.0 ] {
 
   - Functions {
     Function [ <internal:xdebug> function xdebug_get_stack_depth ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_get_function_stack ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_get_formatted_function_stack ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_print_function_stack ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $message ]
+        Parameter #1 [ <optional> $options ]
+      }
     }
     Function [ <internal:xdebug> function xdebug_get_declared_vars ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_call_class ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $depth ]
+      }
     }
     Function [ <internal:xdebug> function xdebug_call_function ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $depth ]
+      }
     }
     Function [ <internal:xdebug> function xdebug_call_file ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $depth ]
+      }
     }
     Function [ <internal:xdebug> function xdebug_call_line ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $depth ]
+      }
     }
     Function [ <internal:xdebug> function xdebug_var_dump ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
     }
     Function [ <internal:xdebug> function xdebug_debug_zval ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
     }
     Function [ <internal:xdebug> function xdebug_debug_zval_stdout ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $var ]
+      }
     }
     Function [ <internal:xdebug> function xdebug_enable ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_disable ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_is_enabled ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_break ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_start_trace ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $fname ]
+        Parameter #1 [ <optional> $options ]
+      }
     }
     Function [ <internal:xdebug> function xdebug_stop_trace ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_get_tracefile_name ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_get_profiler_filename ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_dump_aggr_profiling_data ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $prefix ]
+      }
     }
     Function [ <internal:xdebug> function xdebug_clear_aggr_profiling_data ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_memory_usage ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_peak_memory_usage ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_time_index ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_start_error_collection ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_stop_error_collection ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_get_collected_errors ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $clear ]
+      }
     }
     Function [ <internal:xdebug> function xdebug_start_function_monitor ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $functions_to_monitor ]
+      }
     }
     Function [ <internal:xdebug> function xdebug_stop_function_monitor ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_get_monitored_functions ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $clear ]
+      }
     }
     Function [ <internal:xdebug> function xdebug_start_code_coverage ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $options ]
+      }
     }
     Function [ <internal:xdebug> function xdebug_stop_code_coverage ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $cleanup ]
+      }
     }
     Function [ <internal:xdebug> function xdebug_get_code_coverage ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_code_coverage_started ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_get_function_count ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_dump_superglobals ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:xdebug> function xdebug_get_headers ] {
+
+      - Parameters [0] {
+      }
     }
   }
 }

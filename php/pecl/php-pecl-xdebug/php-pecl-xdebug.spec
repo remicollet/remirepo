@@ -16,7 +16,7 @@
 
 %global pecl_name   xdebug
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
-%global gh_commit   150336d1fa29e311636c682db0c1550117762947
+%global gh_commit   0fb207dfad8566ddbaa0412b9068e08df0f59b77
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date     20161004
 %global with_tests  0%{?_with_tests:1}
@@ -31,7 +31,7 @@
 
 Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
-Version:        2.5.0
+Version:        2.5.1
 %if 0%{?gh_date:1}
 Release:        0.5.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
@@ -151,6 +151,8 @@ cp -pr NTS ZTS
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -178,6 +180,7 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
+%{?dtsenable}
 
 # install NTS extension
 make -C NTS install INSTALL_ROOT=%{buildroot}
@@ -308,6 +311,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 26 2017 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
+- Update to 2.5.1
+
 * Mon Dec  5 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
 - update to 2.5.0
 
