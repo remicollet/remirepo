@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    135fac5b1d71cde9d0a0c9cad61a18d2704c3e47
+%global gh_commit    2bb0333200dbec22b0c1868d907e3e451b555665
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.4.1
+Version:        2.4.2
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Mail: Sending E-mails
@@ -40,8 +40,8 @@ BuildRequires:  php-date
 BuildRequires:  php-fileinfo
 BuildRequires:  php-pcre
 # From composer.json, "require-dev": {
-#               "nette/di": "~2.4",
-#               "nette/tester": "~2.0",
+#               "nette/di": "^2.4 || ~3.0.0",
+#               "nette/tester": "^2.0",
 #               "tracy/tracy": "^2.4"
 BuildRequires:  php-composer(%{gh_owner}/di) >= 2.4
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
@@ -51,11 +51,11 @@ BuildRequires:  php-composer(tracy/tracy) >= 2.4
 # from composer.json, "require": {
 #        "php": ">=5.6.0"
 #        "ext-iconv": "*",
-#        "nette/utils": "~2.4"
+#        "nette/utils": "^2.4 || ~3.0.0"
 Requires:       php(language) >= 5.6
 Requires:       php-iconv
 Requires:       php-composer(%{gh_owner}/utils) >= 2.4
-Requires:       php-composer(%{gh_owner}/utils) <  3
+Requires:       php-composer(%{gh_owner}/utils) <  4
 # from phpcompatinfo report for version 2.4.0
 Requires:       php-date
 Requires:       php-fileinfo
@@ -142,6 +142,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 26 2017 Remi Collet <remi@fedoraproject.org> - 2.4.2-1
+- update to 2.4.2
+
 * Thu Aug  4 2016 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
 - update to 2.4.1
 - raise dependency on PHP >= 5.6
