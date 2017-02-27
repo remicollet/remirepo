@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-SessionHandler
-Version:        2.2.8
+Version:        2.2.9
 Release:        1%{?dist}
 Summary:        Horde Session Handler API
 
@@ -125,6 +125,9 @@ fi
 
 
 %changelog
+* Mon Feb 27 2017 Remi Collet <remi@fedoraproject.org> - 2.2.9-1
+- Update to 2.2.9
+
 * Fri Sep 02 2016 Remi Collet <remi@fedoraproject.org> - 2.2.8-1
 - Update to 2.2.8
 
