@@ -18,7 +18,7 @@
 %endif
 
 Name:           php-horde-Horde-Idna
-Version:        1.0.4
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        IDNA backend normalization package
 
@@ -32,6 +32,7 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
+BuildRequires:  gettext
 %if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
@@ -63,12 +64,23 @@ Domain Names in Applications) support.
 %prep
 %setup -q -c
 cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
+
+# Don't install .po and .pot files
+# Remove checksum for .mo, as we regenerate them
+sed -e '/%{pear_name}.po/d' \
+    -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+    ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
 cd %{pear_name}-%{version}
-# Empty build section, most likely nothing required.
+
+# Regenerate the locales
+for po in $(find locale -name \*.po)
+do
+   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+done
 
 
 %install
@@ -83,15 +95,33 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
+for loc in locale/{??,??_??}
+do
+    lang=$(basename $loc)
+    test -d $loc && echo "%%lang(${lang%_*}) %{pear_datadir}/%{pear_name}/$loc"
+done | tee ../%{pear_name}.lang
+
 
 %check
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-%{_bindir}/phpunit .
 
-if which php70; then
-   php70 %{_bindir}/phpunit .
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit . || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose .
+# remirepo:2
+fi
+exit $ret
 %else
 : Test disabled, bootstrap build
 %endif
@@ -112,16 +142,22 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
-%files
+%files -f %{pear_name}.lang
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Idna/
 %{pear_phpdir}/Horde/Idna.php
 %{pear_testdir}/%{pear_name}
+%dir %{pear_datadir}/%{pear_name}
+%dir %{pear_datadir}/%{pear_name}/locale
 
 
 %changelog
+* Mon Feb 27 2017 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Update to 1.1.0
+- add locales
+
 * Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - Update to 1.0.4
 - PHP 7 compatible version
