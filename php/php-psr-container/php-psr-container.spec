@@ -47,7 +47,7 @@ Provides:  php-composer(%{pk_vendor}/%{pk_project}) = %{version}
 
 
 %description
-This repository holds all interfaces/classes/traits related to PSR-11.
+This package holds all interfaces/classes/traits related to PSR-11.
 
 Note that this is not a container implementation of its own. 
 
