@@ -19,7 +19,7 @@ Build order
 	* Horde_Browser             2.0.13       R: Horde_Exception, Horde_Translation, Horde_Util
 	* Horde_Cli                 2.0.7       I: Horde_Test R: Horde_Support, Horde_Translation
 	* Horde_Log                 2.3.0       I: Horde_Test R: Horde_Constraint, Horde_Exception, Horde_Util, Horde_Cli, Horde_Scribe
-	* Horde_Test                2.6.1        R: Horde_Support, Horde_Util, Horde_Cli, Horde_Log
+	* Horde_Test                2.6.2        R: Horde_Support, Horde_Util, Horde_Cli, Horde_Log
 	* Horde_Text_Diff           2.1.2      BR: Horde_Test  R: Horde_Exception, Horde_Util
 	* Horde_Text_Flowed         2.0.3      BR: Horde_Test  R: Horde_Util
 	* Horde_Url                 2.2.5      BR: Horde_Test  R: Horde_Exception
