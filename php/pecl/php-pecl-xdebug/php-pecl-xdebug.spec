@@ -35,7 +35,7 @@ Version:        2.5.1
 %if 0%{?gh_date:1}
 Release:        0.5.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 
 # The Xdebug License, version 1.01
@@ -149,6 +149,13 @@ cd ..
 cp -pr NTS ZTS
 %endif
 
+cat << 'EOF' | tee %{ini_name}
+; Enable xdebug extension module
+zend_extension=%{pecl_name}.so
+
+EOF
+sed -e '1d' NTS/%{pecl_name}.ini >>%{ini_name}
+
 
 %build
 %{?dtsenable}
@@ -193,33 +200,13 @@ install -Dpm 755 NTS/debugclient/debugclient \
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # install config file
-install -d %{buildroot}%{php_inidir}
-cat << 'EOF' | tee %{buildroot}%{php_inidir}/%{ini_name}
-; Enable xdebug extension module
-%if "%{php_version}" > "5.5"
-zend_extension=%{pecl_name}.so
-%else
-zend_extension=%{php_extdir}/%{pecl_name}.so
-%endif
-
-; see http://xdebug.org/docs/all_settings
-EOF
+install -Dpm 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 # Install ZTS extension
 make -C ZTS install INSTALL_ROOT=%{buildroot}
 
-install -d %{buildroot}%{php_ztsinidir}
-cat << 'EOF' | tee %{buildroot}%{php_ztsinidir}/%{ini_name}
-; Enable xdebug extension module
-%if "%{php_version}" > "5.5"
-zend_extension=%{pecl_name}.so
-%else
-zend_extension=%{php_ztsextdir}/%{pecl_name}.so
-%endif
-
-; see http://xdebug.org/docs/all_settings
-EOF
+install -Dpm 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Documentation
@@ -311,6 +298,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 27 2017 Remi Collet <remi@fedoraproject.org> - 2.5.1-2
+- use uptream provided configuration with all settings
+
 * Sun Feb 26 2017 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
 - Update to 2.5.1
 
