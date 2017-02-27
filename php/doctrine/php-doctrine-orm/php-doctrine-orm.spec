@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-doctrine-orm
 #
-# Copyright (c) 2013-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2017 Shawn Iwinski <shawn.iwinski@gmail.com>
 #                         Remi Collet <remi@fedoraproject.org>
 #
 # License: MIT
@@ -42,7 +42,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       3%{?dist}
 Summary:       Doctrine Object-Relational-Mapper (ORM)
 
 Group:         Development/Libraries
@@ -63,9 +63,10 @@ Patch1:        %{name}-phpunit54.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
+# Tests
 %if %{with_tests}
 BuildRequires: php-composer(phpunit/phpunit)
-# composer.json
+## composer.json
 BuildRequires: php(language)                      >= %{php_min_ver}
 BuildRequires: php-composer(doctrine/collections) <  %{collections_max_ver}
 BuildRequires: php-composer(doctrine/collections) >= %{collections_min_ver}
@@ -85,6 +86,8 @@ BuildRequires: php-reflection
 BuildRequires: php-simplexml
 BuildRequires: php-spl
 BuildRequires: php-tokenizer
+## Autoloader
+BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 # composer.json
@@ -106,6 +109,8 @@ Requires:      php-reflection
 Requires:      php-simplexml
 Requires:      php-spl
 Requires:      php-tokenizer
+# Autoloader
+Requires:      php-composer(fedora/autoloader)
 
 # Weak dependencies
 %if 0%{?fedora} >= 21
@@ -160,34 +165,17 @@ cat <<'AUTOLOAD' | tee lib/Doctrine/ORM/autoload.php
 /**
  * Autoloader for %{name} and its' dependencies
  * (created by %{name}-%{version}-%{release}).
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
  */
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+\Fedora\Autoloader\Autoload::addPsr4('Doctrine\\ORM\\', __DIR__);
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('Doctrine\\ORM\\', dirname(dirname(__DIR__)));
-
-// Dependencies (autoloader => required)
-foreach(array(
-    '%{phpdir}/Doctrine/Common/Collections/autoload.php' => true,
-    '%{phpdir}/Doctrine/DBAL/autoload.php'               => true,
-    '%{phpdir}/Symfony/Component/Console/autoload.php'   => true,
-    '%{phpdir}/Symfony/Component/Yaml/autoload.php'      => true,
-) as $dependencyAutoloader => $required) {
-    if ($required || file_exists($dependencyAutoloader)) {
-        require_once $dependencyAutoloader;
-    }
-}
-
-return $fedoraClassLoader;
+\Fedora\Autoloader\Dependencies::required(array(
+    '%{phpdir}/Doctrine/Common/Collections/autoload.php',
+    '%{phpdir}/Doctrine/DBAL/autoload.php',
+    '%{phpdir}/Symfony/Component/Console/autoload.php',
+    '%{phpdir}/Symfony/Component/Yaml/autoload.php',
+));
 AUTOLOAD
 
 
@@ -217,10 +205,8 @@ sed 's#__DIR__\s*\.\s*"/\(\.\./\)*lib#"%{buildroot}%{phpdir}#' \
 : Create tests bootstrap
 cat > bootstrap.php <<'BOOTSTRAP'
 <?php
-$fedoraClassLoader =
-    require_once '%{buildroot}%{phpdir}/Doctrine/ORM/autoload.php';
-
-$fedoraClassLoader->addPrefix('Doctrine\\Tests\\', __DIR__.'/tests');
+require_once '%{buildroot}%{phpdir}/Doctrine/ORM/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('Doctrine\\Tests\\', __DIR__.'/tests/Doctrine/Tests');
 BOOTSTRAP
 
 # Skip test known to fail
@@ -231,10 +217,13 @@ sed 's/function testNativeQueryResultCaching/function SKIP_testNativeQueryResult
     -i tests/Doctrine/Tests/ORM/Functional/ResultCacheTest.php
 sed 's/function testQueryCache_DependsOnFilters/function SKIP_testQueryCache_DependsOnFilters/' \
     -i tests/Doctrine/Tests/ORM/Functional/SQLFilterTest.php
-%if 1
-# PHP 7
+%if 0%{?fedora} > 24
 sed 's/function testReusedSplObjectHashDoesNotConfuseUnitOfWork/function SKIP_testReusedSplObjectHashDoesNotConfuseUnitOfWork/' \
     -i tests/Doctrine/Tests/ORM/Functional/IdentityMapTest.php
+%endif
+%if 1
+sed 's/function testFindMappingFileNamespacedFoundFileNotFound/function SKIP_testFindMappingFileNamespacedFoundFileNotFound/' \
+    -i tests/Doctrine/Tests/ORM/Mapping/Symfony/AbstractDriverTest.php
 %endif
 
 # Weird el6 error
@@ -248,20 +237,17 @@ sed 's#$this->_em->clear();#if (isset($this->_em)) { $this->_em->clear(); }#' \
 rm tests/Doctrine/Tests/ORM/Functional/QueryDqlFunctionTest.php
 %endif
 
-ret=0
-run=0
-if which php56; then
-  php56 %{_bindir}/phpunit -d memory_limit="512M" --bootstrap bootstrap.php || ret=1
-  run=1
-fi
-if which php71; then
-  php71 %{_bindir}/phpunit -d memory_limit="512M" --bootstrap bootstrap.php || ret=1
-  run=1
-fi
-if [ $run -eq 0 ]; then
-  %{_bindir}/phpunit -d memory_limit="512M" --bootstrap bootstrap.php
-fi
-exit $ret
+%{_bindir}/phpunit --verbose -d memory_limit="512M" --bootstrap bootstrap.php
+
+: Upstream tests with SCLs if available
+SCL_RETURN_CODE=0
+for SCL in %{?rhel:php54 php55} php56 php70 php71; do
+    if which $SCL; then
+        $SCL %{_bindir}/phpunit --verbose -d memory_limit="512M" \
+            --bootstrap bootstrap.php || SCL_RETURN_CODE=1
+    fi
+done
+exit $SCL_RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -276,11 +262,16 @@ rm -rf %{buildroot}
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md *.markdown composer.json
-%{_datadir}/php/Doctrine/ORM
+%{phpdir}/Doctrine/ORM
 %{_bindir}/doctrine
 
 
 %changelog
+* Sat Feb 25 2017 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.8-3
+- Fix FTBFS in rawhide (RHBZ #1424060)
+- Use php-composer(fedora/autoloader)
+- Test SCLs if available
+
 * Sat Jul 09 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.8-1
 - Updated to 2.4.8 (RHBZ #1347926 / CVE-2015-5723)
 - Added autoloader
