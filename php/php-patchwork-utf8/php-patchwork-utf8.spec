@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-patchwork-utf8
 #
-# Copyright (c) 2015-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2015-2017 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -32,7 +32,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       3%{?github_release}%{?dist}
 Summary:       Portable and performant UTF-8, Unicode and Grapheme Clusters for PHP
 
 Group:         Development/Libraries
@@ -43,6 +43,10 @@ URL:           https://github.com/%{github_owner}/%{github_name}
 # Run php-patchwork-utf8-get-source.sh to create full source.
 Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
 Source1:       %{name}-get-source.sh
+
+# Fix tests for PHP 7.1 negative string offsets
+# https://github.com/tchwork/utf8/pull/64
+Patch0:        %{name}-pull-request-64.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -65,9 +69,9 @@ BuildRequires: php-json
 BuildRequires: php-reflection
 BuildRequires: php-spl
 BuildRequires: php-xml
-## Autoloader
-BuildRequires: php-composer(symfony/class-loader)
 %endif
+## Autoloader
+BuildRequires: php-fedora-autoloader-devel
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
@@ -83,7 +87,7 @@ Requires:      php-json
 Requires:      php-spl
 Requires:      php-xml
 # Autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:      php-composer(fedora/autoloader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -91,35 +95,15 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 %description
 %{summary}.
 
+Autoloder: %{phpdir}/Patchwork/autoload-utf8.php
+
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-: Create autoloader
-cat <<'AUTOLOAD' | tee src/Patchwork/autoload.php
-<?php
-/**
- * Autoloader for %{name} and its' dependencies
- * (created by %{name}-%{version}-%{release}).
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
- */
-
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
-
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('Patchwork\\', dirname(__DIR__));
-
-\Patchwork\Utf8\Bootup::initAll();
-
-return $fedoraClassLoader;
-AUTOLOAD
+: Fix tests for PHP 7.1 negative string offsets
+: https://github.com/tchwork/utf8/pull/64
+%patch0 -p1
 
 : Remove Windows files
 rm -f \
@@ -128,7 +112,15 @@ rm -f \
 
 
 %build
-# Empty build section, nothing to build
+: Create autoloader
+%{_bindir}/phpab --template fedora --output src/Patchwork/autoload-utf8.php src/
+cat <<'AUTOLOAD' | tee -a src/Patchwork/autoload-utf8.php
+
+\Patchwork\Utf8\Bootup::initAll();
+AUTOLOAD
+
+: Compat autoloader
+ln -s autoload-utf8.php src/Patchwork/autoload.php
 
 
 %install
@@ -158,15 +150,15 @@ ln -s \
 run=0
 ret=0
 if which php56; then
-   php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Patchwork/autoload.php || ret=1
+   php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Patchwork/autoload-utf8.php || ret=1
    run=1
 fi
 if which php70; then
-   php70 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Patchwork/autoload.php || ret=1
+   php70 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Patchwork/autoload-utf8.php || ret=1
    run=1
 fi
 if which php71; then
-   php71 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Patchwork/autoload.php || : ignore
+   php71 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Patchwork/autoload-utf8.php || : ignore
    run=1
 fi
 %if 0%{?rhel}
@@ -175,7 +167,8 @@ rm  tests/PHP/Shim/IntlTest.php
 %endif
 
 if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose --bootstrap %{buildroot}%{phpdir}/Patchwork/autoload.php
+%{_bindir}/phpunit --verbose \
+    --bootstrap %{buildroot}%{phpdir}/Patchwork/autoload-utf8.php
 fi
 exit $ret
 %else
@@ -200,6 +193,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Feb 25 2017 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.1-3
+- Fix FTBFS in rawhide (RHBZ #1424074)
+- Use php-composer(fedora/autoloader)
+
 * Sat Jul 23 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.1-1
 - Updated to 1.3.1 (RHBZ #1332183)
 
