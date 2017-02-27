@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-horde-Horde-Mime
-Version:        2.10.2
+Version:        2.10.3
 Release:        1%{?dist}
 Summary:        Horde MIME Library
 
@@ -131,6 +131,7 @@ done | tee ../%{pear_name}.lang
 %check
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+# remirepo:3
 %if 0%{?rhel} == 5
 rm MdnTest.php
 %endif
@@ -180,6 +181,9 @@ fi
 
 
 %changelog
+* Mon Feb 27 2017 Remi Collet <remi@fedoraproject.org> - 2.10.3-1
+- Update to 2.10.3
+
 * Thu Nov 10 2016 Remi Collet <remi@fedoraproject.org> - 2.10.2-1
 - Update to 2.10.2
 
