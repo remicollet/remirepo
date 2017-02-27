@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Prefs
-Version:        2.8.0
+Version:        2.8.1
 Release:        1%{?dist}
 Summary:        Horde Preferences API
 
@@ -166,6 +166,9 @@ fi
 
 
 %changelog
+* Mon Feb 27 2017 Remi Collet <remi@fedoraproject.org> - 2.8.1-1
+- Update to 2.8.1
+
 * Fri Sep 02 2016 Remi Collet <remi@fedoraproject.org> - 2.8.0-1
 - Update to 2.8.0
 
