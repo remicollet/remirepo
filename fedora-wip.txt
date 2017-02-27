@@ -8,15 +8,6 @@ php-zendframework-zend-form 2.10.0 (after zend-captcha 2.7.1)
 php-twig2 2.2.0 (when psr/container approved)
 php-twig 1.32.0 (when psr/container approved)
 
-pear.horde.org Horde_Prefs           2.8.0 (stable)  2.8.1 (stable)  54kB
-pear.horde.org Horde_Service_Weather 2.5.3 (stable)  2.5.4 (stable)  211kB
-pear.horde.org Horde_SessionHandler  2.2.8 (stable)  2.2.9 (stable)  25kB
-pear.horde.org Horde_Share           2.1.1 (stable)  2.1.2 (stable)  60kB
-pear.horde.org Horde_Support         2.1.5 (stable)  2.2.0 (stable)  25kB
-pear.horde.org Horde_Test            2.6.1 (stable)  2.6.2 (stable)  716kB
-pear.horde.org Horde_Translation 2.2.1 (stable) 2.2.2 (stable) 15.6kB
-pear.horde.org Horde_Vfs         2.3.4 (stable) 2.4.0 (stable) 73kB
-
 =================
  Pending
 =================
@@ -24,6 +15,38 @@ pear.horde.org Horde_Vfs         2.3.4 (stable) 2.4.0 (stable) 73kB
 =================
  Testing
 =================
+27/2	php-horde-Horde-Vfs-2.4.0-1.fc25
+27/2	php-horde-Horde-Vfs-2.4.0-1.fc24
+27/2	php-horde-Horde-Vfs-2.4.0-1.el7
+27/2	php-horde-Horde-Vfs-2.4.0-1.el6
+27/2	php-horde-Horde-Translation-2.2.2-1.fc25
+27/2	php-horde-Horde-Translation-2.2.2-1.fc24
+27/2	php-horde-Horde-Translation-2.2.2-1.el7
+27/2	php-horde-Horde-Translation-2.2.2-1.el6
+27/2	php-horde-Horde-Test-2.6.2-1.fc25
+27/2	php-horde-Horde-Test-2.6.2-1.fc24
+27/2	php-horde-Horde-Test-2.6.2-1.el7
+27/2	php-horde-Horde-Test-2.6.2-1.el6
+27/2	php-horde-Horde-Support-2.2.0-1.fc25
+27/2	php-horde-Horde-Support-2.2.0-1.fc24
+27/2	php-horde-Horde-Support-2.2.0-1.el7
+27/2	php-horde-Horde-Support-2.2.0-1.el6
+27/2	php-horde-Horde-Share-2.1.2-1.fc25
+27/2	php-horde-Horde-Share-2.1.2-1.fc24
+27/2	php-horde-Horde-Share-2.1.2-1.el7
+27/2	php-horde-Horde-Share-2.1.2-1.el6
+27/2	php-horde-Horde-SessionHandler-2.2.9-1.fc25
+27/2	php-horde-Horde-SessionHandler-2.2.9-1.fc24
+27/2	php-horde-Horde-SessionHandler-2.2.9-1.el7
+27/2	php-horde-Horde-SessionHandler-2.2.9-1.el6
+27/2	php-horde-Horde-Service-Weather-2.5.4-1.fc25
+27/2	php-horde-Horde-Service-Weather-2.5.4-1.fc24
+27/2	php-horde-Horde-Service-Weather-2.5.4-1.el7
+27/2	php-horde-Horde-Service-Weather-2.5.4-1.el6
+27/2	php-horde-Horde-Prefs-2.8.1-1.fc25
+27/2	php-horde-Horde-Prefs-2.8.1-1.fc24
+27/2	php-horde-Horde-Prefs-2.8.1-1.el7
+27/2	php-horde-Horde-Prefs-2.8.1-1.el6
 27/2	php-horde-Horde-Mime-2.10.3-1.fc25
 27/2	php-horde-Horde-Mime-2.10.3-1.fc24
 27/2	php-horde-Horde-Mime-2.10.3-1.el7
@@ -87,6 +110,15 @@ pear.horde.org Horde_Vfs         2.3.4 (stable) 2.4.0 (stable) 73kB
 =================
  Feb, 2017
 =================
+27/2	27/2	php-horde-Horde-Vfs-2.4.0-1.fc26
+27/2	27/2	php-horde-Horde-Translation-2.2.2-1.fc26
+27/2	27/2	php-horde-Horde-Test-2.6.2-1.fc26
+27/2	27/2	php-horde-Horde-Support-2.2.0-1.fc26
+27/2	27/2	php-horde-Horde-Share-2.1.2-1.fc26
+27/2	27/2	php-horde-Horde-SessionHandler-2.2.9-1.fc26
+27/2	27/2	php-horde-Horde-Service-Weather-2.5.4-1.fc26
+27/2	27/2	php-horde-Horde-Prefs-2.8.1-1.fc26
+27/2	27/2	php-horde-Horde-Prefs-2.8.1-1.fc26
 27/2	27/2	php-horde-Horde-Mime-2.10.3-1.fc26
 27/2	27/2	php-horde-Horde-Log-2.3.0-1.fc26
 27/2	27/2	php-horde-Horde-Ldap-2.4.0-1.fc26
