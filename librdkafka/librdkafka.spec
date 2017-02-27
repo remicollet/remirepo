@@ -7,15 +7,15 @@
 # Please, preserve the changelog entries
 #
 %global libname      librdkafka
-%global gh_commit    6c9582c82f625962dd5a62b7788cc574353a18f9
+%global gh_commit    ebe76d9735f17311f36ce3513c2e33463a4b480a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     edenhill
 %global gh_project   %{libname}
-%global prever       RC2
+#global prever       RC2
 
 Name:    %{libname}
 Version: 0.9.4
-Release: 0.3.%{prever}%{?dist}
+Release: 1%{?dist}
 Group:   System Environment/Libraries
 Summary: Apache Kafka C/C++ client library
 
@@ -100,6 +100,9 @@ rm %{buildroot}%{_libdir}/*.a
 
 
 %changelog
+* Mon Feb 27 2017 Remi Collet <remi@remirepo.net> - 0.9.4-1
+- update to 0.9.4
+
 * Fri Feb 24 2017 Remi Collet <remi@remirepo.net> - 0.9.4-0.3.RC2
 - update to 0.9.4RC2 for test
 
