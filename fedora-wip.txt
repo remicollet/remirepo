@@ -8,6 +8,19 @@ php-zendframework-zend-form 2.10.0 (after zend-captcha 2.7.1)
 php-twig2 2.2.0 (when psr/container approved)
 php-twig 1.32.0 (when psr/container approved)
 
+pear.horde.org Horde_Cache           2.5.4 (stable)  2.5.5 (stable)  27kB
+pear.horde.org Horde_Db              2.3.4 (stable)  2.4.0 (stable)  95kB
+pear.horde.org Horde_Idna            1.0.4 (stable)  1.1.0 (stable)  9.1kB
+pear.horde.org Horde_Ldap            2.3.2 (stable)  2.4.0 (stable)  64kB
+pear.horde.org Horde_Log             2.2.0 (stable)  2.3.0 (stable)  14.5kB
+pear.horde.org Horde_Mime            2.10.2 (stable) 2.10.3 (stable) 141kB
+pear.horde.org Horde_Prefs           2.8.0 (stable)  2.8.1 (stable)  54kB
+pear.horde.org Horde_Service_Weather 2.5.3 (stable)  2.5.4 (stable)  211kB
+pear.horde.org Horde_SessionHandler  2.2.8 (stable)  2.2.9 (stable)  25kB
+pear.horde.org Horde_Share           2.1.1 (stable)  2.1.2 (stable)  60kB
+pear.horde.org Horde_Support         2.1.5 (stable)  2.2.0 (stable)  25kB
+pear.horde.org Horde_Test            2.6.1 (stable)  2.6.2 (stable)  716kB
+
 =================
  Pending
 =================
@@ -15,6 +28,9 @@ php-twig 1.32.0 (when psr/container approved)
 =================
  Testing
 =================
+27/2	php-phpunit-PHP-TokenStream-1.4.11-1.fc25
+27/2	php-phpunit-PHP-TokenStream-1.4.11-1.fc24
+27/2	php-phpunit-PHP-TokenStream-1.4.11-1.el7
 27/2	php-pear-crypt-gpg-1.6.0-1.fc25
 27/2	php-pear-crypt-gpg-1.6.0-1.fc24
 27/2	php-pear-crypt-gpg-1.6.0-1.el7
@@ -51,6 +67,7 @@ php-twig 1.32.0 (when psr/container approved)
 =================
  Feb, 2017
 =================
+27/2	27/2	php-phpunit-PHP-TokenStream-1.4.11-1.fc26
 27/2	27/2	php-pear-crypt-gpg-1.6.0-1.fc26
 27/2	27/2	php-pecl-xdebug-2.5.1-2.fc26
 27/2	27/2	php-pecl-xdebug-2.5.1-1.fc26

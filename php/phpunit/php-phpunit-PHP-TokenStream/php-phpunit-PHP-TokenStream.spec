@@ -8,7 +8,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    284fb0679dd25fb5ffb56dad92c72860c0a22f1b
+%global gh_commit    e03f8f67534427a787e21a385a67ec3ca6978ea7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-token-stream
@@ -22,7 +22,7 @@
 %endif
 
 Name:           php-phpunit-PHP-TokenStream
-Version:        1.4.10
+Version:        1.4.11
 Release:        1%{?dist}
 Summary:        Wrapper around PHP tokenizer extension
 
@@ -127,6 +127,9 @@ fi
 
 
 %changelog
+* Mon Feb 27 2017 Remi Collet <remi@fedoraproject.org> - 1.4.11-1
+- Update to 1.4.11
+
 * Thu Feb 23 2017 Remi Collet <remi@fedoraproject.org> - 1.4.10-1
 - Update to 1.4.10
 
