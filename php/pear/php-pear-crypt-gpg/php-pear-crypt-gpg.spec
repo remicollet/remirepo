@@ -12,7 +12,7 @@
 %global with_tests 0%{!?_without_tests:1}
 
 Name:           php-pear-crypt-gpg
-Version:        1.4.3
+Version:        1.6.0
 Release:        1%{?dist}
 Summary:        GNU Privacy Guard (GnuPG)
 
@@ -21,6 +21,8 @@ License:        LGPLv2+
 URL:            http://pear.php.net/package/%{pear_name}
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
 
+# Use /usr/bin/gpg1 if available, only in #remirepo
+Patch0:         %{pear_name}-gpg1.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -38,7 +40,7 @@ Requires:       php-pear(PEAR)
 
 Requires:       gnupg < 2
 # From package.pear
-Requires:       php(language) >= 5.2.1
+Requires:       php(language) >= 5.4.8
 Requires:       php-pear(Console_CommandLine) >= 1.1.10
 Requires:       php-mbstring
 # From phpcompatinfo report for version 1.4.1
@@ -67,14 +69,14 @@ is intended only to facilitate public-key cryptography.
 
 %{?_licensedir:sed -e '/LICENSE/d' -i package.xml}
 
-if [ -x %{_bindir}/gpg1 ]; then
-  sed -e "s:'%{_bindir}/gpg':'%{_bindir}/gpg1':" \
-      -i %{pear_name}-%{version}/Crypt/GPG/Engine.php
-  sed -e 's/md5sum="[^"]*"//' \
-      -i package.xml
-fi
 
 cd %{pear_name}-%{version}
+if [ -x %{_bindir}/gpg1 ]; then
+%patch0 -p1 -b .rpm
+sed -e '/Engine.php/s/md5sum="[^"]*"//' \
+    -i ../package.xml
+fi
+
 mv  ../package.xml %{name}.xml
 
 
@@ -105,11 +107,23 @@ rm -rf %{buildroot}
 %check
 cd %{pear_name}-%{version}/tests
 
-%{_bindir}/phpunit --verbose .
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose .
+: Upstream test suite
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit . || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose .
+# remirepo:2
+fi
+exit $ret
 %endif
 
 
@@ -137,6 +151,9 @@ fi
 
 
 %changelog
+* Mon Feb 27 2017 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
+- Update to 1.6.0
+
 * Fri Oct 07 2016 Remi Collet <remi@fedoraproject.org> - 1.4.3-1
 - Update to 1.4.3
 

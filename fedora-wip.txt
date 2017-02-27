@@ -8,8 +8,6 @@ php-zendframework-zend-form 2.10.0 (after zend-captcha 2.7.1)
 php-twig2 2.2.0 (when psr/container approved)
 php-twig 1.32.0 (when psr/container approved)
 
-pear.php.net Crypt_GPG 1.4.3 (stable) 1.6.0 (stable) 338kB
-
 =================
  Pending
 =================
@@ -17,6 +15,9 @@ pear.php.net Crypt_GPG 1.4.3 (stable) 1.6.0 (stable) 338kB
 =================
  Testing
 =================
+27/2	php-pear-crypt-gpg-1.6.0-1.fc25
+27/2	php-pear-crypt-gpg-1.6.0-1.fc24
+27/2	php-pear-crypt-gpg-1.6.0-1.el7
 27/2	php-pecl-xdebug-2.5.1-1.fc25
 27/2	php-nette-php-generator-2.6.0-1.fc25
 27/2	php-nette-mail-2.4.2-1.fc25
@@ -50,6 +51,7 @@ pear.php.net Crypt_GPG 1.4.3 (stable) 1.6.0 (stable) 338kB
 =================
  Feb, 2017
 =================
+27/2	27/2	php-pear-crypt-gpg-1.6.0-1.fc26
 27/2	27/2	php-pecl-xdebug-2.5.1-2.fc26
 27/2	27/2	php-pecl-xdebug-2.5.1-1.fc26
 27/2	27/2	php-nette-php-generator-2.6.0-1.fc26

@@ -1,0 +1,13 @@
+diff -up Crypt_GPG-1.6.0/Crypt/GPG/Engine.php.rpm Crypt_GPG-1.6.0/Crypt/GPG/Engine.php
+--- Crypt_GPG-1.6.0/Crypt/GPG/Engine.php.rpm	2017-02-27 10:57:56.809109249 +0100
++++ Crypt_GPG-1.6.0/Crypt/GPG/Engine.php	2017-02-27 10:58:16.432196197 +0100
+@@ -1913,6 +1913,9 @@ class Crypt_GPG_Engine
+      */
+     private function _getBinary()
+     {
++        if ($binary = $this->_findBinary('gpg1')) {
++            return $binary;
++        }
+         if ($binary = $this->_findBinary('gpg')) {
+             return $binary;
+         }
