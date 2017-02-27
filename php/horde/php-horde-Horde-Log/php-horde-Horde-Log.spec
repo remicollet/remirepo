@@ -18,7 +18,7 @@
 %endif
 
 Name:           php-horde-Horde-Log
-Version:        2.2.0
+Version:        2.3.0
 Release:        1%{?dist}
 Summary:        Horde Logging library
 
@@ -93,11 +93,23 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-%{_bindir}/phpunit .
 
-if which php70; then
-   php70 %{_bindir}/phpunit .
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit . || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose .
+# remirepo:2
+fi
+exit $ret
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -124,6 +136,9 @@ fi
 
 
 %changelog
+* Mon Feb 27 2017 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- Update to 2.3.0
+
 * Tue Apr 05 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - Update to 2.2.0
 
