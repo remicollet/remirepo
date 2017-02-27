@@ -12,8 +12,8 @@
 
 %global github_owner     paragonie
 %global github_name      random_compat
-%global github_version   2.0.4
-%global github_commit    a9b97968bcde1c4de2a5ec6cbd06a0f6c919b46e
+%global github_version   2.0.5
+%global github_commit    411e7526015651c64887eb0bfe5d56f528a7c7e1
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  paragonie
@@ -126,6 +126,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 27 2017 Remi Collet <remi@remirepo.net> - 2.0.5-1
+- update to 2.0.5
+
 * Thu Dec 29 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.0.4-1
 - Updated to 2.0.4 (RHBZ #1385987)
 - Run upstream tests with SCLs if they are available
