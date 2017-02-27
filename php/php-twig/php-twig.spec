@@ -3,7 +3,7 @@
 #
 # Fedora spec file for php-twig
 #
-# Copyright (c) 2014-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2014-2017 Shawn Iwinski <shawn.iwinski@gmail.com>
 #                         Remi Collet <remi@fedoraproject.org>
 #
 # License: MIT
@@ -30,8 +30,8 @@
 
 %global github_owner     twigphp
 %global github_name      Twig
-%global github_version   1.31.0
-%global github_commit    ddc9e3e20ee9c0b6908f401ac8353635b750eca7
+%global github_version   1.32.0
+%global github_commit    9935b662e24d6e634da88901ab534cc12e8c728f
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %if "%{php_version}" < "7"
@@ -73,7 +73,10 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel >= %{php_min_ver}
 %if %{with_tests}
 # For tests
-BuildRequires: %{_bindir}/phpunit
+BuildRequires: php-composer(phpunit/phpunit)
+BuildRequires: php-composer(symfony/phpunit-bridge)
+BuildRequires: php-composer(symfony/debug) >= 2.7
+BuildRequires: php-composer(psr/container) >= 1.0
 ## phpcompatinfo (computed from version 1.23.3)
 BuildRequires: %{?scl_prefix}php-ctype
 BuildRequires: %{?scl_prefix}php-date
@@ -135,7 +138,7 @@ Provides:      %{?scl_prefix}php-pecl(pear.twig-project.org/CTwig)%{?_isa} = %{v
 # This pkg was the only one in this channel so the channel is no longer needed
 Obsoletes:     %{?scl_prefix}php-channel-twig
 
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
 Obsoletes:      php53-%{ext_name} <= %{version}
 Obsoletes:     php53u-%{ext_name} <= %{version}
@@ -284,35 +287,50 @@ EXT_VERSION=`grep PHP_TWIG_VERSION ext/NTS/php_twig.h | awk '{print $3}' | sed '
 %endif
 
 %if %{with_tests}
+: Generate autoloader
+mkdir vendor
+cat << 'EOF' | tee vendor/autoload.php
+<?php
+require_once '%{buildroot}%{phpdir}/Twig/autoload.php';
+// Dependencies (require-dev)
+if (!file_exists('%{phpdir}/Zend/Expressive-Twig-autoload.php')) {
+    require_once '%{phpdir}/Symfony/Bridge/PhpUnit/autoload.php';
+}
+require_once '%{phpdir}/Symfony/Component/Debug/autoload.php';
+require_once '%{phpdir}/Psr/Container/autoload.php';
+EOF
+
 : Skip tests known to fail
 %if 0%{?rhel} == 5 || 0%{?rhel} == 6
 sed -e 's/function testGetAttributeWithTemplateAsObject/function skip_testGetAttributeWithTemplateAsObject/' \
     -i test/Twig/Tests/TemplateTest.php
 %endif
-: Disable listener from symfony/phpunit-bridge 3.2@dev
-sed -e '/listener/d' phpunit.xml.dist > phpunit.xml
+if [ -f %{phpdir}/Zend/Expressive-Twig-autoload.php ]; then
+    : Disable listener from symfony/phpunit-bridge ~3.2
+    sed -e '/listener/d' phpunit.xml.dist > phpunit.xml
+fi
 
 : Test suite without extension
 # remirepo:11
 run=0
 ret=0
 if which php56; then
-   php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php || ret=1
+   php56 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if which php71; then
-   php71 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php || ret=1
+   php71 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php --verbose || ret=1
+%{_bindir}/phpunit --verbose || ret=1
 # remirepo:1
 fi
 
 %if %{with_ext}
 : Test suite with extension
 %{_bindir}/php --define extension=ext/NTS/modules/%{ext_name}.so \
-    %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php --verbose || ret=1
+    %{_bindir}/phpunit --verbose || ret=1
 %endif
 
 exit $ret
@@ -346,6 +364,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 27 2017 Remi Collet <remi@fedoraproject.org> - 1.32.0-1
+- Update to 1.32.0
+
 * Thu Jan 12 2017 Remi Collet <remi@fedoraproject.org> - 1.31.0-1
 - Update to 1.31.0
 

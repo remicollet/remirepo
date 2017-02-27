@@ -6,12 +6,13 @@ php-tecnickcom-tc-lib-barcode 1.15.6
 php-zendframework-zend-captcha 2.7.1 (when recaptcha approved)
 php-zendframework-zend-form 2.10.0 (after zend-captcha 2.7.1)
 php-twig2 2.2.0 (when psr/container approved)
+php-twig 1.32.0 (when psr/container approved)
+
 pear.php.net Crypt_GPG 1.4.3 (stable) 1.6.0 (stable) 338kB
 pecl.php.net xdebug  2.5.0 (stable) 2.5.1 (stable) 272kB
  php-nette-mail                                               2.4.1           2.4.2      2017-01-27 
  php-nette-php-generator ..........................           2.5.0           2.6.0      2017-02-24 (Just released)
  php-phpunit-PHP-Timer ............................           1.0.8           1.0.9      2017-02-26 (Just released)
- php-twig .........................................          1.31.0          1.32.0      2017-02-27 (Just released)
 
 =================
  Pending
@@ -37,7 +38,6 @@ pecl.php.net xdebug  2.5.0 (stable) 2.5.1 (stable) 272kB
 20/2	php-nette-di-2.4.7-1.fc25
 20/2	php-nette-bootstrap-2.4.3-1.fc25
 20/2	php-pecl-memcached-3.0.3-1.fc25
-19/2	php-sebastian-object-enumerator-2.0.1-1.fc24
 13/2	php-swiftmailer-5.4.6-1.el7
 13/2	php-pecl-memcached-3.0.2-1.fc25
 12/2	php-horde-Horde-Timezone-1.1.0-1.el7
@@ -48,6 +48,7 @@ pecl.php.net xdebug  2.5.0 (stable) 2.5.1 (stable) 272kB
 =================
  Feb, 2017
 =================
+27/2	19/2	php-sebastian-object-enumerator-2.0.1-1.fc24
 27/2	19/2	php-sebastian-object-enumerator-2.0.1-1.fc25
 27/2	11/2	php-horde-Horde-Icalendar-2.1.6-1.el7
 27/2	11/2	php-cs-fixer-2.1.0-1.el7
