@@ -13,7 +13,7 @@
 %global with_tests       0%{!?_without_tests:1}
 %global github_owner     twigphp
 %global github_name      Twig
-%global github_commit    9062992538bc5855a683c6737257bfa18d25a4b8
+%global github_commit    29bb02dde09ff56291d30f7687eb8696918023af
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  twig
@@ -24,7 +24,7 @@
 %global phpdir      %{_datadir}/php
 
 Name:          php-%{composer_project}2
-Version:       2.1.0
+Version:       2.2.0
 Release:       1%{?dist}
 Summary:       The flexible, fast, and secure template engine for PHP
 
@@ -41,7 +41,8 @@ BuildRequires: php-fedora-autoloader-devel
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(symfony/phpunit-bridge)
-BuildRequires: php-composer(symfony/debug)
+BuildRequires: php-composer(symfony/debug) >= 2.7
+BuildRequires: php-composer(psr/container) >= 1.0
 ## phpcompatinfo (computed from version 2.0.0)
 BuildRequires: php-ctype
 BuildRequires: php-date
@@ -120,6 +121,7 @@ require_once '%{buildroot}%{phpdir}/Twig2/autoload.php';
 // Dependencies (require-dev)
 require_once '%{phpdir}/Symfony/Bridge/PhpUnit/autoload.php';
 require_once '%{phpdir}/Symfony/Component/Debug/autoload.php';
+require_once '%{phpdir}/Psr/Container/autoload.php';
 EOF
 
 : Upstream test suite
@@ -146,7 +148,10 @@ exit $RETURN_CODE
 
 
 %changelog
-* Thu Jan 11 2017 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+* Mon Feb 27 2017 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- update to 2.2.0
+
+* Wed Jan 11 2017 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - update to 2.1.0
 
 * Fri Jan  6 2017 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
