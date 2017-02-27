@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Service-Weather
-Version:        2.5.3
+Version:        2.5.4
 Release:        1%{?dist}
 Summary:        Horde Weather Provider
 
@@ -165,6 +165,9 @@ fi
 
 
 %changelog
+* Mon Feb 27 2017 Remi Collet <remi@fedoraproject.org> - 2.5.4-1
+- Update to 2.5.4
+
 * Sun Dec 11 2016 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
 - Update to 2.5.3
 - add horde-service-weather-metar-database command
