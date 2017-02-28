@@ -7,14 +7,14 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    1e5e2ffdc4d71d7358ed58a6fdd30a4a0c506855
+%global gh_commit    6fdb61243844dc924071d3404bb23994ea0b6856
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     padraic
 %global gh_project   mockery
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-deepend-Mockery
-Version:        0.9.8
+Version:        0.9.9
 Release:        1%{?dist}
 Summary:        Mockery is a simple but flexible PHP mock object framework
 
@@ -126,6 +126,9 @@ fi
 
 
 %changelog
+* Tue Feb 28 2017 Remi Collet <remi@remirepo.net> - 0.9.9-1
+- Update to 0.9.9
+
 * Fri Feb 10 2017 Remi Collet <remi@remirepo.net> - 0.9.8-1
 - Update to 0.9.8
 
