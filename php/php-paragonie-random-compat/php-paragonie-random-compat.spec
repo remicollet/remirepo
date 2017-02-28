@@ -12,8 +12,8 @@
 
 %global github_owner     paragonie
 %global github_name      random_compat
-%global github_version   2.0.5
-%global github_commit    411e7526015651c64887eb0bfe5d56f528a7c7e1
+%global github_version   2.0.7
+%global github_commit    b5ea1ef3d8ff10c307ba8c5945c2f134e503278f
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  paragonie
@@ -126,6 +126,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 28 2017 Remi Collet <remi@remirepo.net> - 2.0.7-1
+- update to 2.0.7 (no change)
+
 * Mon Feb 27 2017 Remi Collet <remi@remirepo.net> - 2.0.5-1
 - update to 2.0.5
 
