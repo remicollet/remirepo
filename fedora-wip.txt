@@ -95,21 +95,21 @@ php-twig 1.32.0 (when psr/container approved)
 21/2	php-sabre-xml-1.5.0-1.fc24
 21/2	php-sabre-vobject4-4.1.2-1.fc25
 21/2	php-sabre-vobject4-4.1.2-1.fc24
-20/2	php-phpunit-PHPUnit-5.7.14-1.fc25
-20/2	php-phpunit-PHPUnit-5.7.14-1.fc24
-20/2	php-nette-di-2.4.7-1.fc25
-20/2	php-nette-bootstrap-2.4.3-1.fc25
-20/2	php-pecl-memcached-3.0.3-1.fc25
-13/2	php-swiftmailer-5.4.6-1.el7
-13/2	php-pecl-memcached-3.0.2-1.fc25
-12/2	php-horde-Horde-Timezone-1.1.0-1.el7
-12/2	php-horde-Horde-Timezone-1.1.0-1.el6
-11/2	php-horde-Horde-Icalendar-2.1.6-1.el6
 =================
  Stable
 =================
  Feb, 2017
 =================
+28/2	20/2	php-phpunit-PHPUnit-5.7.14-1.fc25
+28/2	20/2	php-phpunit-PHPUnit-5.7.14-1.fc24
+28/2	20/2	php-nette-di-2.4.7-1.fc25
+28/2	20/2	php-nette-bootstrap-2.4.3-1.fc25
+28/2	20/2	php-pecl-memcached-3.0.3-1.fc25
+28/2	13/2	php-swiftmailer-5.4.6-1.el7
+obso	13/2	php-pecl-memcached-3.0.2-1.fc25
+28/2	12/2	php-horde-Horde-Timezone-1.1.0-1.el7
+28/2	12/2	php-horde-Horde-Timezone-1.1.0-1.el6
+28/2	11/2	php-horde-Horde-Icalendar-2.1.6-1.el6
 27/2	27/2	php-horde-Horde-Vfs-2.4.0-1.fc26
 27/2	27/2	php-horde-Horde-Translation-2.2.2-1.fc26
 27/2	27/2	php-horde-Horde-Test-2.6.2-1.fc26
