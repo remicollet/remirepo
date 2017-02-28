@@ -7,6 +7,8 @@ php-zendframework-zend-captcha 2.7.1 (when recaptcha approved)
 php-zendframework-zend-form 2.10.0 (after zend-captcha 2.7.1)
 php-twig2 2.2.0 (when psr/container approved)
 php-twig 1.32.0 (when psr/container approved)
+php-pear 1.10.2
+php-deepend-Mockery 0.9.9
 
 =================
  Pending
@@ -15,6 +17,7 @@ php-twig 1.32.0 (when psr/container approved)
 =================
  Testing
 =================
+28/2	php-7.0.17-0.1.RC1.fc25
 27/2	php-horde-Horde-Vfs-2.4.0-1.fc25
 27/2	php-horde-Horde-Vfs-2.4.0-1.fc24
 27/2	php-horde-Horde-Vfs-2.4.0-1.el7
