@@ -1,15 +1,17 @@
-===== 7.1.2 (2017-02-16)
+===== 7.1.3RC1 (2017-03-02)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl71*/build.log
 
 /var/lib/mock/scl70el6x/build.log:Tests failed    :     0
-/var/lib/mock/scl70el7x/build.log:Tests failed    :     0
-/var/lib/mock/scl70fc22x/build.log:Tests failed    :    0
-/var/lib/mock/scl70fc23x/build.log:Tests failed    :    0
-/var/lib/mock/scl70fc24x/build.log:Tests failed    :    0
-/var/lib/mock/scl70fc25x/build.log:Tests failed    :    0
+/var/lib/mock/scl70el7x/build.log:Tests failed    :     1
+/var/lib/mock/scl70fc22x/build.log:Tests failed    :    1
+/var/lib/mock/scl70fc23x/build.log:Tests failed    :    1
+/var/lib/mock/scl70fc24x/build.log:Tests failed    :    1
+/var/lib/mock/scl70fc25x/build.log:Tests failed    :    1
 
 
+el7x, fc22x, fc23x, fc24x, fc25x:
+	**	Bug #74093 (Maximum execution time of n+2 seconds exceed not written in error_log) [Zend/tests/bug74093.phpt]
 
 
 *	proc_open give erratic test results :(
