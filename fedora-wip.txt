@@ -7,7 +7,7 @@ php-zendframework-zend-captcha 2.7.1 (when recaptcha approved)
 php-zendframework-zend-form 2.10.0 (after zend-captcha 2.7.1)
 php-twig2 2.2.0 (when psr/container approved)
 php-twig 1.32.0 (when psr/container approved)
-php-pear 1.10.2
+php-pear 1.10.3
 php-deepend-Mockery 0.9.9
 
 =================

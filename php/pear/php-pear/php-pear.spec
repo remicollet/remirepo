@@ -39,7 +39,7 @@
 
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
-Version: 1.10.2
+Version: 1.10.3
 Release: 1%{?dist}
 Epoch: 1
 # PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
@@ -426,8 +426,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Feb 28 2017 Remi Collet <remi@fedoraproject.org> 1:1.10.3-1
+- update PEAR to 1.10.3
+
 * Tue Feb 28 2017 Remi Collet <remi@fedoraproject.org> 1:1.10.2-1
-- update PEAR to 1.10.2
+- update PEAR to 1.10.2 (broken)
 
 * Thu Feb 23 2017 Remi Collet <remi@fedoraproject.org> 1:1.10.1-12
 - update XML_Util to 1.4.2
