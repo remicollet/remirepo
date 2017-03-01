@@ -7,8 +7,10 @@ php-zendframework-zend-captcha 2.7.1 (when recaptcha approved)
 php-zendframework-zend-form 2.10.0 (after zend-captcha 2.7.1)
 php-twig2 2.2.0 (when psr/container approved)
 php-twig 1.32.0 (when psr/container approved)
-php-pear 1.10.3
-php-deepend-Mockery 0.9.9
+
+To rebuild in rawhide
+	php-deepend-Mockery-0.9.9-1.fc27
+	php-pear-1.10.3-1.fc27
 
 =================
  Pending
@@ -17,6 +19,11 @@ php-deepend-Mockery 0.9.9
 =================
  Testing
 =================
+1/3	php-deepend-Mockery-0.9.9-1.fc25
+1/3	php-deepend-Mockery-0.9.9-1.fc24
+1/3	php-deepend-Mockery-0.9.9-1.el7
+1/3	php-pear-1.10.3-1.fc25
+1/3	php-pear-1.10.3-1.fc24
 28/2	php-7.0.17-0.1.RC1.fc25
 27/2	php-horde-Horde-Vfs-2.4.0-1.fc25
 27/2	php-horde-Horde-Vfs-2.4.0-1.fc24
@@ -93,7 +100,6 @@ php-deepend-Mockery 0.9.9
 24/2	php-zendframework-zendpdf-2.0.2-4.fc24
 23/2	php-phpunit-PHP-CodeCoverage-4.0.6-1.fc25
 23/2	php-phpunit-PHP-CodeCoverage-4.0.6-1.fc24
-23/2	php-pear-1.10.1-11.fc25
 21/2	glpi-9.1.2-3.fc25
 21/2	php-sabre-xml-1.5.0-1.fc24
 21/2	php-sabre-vobject4-4.1.2-1.fc25
@@ -101,7 +107,13 @@ php-deepend-Mockery 0.9.9
 =================
  Stable
 =================
- Feb, 2017
+ March, 2017
+=================
+1/3	1/3	php-deepend-Mockery-0.9.9-1.fc26
+1/3	28/2	php-pear-1.10.3-1.fc26
+obso	23/2	php-pear-1.10.1-11.fc25
+=================
+ February, 2017
 =================
 28/2	28/2	libzip-1.2.0-1.fc26
 28/2	28/2	amftools-0.0-12.20121220svn32.fc26
