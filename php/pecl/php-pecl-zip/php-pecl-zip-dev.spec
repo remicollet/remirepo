@@ -31,7 +31,7 @@ Summary:      A ZIP archive management extension
 Summary(fr):  Une extension de gestion des ZIP
 Name:         %{?scl_prefix}php-pecl-zip
 Version:      1.14.0
-Release:      0.1.20170219dev%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:      0.2.20170301dev%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %if %{with_libzip}
 License:      PHP
 %else
@@ -267,6 +267,9 @@ fi
 
 
 %changelog
+* Wed Mar  1 2017 Remi Collet <remi@fedoraproject.org> - 1.14.0-0.2.20170301dev
+- refresh with pasword support in stream wrapper
+
 * Sun Feb 19 2017 Remi Collet <remi@fedoraproject.org> - 1.14.0-0.1.20170219dev
 - update to 1.4.0-dev with encryption support
 - raise dependency on libzip 1.2.0

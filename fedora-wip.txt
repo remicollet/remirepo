@@ -20,6 +20,7 @@ To rebuild in rawhide
 =================
  Testing
 =================
+1/3	php-horde-Horde-Test-2.6.2-1.el6.1
 1/3	php-deepend-Mockery-0.9.9-1.fc25
 1/3	php-deepend-Mockery-0.9.9-1.fc24
 1/3	php-deepend-Mockery-0.9.9-1.el7
@@ -37,7 +38,6 @@ To rebuild in rawhide
 27/2	php-horde-Horde-Test-2.6.2-1.fc25
 27/2	php-horde-Horde-Test-2.6.2-1.fc24
 27/2	php-horde-Horde-Test-2.6.2-1.el7
-27/2	php-horde-Horde-Test-2.6.2-1.el6
 27/2	php-horde-Horde-Support-2.2.0-1.fc25
 27/2	php-horde-Horde-Support-2.2.0-1.fc24
 27/2	php-horde-Horde-Support-2.2.0-1.el7
@@ -110,6 +110,7 @@ To rebuild in rawhide
 =================
  March, 2017
 =================
+obso	27/2	php-horde-Horde-Test-2.6.2-1.el6
 1/3	1/3	php-bartlett-umlwriter-1.2.0-1.fc26
 1/3	1/3	php-deepend-Mockery-0.9.9-1.fc26
 1/3	28/2	php-pear-1.10.3-1.fc26
