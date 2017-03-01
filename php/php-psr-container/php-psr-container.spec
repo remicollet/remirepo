@@ -62,7 +62,7 @@ cat <<'AUTOLOAD' | tee src/autoload.php
 <?php
 /* Autoloader for %{pk_vendor}/%{pk_project} and its dependencies */
 
-require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
+require_once '%{_datadir}/php/Fedora/Autoloader/autoload.php';
 
 \Fedora\Autoloader\Autoload::addPsr4('Psr\\Container\\', __DIR__);
 AUTOLOAD
