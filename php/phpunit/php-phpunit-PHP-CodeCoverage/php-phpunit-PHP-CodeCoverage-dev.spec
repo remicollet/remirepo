@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    ca060f645beeddebedb1885c97bf163e93264c35
+%global gh_commit    09e2277d14ea467e5a984010f501343ef29ffc69
 #global gh_date      20150924
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHP_CodeCoverage
 %global pear_channel pear.phpunit.de
 %global major        4.0
-%global minor        6
+%global minor        7
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   0%{?_with_tests:1}
@@ -41,9 +41,9 @@ BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-fedora-autoloader-devel
 %if %{with_tests}
 # From composer.json, "require-dev": {
-#        "phpunit/phpunit": "^5.4",
-#        "ext-xdebug": ">=2.1.4"
-BuildRequires:  php-composer(phpunit/phpunit) >= 5.4
+#        "phpunit/phpunit": "^5.7",
+#        "ext-xdebug": "^2.1.4"
+BuildRequires:  php-composer(phpunit/phpunit) >= 5.7
 BuildRequires:  php-composer(sebastian/code-unit-reverse-lookup) >= 1
 BuildRequires:  php-composer(sebastian/environment) >= 1.3.2
 BuildRequires:  php-pecl-xdebug  >= 2.4.0
@@ -51,13 +51,17 @@ BuildRequires:  php-pecl-xdebug  >= 2.4.0
 
 # From composer.json, require
 #        "php": "^5.6 || ^7.0",
-#        "phpunit/php-file-iterator": "~1.3",
+#        "ext-dom": "*",
+#        "ext-xmlwriter": "*"
+#        "phpunit/php-file-iterator": "^1.3",
 #        "phpunit/php-token-stream": "^1.4.2 || ^2.0",
-#        "phpunit/php-text-template": "~1.2",
-#        "sebastian/code-unit-reverse-lookup": "~1.0",
+#        "phpunit/php-text-template": "^1.2",
+#        "sebastian/code-unit-reverse-lookup": "^1.0",
 #        "sebastian/environment": "^1.3.2 || ^2.0",
-#        "sebastian/version": "~1.0|~2.0"
+#        "sebastian/version": "^1.0 || ^2.0"
 Requires:       php(language) >= 5.6
+Requires:       php-dom
+Requires:       php-xmlwriter
 Requires:       php-composer(phpunit/php-file-iterator) >= 1.3
 Requires:       php-composer(phpunit/php-file-iterator) <  2
 Requires:       php-composer(phpunit/php-token-stream) >= 1.4.2
@@ -71,11 +75,7 @@ Requires:       php-composer(sebastian/environment) <  3
 Requires:       php-composer(sebastian/version) >= 1.0
 Requires:       php-composer(sebastian/version) <  3
 # From composer.json, suggest
-#        "ext-dom": "*",
-#        "ext-xdebug": ">=2.4.0",
-#        "ext-xmlwriter": "*"
-Requires:       php-dom
-Requires:       php-xmlwriter
+#        "ext-xdebug": "^2.5.1",
 # From phpcompatinfo report for version 4.0.4
 Requires:       php-reflection
 Requires:       php-date
@@ -184,6 +184,9 @@ fi
 
 
 %changelog
+* Wed Mar  1 2017 Remi Collet <remi@fedoraproject.org> - 4.0.7-1
+- Update to 4.0.7
+
 * Thu Feb 23 2017 Remi Collet <remi@fedoraproject.org> - 4.0.6-1
 - Update to 4.0.6
 - drop patch merged upstream
