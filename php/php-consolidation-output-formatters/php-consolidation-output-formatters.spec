@@ -134,7 +134,7 @@ rm -f tests/testAPIDocs.php
 
 : Upstream tests with SCLs if available
 SCL_RETURN_CODE=0
-for SCL in php56 php70 php71; do
+for SCL in %{?rhel:php55} php56 php70 php71; do
     if which $SCL; then
        $SCL %{_bindir}/phpunit --bootstrap bootstrap.php || SCL_RETURN_CODE=1
     fi
@@ -160,6 +160,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 28 2017 Shawn Iwinski <shawn@iwin.ski> - 3.1.7-1
+- Update to 3.1.7 (RHBZ #1415386)
+
 * Sat Jan 21 2017 Remi Collet <remi@remirepo.net> - 3.1.7-1
 - Update to 3.1.7
 
