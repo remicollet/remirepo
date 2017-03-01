@@ -7,7 +7,7 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    eb6cfbca928106205558a596988923da0e47bd9d
+%global gh_commit    e1d6b8dc2e6abea3185b59da8b52002eb7dc9a87
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     onelogin
 %global gh_project   php-saml
@@ -17,7 +17,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Group:          Development/Libraries
-Version:        2.10.3
+Version:        2.10.4
 Release:        1%{?dist}
 Summary:        SAML support for PHP
 
@@ -128,6 +128,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar  1 2017 Remi Collet <remi@remirepo.net> - 2.10.4-1
+- update to 2.10.4
+
 * Thu Jan 12 2017 Remi Collet <remi@remirepo.net> - 2.10.3-1
 - update to 2.10.3
 
