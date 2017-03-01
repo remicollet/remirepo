@@ -28,7 +28,7 @@
         "phpdocumentor/reflection-docblock": "^2.0|^3.0.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.*",
+        "phpunit/phpunit": "^4.8",
         "satooshi/php-coveralls": "^1.0",
         "squizlabs/php_codesniffer": "^2.7"
     },

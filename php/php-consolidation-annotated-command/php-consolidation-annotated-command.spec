@@ -12,8 +12,8 @@
 
 %global github_owner     consolidation-org
 %global github_name      annotated-command
-%global github_version   2.2.2
-%global github_commit    1f1d92807f72901e049e9df048b412c3bc3652c9
+%global github_version   2.4.4
+%global github_commit    ccff73e46582a885ce4bb2c57bbd8ba4415dbd24
 
 %global composer_vendor  consolidation
 %global composer_project annotated-command
@@ -72,7 +72,7 @@ BuildRequires: php-composer(symfony/event-dispatcher)          <  %{symfony_max_
 BuildRequires: php-composer(symfony/event-dispatcher)          >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/finder)                    <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/finder)                    >= %{symfony_min_ver}
-## phpcompatinfo (computed from version 2.2.2)
+## phpcompatinfo (computed from version 2.4.4)
 BuildRequires: php-dom
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -95,7 +95,7 @@ Requires:      php-composer(symfony/event-dispatcher)          <  %{symfony_max_
 Requires:      php-composer(symfony/event-dispatcher)          >= %{symfony_min_ver}
 Requires:      php-composer(symfony/finder)                    <  %{symfony_max_ver}
 Requires:      php-composer(symfony/finder)                    >= %{symfony_min_ver}
-# phpcompatinfo (computed from version 2.2.2)
+# phpcompatinfo (computed from version 2.4.4)
 Requires:      php-dom
 Requires:      php-pcre
 Requires:      php-reflection
@@ -164,7 +164,7 @@ sed 's/function testInteractAndValidate/function SKIP_testInteractAndValidate/' 
 
 : Upstream tests with SCLs if available
 SCL_RETURN_CODE=0
-for SCL in php56 php70 php71; do
+for SCL in %{?rhel:php55} php56 php70 php71; do
     if which $SCL; then
        $SCL %{_bindir}/phpunit --bootstrap bootstrap.php || SCL_RETURN_CODE=1
     fi
@@ -189,6 +189,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 28 2017 Shawn Iwinski <shawn@iwin.ski> - 2.4.4-1
+- Update to 2.4.4 (RHBZ #1415385)
+
 * Sun Jan 15 2017 Shawn Iwinski <shawn@iwin.ski> - 2.2.2-1
 - Update to 2.2.2 (RHBZ #1395001)
 - Use php-composer(fedora/autoloader)
