@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    8b952840a317988b10b4f0c51a3dcec80e8f35dc
+%global gh_commit    e4a204db7416ce49712978287f6c631b54c09008
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150331
 %global gh_owner     llaville
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-bartlett-umlwriter
-Version:        1.1.0
-%global specrel 4
+Version:        1.2.0
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Create UML class diagrams from your PHP source
 
@@ -53,8 +53,8 @@ BuildRequires:   php-andrewsville-php-token-reflection >= 1.4.0-5
 # From composer.json
 #    "require": {
 #        "php": ">=5.4.0"
-#        "symfony/console": "~2.5",
-#        "sebastian/version": "~1.0"
+#        "symfony/console": "~2.5|~3.0",
+#        "sebastian/version": "~1.0|~2.0"
 Requires:       php(language) >= 5.4.0
 Requires:       php-cli
 Requires:       php-spl
@@ -114,7 +114,8 @@ sed -e 's/@package_version@/%{version}%{?prever}/' \
 mkdir -p %{buildroot}%{_datadir}/php
 cp -pr src/Bartlett %{buildroot}%{_datadir}/php/Bartlett
 
-install -D -p -m 755 bin/umlwriter  %{buildroot}%{_bindir}/umlwriter
+install -Dpm 755 bin/umlwriter   %{buildroot}%{_bindir}/umlwriter
+install -Dpm 644 bin/umlwriter.1 %{buildroot}%{_mandir}/man1/umlwriter.1
 
 
 %check
@@ -147,11 +148,16 @@ exit $ret
 %license LICENSE
 %doc composer.json README.* examples
 %{_bindir}/umlwriter
+%{_mandir}/man1/umlwriter.1*
 %dir %{_datadir}/php/Bartlett
      %{_datadir}/php/Bartlett/UmlWriter
 
 
 %changelog
+* Wed Mar  1 2017 Remi Collet <remi@remirepo.net> - 1.2.0-1
+- update to 1.2.0 (no change)
+- add the command man page
+
 * Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-4
 - switch to fedora/autoloader
 
