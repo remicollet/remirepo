@@ -7,9 +7,9 @@
 # Please, preserve the changelog entries
 #
 
-%global bootstrap    1
+%global bootstrap    0
 # Github
-%global gh_commit    3f10a2c8eed68b29cbbb54e29cc58cb31b077553
+%global gh_commit    531553c4795a1df54114342d68ca337d5d81c8a0
 #global gh_date      20150924
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_vendor    sebastianbergmann
@@ -23,7 +23,7 @@
 %global php_home     %{_datadir}/php
 %global ver_major    5
 %global ver_minor    0
-%global ver_patch    1
+%global ver_patch    2
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   0%{?_with_tests:1}
@@ -46,7 +46,7 @@ BuildRequires:  php-fedora-autoloader-devel
 %if %{with_tests}
 BuildRequires:  php(language) >= 7.0
 BuildRequires:  php-composer(phpunit/php-file-iterator) >= 1.3
-BuildRequires:  php-composer(phpunit/php-token-stream) >= 1.4.2
+BuildRequires:  php-composer(phpunit/php-token-stream) >= 1.4.11
 BuildRequires:  php-composer(phpunit/php-token-stream) <  2
 BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
 BuildRequires:  php-composer(phpunit/php-text-template) <  2
@@ -62,16 +62,20 @@ BuildRequires:  php-pecl-xdebug  >= 2.5.0
 
 # From composer.json, require
 #        "php": "^7.0",
+#        "ext-dom": "*",
+#        "ext-xmlwriter": "*",
 #        "phpunit/php-file-iterator": "^1.3",
-#        "phpunit/php-token-stream": "^1.4.2 || ^2.0",
+#        "phpunit/php-token-stream": "^1.4.11 || ^2.0",
 #        "phpunit/php-text-template": "^1.2",
 #        "sebastian/code-unit-reverse-lookup": "^1.0",
 #        "sebastian/environment": "^2.0",
 #        "sebastian/version": "^2.0"
 Requires:       php(language) >= 7.0
+Requires:       php-dom
+Requires:       php-xmlwriter
 Requires:       php-composer(phpunit/php-file-iterator) >= 1.3
 Requires:       php-composer(phpunit/php-file-iterator) <  2
-Requires:       php-composer(phpunit/php-token-stream) >= 1.4.2
+Requires:       php-composer(phpunit/php-token-stream) >= 1.4.11
 Requires:       php-composer(phpunit/php-token-stream) <  3
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
@@ -82,11 +86,7 @@ Requires:       php-composer(sebastian/environment) <  3
 Requires:       php-composer(sebastian/version) >= 2.0
 Requires:       php-composer(sebastian/version) <  3
 # From composer.json, suggest
-#        "ext-dom": "*",
 #        "ext-xdebug": ">=2.4.0",
-#        "ext-xmlwriter": "*"
-Requires:       php-dom
-Requires:       php-xmlwriter
 # From phpcompatinfo report for version 5.0.0
 Requires:       php-reflection
 Requires:       php-date
@@ -146,8 +146,13 @@ require __DIR__ . '/TestCase.php';
 define('TEST_FILES_PATH', __DIR__ . '/_files/');
 EOF
 
-%{_bindir}/php $EXT -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-%{_bindir}/phpunit6 --no-coverage --verbose
+ret=0
+for cmd in php70 php71 php; do
+  if which $cmd; then
+    $cmd $EXT -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+    %{_bindir}/phpunit6 --no-coverage --verbose
+  fi
+done
 %endif
 
 
@@ -161,6 +166,10 @@ EOF
 
 
 %changelog
+* Wed Mar  1 2017 Remi Collet <remi@remirepo.net> - 5.0.2-1
+- update to 5.0.2
+- raise dependency on phpunit/php-token-stream 1.4.11
+
 * Thu Feb 23 2017 Remi Collet <remi@remirepo.net> - 5.0.1-1
 - update to 5.0.1
 
