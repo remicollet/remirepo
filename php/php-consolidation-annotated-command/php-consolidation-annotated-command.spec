@@ -12,8 +12,8 @@
 
 %global github_owner     consolidation-org
 %global github_name      annotated-command
-%global github_version   2.4.4
-%global github_commit    ccff73e46582a885ce4bb2c57bbd8ba4415dbd24
+%global github_version   2.4.5
+%global github_commit    7c97c401ea81549779ce96d62f00d230ed5ff1d8
 
 %global composer_vendor  consolidation
 %global composer_project annotated-command
@@ -189,6 +189,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar  1 2017 Remi Collet <remi@remirepo.net> - 2.4.5-1
+- update to 2.4.5
+
 * Tue Feb 28 2017 Shawn Iwinski <shawn@iwin.ski> - 2.4.4-1
 - Update to 2.4.4 (RHBZ #1415385)
 
