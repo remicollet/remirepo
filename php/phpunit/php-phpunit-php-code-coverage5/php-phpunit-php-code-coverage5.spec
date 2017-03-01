@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 
-%global bootstrap    0
+%global bootstrap    1
 # Github
 %global gh_commit    531553c4795a1df54114342d68ca337d5d81c8a0
 #global gh_date      20150924
