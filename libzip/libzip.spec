@@ -22,7 +22,7 @@
 %endif
 %endif
 
-%if 0%{?fedora} >= 99
+%if 0%{?fedora} >= 26
 Name:    %{libname}
 %else
 Name:    %{libname}%{soname}
@@ -42,6 +42,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  zlib-devel
 # Needed to run the test suite
 # find regress/ -type f | /usr/lib/rpm/perl.req
+# find regress/ -type f | /usr/lib/rpm/perl.prov
 BuildRequires:  perl
 BuildRequires:  perl(Cwd)
 BuildRequires:  perl(Data::Dumper)
