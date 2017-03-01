@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    53cc5123c1cba71b26d4e5ab83fa0dd404075d19
+%global gh_commit    15e43d10dd99ac818c8d65735c50191bcbeafdbc
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     robmorgan
 #global gh_date      20150820
@@ -20,7 +20,7 @@
 %endif
 
 Name:           %{gh_project}
-Version:        0.7.2
+Version:        0.8.0
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        Manage the database migrations for your PHP app
 
@@ -134,7 +134,7 @@ sed -e '/_ENABLED/s/true/false/;/SQLITE_ENABLED/s/false/true/' \
 ret=0
 for cmd in php56 php70 php71 php; do
    if which $cmd; then
-      $cmd %{_bindir}/phpunit --verbose || ret=1
+      $cmd %{_bindir}/phpunit --no-coverage --verbose || ret=1
    fi
 done
 exit $ret
@@ -159,6 +159,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar  1 2017 Remi Collet <remi@remirepo.net> - 0.8.0-1
+- update to 0.8.0
+
 * Tue Feb 28 2017 Remi Collet <remi@remirepo.net> - 0.7.2-1
 - update to 0.7.2
 
