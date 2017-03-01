@@ -12,8 +12,8 @@
 
 %global github_owner     bobthecow
 %global github_name      psysh
-%global github_version   0.8.1
-%global github_commit    701e8a1cc426ee170f1296f5d9f6b8a26ad25c4a
+%global github_version   0.8.2
+%global github_commit    97113db4107a4126bef933b60fea6dbc9f615d41
 
 %global composer_vendor  psy
 %global composer_project psysh
@@ -236,6 +236,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar  1 2017 Remi Collet <remi@remirepo.net> - 0.8.2-1
+- update to 0.8.2
+
 * Mon Jan 16 2017 Remi Collet <remi@fedoraproject.org> - 0.8.1-1
 - update to 0.8.1
 
