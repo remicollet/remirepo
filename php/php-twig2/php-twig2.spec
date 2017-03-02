@@ -150,6 +150,7 @@ exit $RETURN_CODE
 %changelog
 * Mon Feb 27 2017 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - update to 2.2.0
+- add dependency on psr/container
 
 * Wed Jan 11 2017 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - update to 2.1.0
