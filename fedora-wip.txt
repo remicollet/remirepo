@@ -16,6 +16,9 @@ php-twig 1.32.0 (when psr/container approved)
 =================
  Testing
 =================
+2/3	php-pear-PHP-CodeSniffer-2.8.1-1.fc25
+2/3	php-pear-PHP-CodeSniffer-2.8.1-1.fc24
+2/3	php-pear-PHP-CodeSniffer-2.8.1-1.el7
 2/3	php-horde-Horde-Core-2.27.7-1.fc25
 2/3	php-horde-Horde-Core-2.27.7-1.fc24
 2/3	php-horde-Horde-Core-2.27.7-1.el7
@@ -110,6 +113,12 @@ php-twig 1.32.0 (when psr/container approved)
 =================
  March, 2017
 =================
+2/3	2/3	php-zendframework-zend-servicemanager-3.3.0-1.fc27
+2/3	2/3	php-zendframework-zend-servicemanager-3.3.0-1.fc26
+2/3	2/3	php-zendframework-zend-expressive-zendrouter-2.0.1-1.fc27
+2/3	2/3	php-zendframework-zend-expressive-zendrouter-2.0.1-1.fc26
+2/3	2/3	php-pear-PHP-CodeSniffer-2.8.1-1.fc27
+2/3	2/3	php-pear-PHP-CodeSniffer-2.8.1-1.fc26
 2/3	2/3	php-horde-Horde-Core-2.27.7-1.fc27
 2/3	2/3	php-horde-Horde-Core-2.27.7-1.fc26
 2/3	2/3	php-container-interop-1.2.0-1.fc27

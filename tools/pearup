@@ -1,6 +1,6 @@
 #!/bin/sh
 
-vendor="Remi Collet <remi@fedoraproject.org>"
+vendor="Remi Collet <remi@remirepo.net>"
 rpmdate=$(LC_ALL="C" date +"%a %b %d %Y")
 name=$(basename $PWD)
 
