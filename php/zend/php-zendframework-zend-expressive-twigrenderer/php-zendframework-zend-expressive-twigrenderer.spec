@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    786c2b971856c810106b37e9e9b8a90cc28ae454
+%global gh_commit    a1583749cc55b79b81939175281e56a5c9449213
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-twigrenderer
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.2.1
+Version:        1.3.0
 Release:        1%{?dist}
 Summary:        Twig integration for %{library}
 
@@ -36,18 +36,19 @@ BuildArch:      noarch
 # Tests
 %if %{with_tests}
 BuildRequires:  php(language) >= 5.6
-BuildRequires:  php-composer(container-interop/container-interop)    >= 1.1
+BuildRequires:  php-composer(container-interop/container-interop)    >= 1.2
+# test suite fails with v2
 BuildRequires:  php-composer(twig/twig)                              <  2
-BuildRequires:  php-composer(twig/twig)                              >= 1.26
-BuildRequires:  php-composer(%{gh_owner}/zend-expressive-helpers)    >= 1.1
+BuildRequires:  php-composer(twig/twig)                              >= 1.32
+BuildRequires:  php-composer(%{gh_owner}/zend-expressive-helpers)    >= 1.4
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 # From composer, "require-dev": {
-#        "phpunit/phpunit": "^5.7",
-#        "zendframework/zend-coding-standard": "~1.0.0",
-#        "malukenho/docheader": "^0.1.5"
+#        "malukenho/docheader": "^0.1.5",
+#        "phpunit/phpunit": "^6.0.7 || ^5.7.14",
+#        "zendframework/zend-coding-standard": "~1.0.0"
 BuildRequires:  php-composer(phpunit/phpunit)                        >= 5.7
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
@@ -57,17 +58,17 @@ BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 
 # From composer, "require": {
 #        "php": "^5.6 || ^7.0",
-#        "container-interop/container-interop": "^1.1",
-#        "twig/twig": "^1.26",
-#        "zendframework/zend-expressive-helpers": "^1.1 || ^2.0 || ^3.0",
-#        "zendframework/zend-expressive-router": "^1.3.2 || ^2.0",
+#        "container-interop/container-interop": "^1.2",
+#        "twig/twig": "^1.32 || ^2.1",
+#        "zendframework/zend-expressive-helpers": "^1.4 || ^2.2 || ^3.0.1",
+#        "zendframework/zend-expressive-router": "^1.3.2 || ^2.1",
 #        "zendframework/zend-expressive-template": "^1.0.4"
 Requires:       php(language) >= 5.6
-Requires:       php-composer(container-interop/container-interop)    >= 1.1
+Requires:       php-composer(container-interop/container-interop)    >= 1.2
 Requires:       php-composer(container-interop/container-interop)    <  2
-Requires:       php-composer(twig/twig)                              >= 1.19
-Requires:       php-composer(twig/twig)                              <  2
-Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    >= 1.1
+Requires:       php-composer(twig/twig)                              >= 1.32
+Requires:       php-composer(twig/twig)                              <  3
+Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    >= 1.4
 Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    <  4
 Requires:       php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
 Requires:       php-composer(%{gh_owner}/zend-expressive-router)     <  3
@@ -107,7 +108,11 @@ mv LICENSE.md LICENSE
 : Create dependency autoloader
 cat << 'EOF' | tee autoload.php
 <?php
-require_once '%{php_home}/Twig/autoload.php';
+if (file_exists('%{php_home}/Twig/autoload.php')) {
+   require_once '%{php_home}/Twig/autoload.php';
+} else {
+   require_once '%{php_home}/Twig2/autoload.php';
+}
 if (file_exists('%{php_home}/Aura/Di/autoload.php')) {
    require_once '%{php_home}/Aura/Di/autoload.php';
 }
@@ -152,7 +157,7 @@ if which php56; then
    run=1
 fi
 if which php71; then
-   php71 %{_bindir}/phpunit --verbose || ret=1
+   php71 %{_bindir}/phpunit6 --verbose || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -180,6 +185,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar  2 2017 Remi Collet <remi@remirepo.net> - 1.3.0-1
+- Update to 1.3.0
+- allow twig 2
+
 * Thu Jan 12 2017 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - update to 1.2.1 (no change)
 
