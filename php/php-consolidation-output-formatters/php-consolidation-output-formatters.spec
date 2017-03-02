@@ -12,19 +12,18 @@
 
 %global github_owner     consolidation-org
 %global github_name      output-formatters
-%global github_version   3.1.7
-%global github_commit    da39a0f14d5aaaee06732bb7cef2aea1de056b40
+%global github_version   3.1.8
+%global github_commit    0b50ba1134d581fd55376f3e21508dab009ced47
 
 %global composer_vendor  consolidation
 %global composer_project output-formatters
 
 # "php": ">=5.4.0"
 %global php_min_ver 5.4.0
-# "symfony/console": "~2.5|~3.0"
+# "symfony/console": "^2.8|~3"
 # "symfony/finder": "~2.5|~3.0"
-#     NOTE: Min version not 2.5 because autoloader required
 #     NOTE: Min version not 4.0 because v3 not packaged yet
-%global symfony_min_ver 2.7.1
+%global symfony_min_ver 2.8
 %global symfony_max_ver 3.0
 
 # Build using "--without tests" to disable tests
@@ -160,6 +159,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar  2 2017 Remi Collet <remi@remirepo.net> - 3.1.8-1
+- Update to 3.1.8
+
 * Tue Feb 28 2017 Shawn Iwinski <shawn@iwin.ski> - 3.1.7-1
 - Update to 3.1.7 (RHBZ #1415386)
 
