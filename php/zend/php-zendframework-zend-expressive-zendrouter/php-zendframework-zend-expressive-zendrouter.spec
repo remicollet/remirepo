@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    4c0f356cb187120ce9c9f34e5863dad54bdf6050
+%global gh_commit    89a18a82fff3c374d347f29b33411ca6a48a90c4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-zendrouter
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?dist}
 Summary:        zend-mvc router support for %{library}
 
@@ -168,6 +168,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar  2 2017 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- update to 2.0.1
+
 * Tue Feb 14 2017 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0
 - raise dependency on zend-expressive-router 2.0
