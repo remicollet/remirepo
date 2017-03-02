@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    fe608d85457449889750fc6bf8d0859af59f56ec
+%global gh_commit    c3036efb81f71bfa36cc9962ee5d4474f36581d0
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-servicemanager
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        3.2.1
+Version:        3.3.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -35,7 +35,8 @@ BuildArch:      noarch
 # Tests
 %if %{with_tests}
 BuildRequires:  php(language) >= 5.6
-BuildRequires:  php-composer(container-interop/container-interop) >= 1.0
+BuildRequires:  php-composer(container-interop/container-interop) >= 1.2
+BuildRequires:  php-composer(psr/container)                       >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)             >= 3.1
 BuildRequires:  php-reflection
 BuildRequires:  php-date
@@ -58,11 +59,14 @@ BuildRequires:  php-zendframework-zend-loader                   >= 2.5.1-3
 
 # From composer, "require": {
 #        "php": "^5.6 || ^7.0",
-#        "container-interop/container-interop": "~1.0",
+#        "container-interop/container-interop": "^1.2",
+#        "psr/container": "^1.0",
 #        "zendframework/zend-stdlib": "^3.1"
 Requires:       php(language) >= 5.6
-Requires:       php-composer(container-interop/container-interop) >= 1.0
+Requires:       php-composer(container-interop/container-interop) >= 1.2
 Requires:       php-composer(container-interop/container-interop) <  2
+Requires:       php-composer(psr/container)                       >= 1.0
+Requires:       php-composer(psr/container)                       <  2
 Requires:       php-composer(%{gh_owner}/zend-stdlib)             >= 3.1
 Requires:       php-composer(%{gh_owner}/zend-stdlib)             <  4
 # From phpcompatinfo report for version 3.2.0
@@ -85,7 +89,8 @@ Requires:       php-zendframework-zend-loader                   >= 2.5.1-3
 Obsoletes:      php-ZendFramework2-%{library} < 2.5
 Provides:       php-ZendFramework2-%{library} = %{version}
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
-Provides:       php-composer(container-interop/container-interop-implementation) = 1.1
+Provides:       php-composer(container-interop/container-interop-implementation) = 1.2
+Provides:       php-composer(psr/container-implementation) = 1.0
 
 
 %description
@@ -105,6 +110,7 @@ mv LICENSE.md LICENSE
 cat << 'EOF' | tee autoload.php
 <?php
 require_once '%{php_home}/Interop/Container/autoload.php';
+require_once '%{php_home}/Psr/Container/autoload.php';
 if (file_exists('%{php_home}/ProxyManager/autoload.php')) {
 	require_once '%{php_home}/ProxyManager/autoload.php';
 }
@@ -179,6 +185,8 @@ rm -rf %{buildroot}
 %changelog
 * Wed Feb 15 2017 Remi Collet <remi@fedoraproject.org> - 3.2.1-1
 - update to 3.2.1
+- raise dependency on container-interop/container-interop 1.2
+- add dependency on psr/container 1.0
 
 * Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
 - update to 3.2.0

@@ -15,7 +15,8 @@
     },
     "require": {
         "php": "^5.6 || ^7.0",
-        "container-interop/container-interop": "~1.0",
+        "container-interop/container-interop": "^1.2",
+        "psr/container": "^1.0",
         "zendframework/zend-stdlib": "^3.1"
     },
     "require-dev": {
@@ -33,8 +34,8 @@
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "3.2-dev",
-            "dev-develop": "3.3-dev"
+            "dev-master": "3.3-dev",
+            "dev-develop": "3.4-dev"
         }
     },
     "autoload-dev": {
@@ -44,7 +45,8 @@
         }
     },
     "provide": {
-        "container-interop/container-interop-implementation": "^1.1"
+        "container-interop/container-interop-implementation": "^1.2",
+        "psr/container-implementation": "^1.0"
     },
     "bin": [
         "bin/generate-deps-for-config-factory",
