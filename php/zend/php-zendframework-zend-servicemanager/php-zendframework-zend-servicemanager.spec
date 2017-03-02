@@ -183,10 +183,13 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Feb 15 2017 Remi Collet <remi@fedoraproject.org> - 3.2.1-1
-- update to 3.2.1
+* Thu Mar  2 2017 Remi Collet <remi@fedoraproject.org> - 3.3.0-1
+- update to 3.3.0
 - raise dependency on container-interop/container-interop 1.2
 - add dependency on psr/container 1.0
+
+* Wed Feb 15 2017 Remi Collet <remi@fedoraproject.org> - 3.2.1-1
+- update to 3.2.1
 
 * Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
 - update to 3.2.0
