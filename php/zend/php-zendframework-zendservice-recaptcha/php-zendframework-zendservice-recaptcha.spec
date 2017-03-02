@@ -18,7 +18,7 @@
 
 Name:           php-%{gh_owner}-%{pk_project}
 Version:        3.0.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -26,6 +26,9 @@ License:        BSD
 URL:            https://framework.zend.com/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
+
+# See https://github.com/zendframework/ZendService_ReCaptcha/pull/12
+Patch0:         %{name}-pr12.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -73,6 +76,7 @@ Provides:       php-composer(%{gh_owner}/%{pk_project}) = %{version}
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+%patch0 -p1
 
 mv LICENSE.md LICENSE
 
@@ -119,15 +123,15 @@ EOF
 run=0
 ret=0
 if which php56; then
-   php56 %{_bindir}/phpunit || ret=1
+   php56 %{_bindir}/phpunit  --exclude online || ret=1
    run=1
 fi
 if which php71; then
-   php70 %{_bindir}/phpunit6 || ret=1
+   php70 %{_bindir}/phpunit6 --exclude online || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose
+%{_bindir}/phpunit --exclude online --verbose
 # remirepo:2
 fi
 exit $ret
@@ -152,6 +156,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar  2 2017 Remi Collet <remi@fedoraproject.org> - 3.0.0-3
+- add patch to skip online tests, from
+  https://github.com/zendframework/ZendService_ReCaptcha/pull/12
+
 * Fri Feb 24 2017 Remi Collet <remi@fedoraproject.org> - 3.0.0-2
 - rewrite autoloader as framework extension
 
