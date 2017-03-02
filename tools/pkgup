@@ -1,0 +1,21 @@
+#!/bin/sh
+
+vendor="Remi Collet <remi@remirepo.net>"
+rpmdate=$(LC_ALL="C" date +"%a %b %d %Y")
+rpmdate=${rpmdate/ 0/  }
+name=$(basename $PWD)
+
+if [ $# -lt 2 ]; then
+	echo "usage $0 version commit"
+    exit 1
+fi
+name=${3:$(basename $PWD)}
+
+sed --regexp-extended \
+	--expression "/^Version:/s/[0-9.]+$/$1/" \
+    --expression "/github_version/s/[0-9.]+$/$1/" \
+    --expression "/(github|gh)_commit/s/[0-9a-f]{40}$/$2/" \
+    --expression '/^Release:/s/[0-9.]+/1/' \
+    --expression "s/%changelog/%changelog\n* $rpmdate $vendor - $1-1\n- Update to $1\n/" \
+    --in-place *spec
+

@@ -2,6 +2,7 @@
 
 vendor="Remi Collet <remi@remirepo.net>"
 rpmdate=$(LC_ALL="C" date +"%a %b %d %Y")
+rpmdate=${rpmdate/ 0/  }
 name=$(basename $PWD)
 
 if [ $# -lt 2 ]; then
