@@ -207,9 +207,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar  2 2017 Remi Collet <remi@remirepo.net> - 2.10.0-1
+- update to 2.10.0
+- raise dependency on zend-captcha 2.7.1
+
 * Fri Sep 23 2016 Remi Collet <remi@fedoraproject.org> - 2.9.2-1
 - update to 2.9.2
-- raise dependency on zend-captcha 2.7.1
 
 * Thu Sep 15 2016 Remi Collet <remi@fedoraproject.org> - 2.9.1-1
 - update to 2.9.1

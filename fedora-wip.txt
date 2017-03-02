@@ -3,8 +3,6 @@
 =================
 php-tecnickcom-tc-lib-color 1.12.6 (waiting for phpunit6)
 php-tecnickcom-tc-lib-barcode 1.15.6
-php-zendframework-zend-captcha 2.7.1 (when recaptcha approved)
-php-zendframework-zend-form 2.10.0 (after zend-captcha 2.7.1)
 php-twig2 2.2.0 (when psr/container approved)
 php-twig 1.32.0 (when psr/container approved)
 
@@ -16,6 +14,10 @@ php-twig 1.32.0 (when psr/container approved)
 =================
  Testing
 =================
+2/3	php-zendframework-zend-form-2.10.0-1.fc25
+2/3	php-zendframework-zend-form-2.10.0-1.fc24
+2/3	php-zendframework-zend-captcha-2.7.1-1.fc25
+2/3	php-zendframework-zend-captcha-2.7.1-1.fc24
 2/3	php-zendframework-zendservice-recaptcha-3.0.0-3.fc25
 2/3	php-zendframework-zendservice-recaptcha-3.0.0-3.fc24
 2/3	php-zendframework-zend-validator-2.8.2-1.fc25
@@ -117,6 +119,10 @@ php-twig 1.32.0 (when psr/container approved)
 =================
  March, 2017
 =================
+2/3	2/3	php-zendframework-zend-form-2.10.0-1.fc27
+2/3	2/3	php-zendframework-zend-form-2.10.0-1.fc26
+2/3	2/3	php-zendframework-zend-captcha-2.7.1-1.fc27
+2/3	2/3	php-zendframework-zend-captcha-2.7.1-1.fc26
 2/3	2/3	php-zendframework-zendservice-recaptcha-3.0.0-3.fc27
 2/3	2/3	php-zendframework-zendservice-recaptcha-3.0.0-3.fc26
 2/3	2/3	php-zendframework-zend-servicemanager-3.3.0-1.fc27
