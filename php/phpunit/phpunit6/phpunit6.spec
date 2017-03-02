@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    4601a46c162eccadffc7d5a6b1f5334df5d99713
+%global gh_commit    47ee3fa1bca5c50f1d25105201eb20df777bd7b6
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_vendor    sebastianbergmann
@@ -20,12 +20,12 @@
 %global php_home     %{_datadir}/php
 %global ver_major    6
 %global ver_minor    0
-%global ver_patch    7
+%global ver_patch    8
 %global specrel      1
 
 Name:           %{pk_project}%{ver_major}
 Version:        %{ver_major}.%{ver_minor}.%{ver_patch}
-Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
+Release:        %{?gh_date:1%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
@@ -68,28 +68,33 @@ BuildRequires:  php-fedora-autoloader-devel
 
 # From composer.json, "require": {
 #        "php": "^7.0",
-#        "phpunit/php-file-iterator": "^1.4",
-#        "phpunit/php-text-template": "^1.2",
-#        "phpunit/php-code-coverage": "^5.0",
-#        "phpunit/php-timer": "^1.0.6",
-#        "phpunit/phpunit-mock-objects": "^4.0",
-#        "phpspec/prophecy": "^1.6.2",
-#        "sebastian/comparator": "^1.2.4",
-#        "sebastian/diff": "^1.2",
-#        "sebastian/environment": "^2.0",
-#        "sebastian/exporter": "^2.0",
-#        "sebastian/global-state": "^1.1",
-#        "sebastian/object-enumerator": "^2.0",
-#        "sebastian/resource-operations": "^1.0",
-#        "sebastian/version": "^2.0",
-#        "myclabs/deep-copy": "^1.3",
 #        "ext-dom": "*",
 #        "ext-json": "*",
+#        "ext-libxml": "*",
 #        "ext-mbstring": "*",
 #        "ext-xml": "*",
-#        "ext-libxml": "*"
+#        "myclabs/deep-copy": "^1.3",
+#        "phpspec/prophecy": "^1.6.2",
+#        "phpunit/php-code-coverage": "^5.0",
+#        "phpunit/php-file-iterator": "^1.4",
+#        "phpunit/php-text-template": "^1.2",
+#        "phpunit/php-timer": "^1.0.6",
+#        "phpunit/phpunit-mock-objects": "^4.0",
+#        "sebastian/comparator": "^1.2.4 || ^2.0",
+#        "sebastian/diff": "^1.2",
+#        "sebastian/environment": "^2.0",
+#        "sebastian/exporter": "^2.0 || ^3.0",
+#        "sebastian/global-state": "^1.1 || ^2.0",
+#        "sebastian/object-enumerator": "^2.0",
+#        "sebastian/resource-operations": "^1.0 || ^3.0",
+#        "sebastian/version": "^2.0",
 Requires:       php(language) >= 7.0
 Requires:       php-cli
+Requires:       php-dom
+Requires:       php-json
+Requires:       php-libxml
+Requires:       php-mbstring
+Requires:       php-xml
 Requires:       php-composer(phpunit/php-file-iterator) >= 1.4
 Requires:       php-composer(phpunit/php-file-iterator) <  2
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
@@ -103,7 +108,7 @@ Requires:       php-composer(phpunit/phpunit-mock-objects) <  5
 Requires:       php-composer(phpspec/prophecy) >= 1.6.2
 Requires:       php-composer(phpspec/prophecy) <  2
 Requires:       php-composer(sebastian/comparator) >= 1.2.4
-Requires:       php-composer(sebastian/comparator) <  2
+Requires:       php-composer(sebastian/comparator) <  3
 Requires:       php-composer(sebastian/diff) >= 1.2
 Requires:       php-composer(sebastian/diff) <  2
 Requires:       php-composer(sebastian/environment) >= 2.0
@@ -120,11 +125,6 @@ Requires:       php-composer(sebastian/version) >= 2.0
 Requires:       php-composer(sebastian/version) <  3
 Requires:       php-composer(myclabs/deep-copy) >= 1.3
 Requires:       php-composer(myclabs/deep-copy) <  2
-Requires:       php-dom
-Requires:       php-json
-Requires:       php-mbstring
-Requires:       php-xml
-Requires:       php-libxml
 # From composer.json, "suggest": {
 #        "phpunit/php-invoker": "^1.1",
 #        "ext-xdebug": "*"
@@ -224,7 +224,7 @@ php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
 %files
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc CONTRIBUTING.md README.md ChangeLog-%{ver_major}.%{ver_minor}.md
+%doc README.md ChangeLog-%{ver_major}.%{ver_minor}.md
 %doc composer.json
 %{_bindir}/%{name}
 %if %{single}
@@ -234,6 +234,9 @@ php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
 
 
 %changelog
+* Thu Mar  2 2017 Remi Collet <remi@remirepo.net> - 6.0.8-1
+- Update to 6.0.8
+
 * Sun Feb 19 2017 Remi Collet <remi@fedoraproject.org> - 6.0.7-1
 - update to 6.0.7
 

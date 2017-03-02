@@ -3,6 +3,10 @@
 =================
 php-tecnickcom-tc-lib-color 1.12.6 (waiting for phpunit6)
 php-tecnickcom-tc-lib-barcode 1.15.6
+pear.horde.org Horde_Core 2.27.7 (stable) 2.27.8 (stable) 1621kB
+ php-aura-router ..................................           3.0.1           3.1.0      2017-03-02 (Just released)
+ php-phpunit-PHPUnit ..............................          5.7.14          5.7.15      2017-03-02 (Just released)
+ phpunit6 .........................................           6.0.7           6.0.8      2017-03-02 (Just released)
 
 
 =================
