@@ -114,13 +114,13 @@ Requires:       php-composer(sebastian/diff) <  2
 Requires:       php-composer(sebastian/environment) >= 2.0
 Requires:       php-composer(sebastian/environment) <  3
 Requires:       php-composer(sebastian/exporter) >= 2.0
-Requires:       php-composer(sebastian/exporter) <  3
+Requires:       php-composer(sebastian/exporter) <  4
 Requires:       php-composer(sebastian/global-state) >= 1.1
-Requires:       php-composer(sebastian/global-state) <  2
+Requires:       php-composer(sebastian/global-state) <  3
 Requires:       php-composer(sebastian/object-enumerator) >= 2.0
 Requires:       php-composer(sebastian/object-enumerator) <  3
 Requires:       php-composer(sebastian/resource-operations) >= 1.0
-Requires:       php-composer(sebastian/resource-operations) <  2
+Requires:       php-composer(sebastian/resource-operations) <  4
 Requires:       php-composer(sebastian/version) >= 2.0
 Requires:       php-composer(sebastian/version) <  3
 Requires:       php-composer(myclabs/deep-copy) >= 1.3

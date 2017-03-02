@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    4906b8faf23e42612182fd212eb6f4c0f2954b57
+%global gh_commit    b99112aecc01f62acf3d81a3f59646700a1849e5
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,12 +17,12 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.7
-%global minor        14
+%global minor        15
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
 Version:        %{major}.%{minor}
-Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
+Release:        %{?gh_date:1%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
@@ -224,7 +224,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc CONTRIBUTING.md README.md composer.json ChangeLog-%{major}.md
+%doc README.md composer.json ChangeLog-%{major}.md
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 
@@ -233,6 +233,9 @@ fi
 
 
 %changelog
+* Thu Mar  2 2017 Remi Collet <remi@remirepo.net> - 5.7.15-1
+- Update to 5.7.15
+
 * Sun Feb 19 2017 Remi Collet <remi@fedoraproject.org> - 5.7.14-1
 - update to 5.7.14
 
