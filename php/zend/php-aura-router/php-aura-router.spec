@@ -6,7 +6,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    6daebc9747e26a6fdd545d1ed5982b276f17b7a2
+%global gh_commit    52507bc813c92511dbcacc7463f163ef5149ad38
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     auraphp
 %global gh_project   Aura.Router
@@ -18,7 +18,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{pk_owner}-%{pk_project}
-Version:        3.0.1
+Version:        3.1.0
 Release:        1%{?dist}
 Summary:        Powerful, flexible web routing for PSR-7 requests
 
@@ -37,10 +37,11 @@ BuildRequires:  php-composer(psr/http-message) >= 1.0
 BuildRequires:  php-composer(psr/log) >= 1.0
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
-BuildRequires:  php-composer(phpunit/phpunit)
 # From composer.json, "require-dev": {
-#        "zendframework/zend-diactoros": "~1.0"
+#        "zendframework/zend-diactoros": "~1.0",
+#        "phpunit/phpunit": "~5.7 || ~4.8"
 BuildRequires:  php-composer(zendframework/zend-diactoros) >= 1.0
+BuildRequires:  php-composer(phpunit/phpunit) >= 4.8
 %endif
 
 # From composer, "require": {
@@ -138,6 +139,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar  2 2017 Remi Collet <remi@remirepo.net> - 3.1.0-1
+- Update to 3.1.0
+
 * Thu Dec 15 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
 - update to 3.0.0
 - License is now MIT
