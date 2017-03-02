@@ -12,8 +12,8 @@
 
 %global github_owner     container-interop
 %global github_name      container-interop
-%global github_version   1.1.0
-%global github_commit    fc08354828f8fd3245f77a66b9e23a6bca48297e
+%global github_version   1.2.0
+%global github_commit    79cbf1341c22ec75643d841642dd5d6acd83bdb8
 
 %global composer_vendor  container-interop
 %global composer_project container-interop
@@ -32,18 +32,25 @@ Source0:   %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_co
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
+BuildRequires: php-cli
+## composer.json
+BuildRequires: php-composer(psr/container) >= 1.0
+## Autoloader
+BuildRequires: php-composer(fedora/autoloader)
 
 # composer.json
-#     <none>
-# phpcompatinfo (computed from version 1.1.0)
+Requires:  php-composer(psr/container) >= 1.0
+Requires:  php-composer(psr/container) <  2
+# phpcompatinfo (computed from version 1.2.0)
 Requires:  php(language) >= 5.3.0
 # Autoloader
-Requires:  php-composer(symfony/class-loader)
+Requires:  php-composer(fedora/autoloader)
 
 # php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}
 Provides:  php-%{composer_vendor}-%{composer_project}           = %{version}-%{release}
 # Composer
 Provides:  php-composer(%{composer_vendor}/%{composer_project}) = %{version}
+
 
 %description
 container-interop tries to identify and standardize features in container
@@ -81,19 +88,13 @@ cat <<'AUTOLOAD' | tee src/Interop/Container/autoload.php
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+\Fedora\Autoloader\Autoload::addPsr4('Interop\\Container\\', __DIR__);
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('Interop\\Container\\', dirname(dirname(__DIR__)));
-
-return $fedoraClassLoader;
+\Fedora\Autoloader\Dependencies::required([
+    '%{phpdir}/Psr/Container/autoload.php',
+]);
 AUTOLOAD
 
 
@@ -108,7 +109,11 @@ cp -rp src/* %{buildroot}%{phpdir}/
 
 
 %check
-: No tests provided upstream
+: Test autoloader
+php -r '
+require "%{buildroot}%{phpdir}/Interop/Container/autoload.php";
+exit (interface_exists("Interop\\Container\\ContainerInterface") ? 0 : 1);
+'
 
 
 %clean
@@ -127,6 +132,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar  2 2017 Remi Collet <remi@remirepo.net> - 1.2.0-1
+- update to 1.2.0
+- add dependency on psr/container
+- switch to fedora/autoloader
+- add minimal autoloader check
+
 * Mon Jan 04 2016 Remi Collet <remi@remirepo.net> - 1.1.0-1
 - backport for #remirepo
 
