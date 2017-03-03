@@ -19,14 +19,15 @@
     },
     "require": {
         "php": "^5.6 || ^7.0",
-        "container-interop/container-interop": "^1.1",
-        "league/plates": "^3.1",
-        "zendframework/zend-expressive-template": "^1.0",
-        "zendframework/zend-expressive-helpers": "^2.2 || ^3.0",
-        "zendframework/zend-expressive-router": "^1.3.2 || ^2.0"
+        "container-interop/container-interop": "^1.2",
+        "league/plates": "^3.3",
+        "zendframework/zend-expressive-helpers": "^2.2 || ^3.0.1",
+        "zendframework/zend-expressive-router": "^1.3.2 || ^2.1",
+        "zendframework/zend-expressive-template": "^1.0.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.7",
+        "malukenho/docheader": "^0.1.5",
+        "phpunit/phpunit": "^6.0.8 || ^5.7.15",
         "zendframework/zend-coding-standard": "~1.0.0"
     },
     "autoload": {
@@ -41,16 +42,20 @@
     },
     "suggest": {
         "mouf/pimple-interop": "^1.0 to use Pimple for dependency injection",
-        "aura/di": "3.0.*@beta to make use of Aura.Di dependency injection container",
-        "zendframework/zend-servicemanager": "^2.5 to use zend-servicemanager for dependency injection"
+        "aura/di": "^3.2 to make use of Aura.Di dependency injection container",
+        "zendframework/zend-servicemanager": "^3.2 to use zend-servicemanager for dependency injection"
     },
     "scripts": {
         "check": [
-            "@cs",
+            "@license-check",
+            "@cs-check",
             "@test"
         ],
-        "cs": "phpcs",
-        "cs-fix": "phpcbf",
-        "test": "phpunit"
+        "upload-coverage": "coveralls -v",
+        "cs-check": "phpcs --colors",
+        "cs-fix": "phpcbf --colors",
+        "license-check": "docheader check src/",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --coverage-clover clover.xml"
     }
 }

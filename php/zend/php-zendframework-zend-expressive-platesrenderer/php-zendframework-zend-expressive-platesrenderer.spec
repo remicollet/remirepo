@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    ee7f5f878650b8bcdb3aa04fdbb92420c9db33a4
+%global gh_commit    f9901d12b618f24af84d8bdbfd1632b81853c72e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-platesrenderer
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.2.0
+Version:        1.2.1
 Release:        1%{?dist}
 Summary:        Plates integration for %{library}
 
@@ -36,17 +36,18 @@ BuildArch:      noarch
 # Tests
 %if %{with_tests}
 BuildRequires:  php(language) >= 5.6
-BuildRequires:  php-composer(container-interop/container-interop)    >= 1.1
-BuildRequires:  php-composer(league/plates)                          >= 3.1
-BuildRequires:  php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0
+BuildRequires:  php-composer(container-interop/container-interop)    >= 1.2
+BuildRequires:  php-composer(league/plates)                          >= 3.3
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-helpers)    >= 2.2
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
+BuildRequires:  php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0.4
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
 # From composer, "require-dev": {
-#        "phpunit/phpunit": "^5.7",
+#        "malukenho/docheader": "^0.1.5",
+#        "phpunit/phpunit": "^6.0.8 || ^5.7.15",
 #        "zendframework/zend-coding-standard": "~1.0.0"
-BuildRequires:  php-composer(phpunit/phpunit)                        >= 5.7
+BuildRequires:  php-composer(phpunit/phpunit)                        >= 5.7.15
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
 # For dependencies autoloader
@@ -55,30 +56,30 @@ BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 
 # From composer, "require": {
 #        "php": "^5.6 || ^7.0",
-#        "container-interop/container-interop": "^1.1",
-#        "league/plates": "^3.1",
-#        "zendframework/zend-expressive-template": "^1.0",
-#        "zendframework/zend-expressive-helpers": "^2.2 || ^3.0",
-#        "zendframework/zend-expressive-router": "^1.3.2 || ^2.0"
+#        "container-interop/container-interop": "^1.2",
+#        "league/plates": "^3.3",
+#        "zendframework/zend-expressive-helpers": "^^2.2 || ^3.0.1",
+#        "zendframework/zend-expressive-router": "^1.3.2 || ^2.1"
+#        "zendframework/zend-expressive-template": "^1.0.4",
 Requires:       php(language) >= 5.6
-Requires:       php-composer(container-interop/container-interop)    >= 1.1
+Requires:       php-composer(container-interop/container-interop)    >= 1.2
 Requires:       php-composer(container-interop/container-interop)    <  2
-Requires:       php-composer(league/plates)                          >= 3.1
+Requires:       php-composer(league/plates)                          >= 3.3
 Requires:       php-composer(league/plates)                          <  4
-Requires:       php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0
-Requires:       php-composer(%{gh_owner}/zend-expressive-template)   <  2
 Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    >= 2.2
 Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    <  4
 Requires:       php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
 Requires:       php-composer(%{gh_owner}/zend-expressive-router)     <  3
+Requires:       php-composer(%{gh_owner}/zend-expressive-template)   >= 1.04
+Requires:       php-composer(%{gh_owner}/zend-expressive-template)   <  2
 # From phpcompatinfo report for version 1.2.0
 Requires:       php-reflection
 Requires:       php-spl
 %if ! %{bootstrap}
 # From composer, "suggest": {
 #        "mouf/pimple-interop": "^1.0 to use Pimple for dependency injection",
-#        "aura/di": "3.0.*@beta to make use of Aura.Di dependency injection container",
-#        "zendframework/zend-servicemanager": "^2.5 to use zend-servicemanager for dependency injection"
+#        "aura/di": "^3.2 to make use of Aura.Di dependency injection container",
+#        "zendframework/zend-servicemanager": "^3.2 to use zend-servicemanager for dependency injection"
 %if 0%{?fedora} >= 21
 Suggests:       php-composer(%{gh_owner}/aura/di)
 Suggests:       php-composer(%{gh_owner}/zend-servicemanager)
@@ -150,7 +151,7 @@ if which php56; then
    run=1
 fi
 if which php71; then
-   php71 %{_bindir}/phpunit --verbose || ret=1
+   php71 %{_bindir}/phpunit6 --verbose || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -178,6 +179,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar  3 2017 Remi Collet <remi@remirepo.net> - 1.2.1-1
+- Update to 1.2.1
+- raise dependency on container-interop/container-interop 1.2
+- raise dependency on zendframework/zend-expressive-template 1.0.4
+- raise dependency on league/plates 3.3
+
 * Wed Jan 11 2017 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - update to 1.2.0
 - raise dependency on PHP version 5.6
