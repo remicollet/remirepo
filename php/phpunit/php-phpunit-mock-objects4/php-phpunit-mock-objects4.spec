@@ -6,9 +6,9 @@
 #
 # Please, preserve the changelog entries
 #
-%global bootstrap    1
+%global bootstrap    0
 # Github
-%global gh_commit    3819745c44f3aff9518fd655f320c4535d541af7
+%global gh_commit    eabce450df194817a7d7e27e19013569a903a2bf
 #global gh_date      20150902
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_vendor    sebastianbergmann
@@ -23,7 +23,7 @@
 %global php_home     %{_datadir}/php
 %global ver_major    4
 %global ver_minor    0
-%global ver_patch    0
+%global ver_patch    1
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   0%{?_with_tests:1}
@@ -33,13 +33,13 @@
 
 Name:           php-%{pk_project}%{ver_major}
 Version:        %{ver_major}.%{ver_minor}.%{ver_patch}
-Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
+Release:        %{?gh_date:1%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Mock Object library for PHPUnit
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_vendor}/%{gh_project}
-Source0:        https://github.com/%{gh_vendor}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+Source0:        https://github.com/%{gh_vendor}/%{gh_project}/archive/%{gh_commit}/%{name}-%{version}-%{gh_short}.tar.gz
 
 # Temporary workaround, under investigation
 Patch0:         %{gh_project}-4.0.0-rpm.patch
@@ -50,7 +50,7 @@ BuildRequires:  php-fedora-autoloader-devel
 BuildRequires:  php(language) >= 7.0
 BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
 BuildRequires:  php-composer(doctrine/instantiator) >= 1.0.2
-BuildRequires:  php-composer(sebastian/exporter) >= 2.0
+BuildRequires:  php-composer(sebastian/exporter) >= 3.0
 # From composer.json, "require-dev": {
 #        "phpunit/phpunit": "^6.0"
 BuildRequires:  phpunit6
@@ -60,14 +60,14 @@ BuildRequires:  phpunit6
 #        "php": "^7.0",
 #        "phpunit/php-text-template": "^1.2",
 #        "doctrine/instantiator": "^1.0.2",
-#        "sebastian/exporter": "^2.0"
+#        "sebastian/exporter": "^3.0"
 Requires:       php(language) >= 7.0
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
 Requires:       php-composer(doctrine/instantiator) >= 1.0.2
 Requires:       php-composer(doctrine/instantiator) <  2
-Requires:       php-composer(sebastian/exporter) >= 2.0
-Requires:       php-composer(sebastian/exporter) <  3
+Requires:       php-composer(sebastian/exporter) >= 3.0
+Requires:       php-composer(sebastian/exporter) <  4
 # From composer.json, "suggest": {
 #        "ext-soap": "*"
 Requires:       php-soap
@@ -127,8 +127,14 @@ cat << 'EOF' | tee -a vendor/autoload.php
 require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{ns_top}/%{ns_project}/autoload.php';
 EOF
 
-%{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-%{_bindir}/phpunit6 --no-coverage --verbose
+ret=0
+for cmd in php70 php71 php; do
+  if which $cmd; then
+    $cmd -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+      %{_bindir}/phpunit6 --no-coverage --verbose
+  fi
+done
+exit $ret
 %endif
 
 
@@ -143,6 +149,10 @@ EOF
 
 
 %changelog
+* Fri Mar  3 2017 Remi Collet <remi@remirepo.net> - 4.0.1-1
+- Update to 4.0.1
+- raise dependency on sebastian/exporter 3.0
+
 * Tue Feb  7 2017 Remi Collet <remi@remirepo.net> - 4.0.0-1
 - rename to php-phpunit-mock-objects4
 - move to /usr/share/php/PHPUnit6/Framework/MockObject
