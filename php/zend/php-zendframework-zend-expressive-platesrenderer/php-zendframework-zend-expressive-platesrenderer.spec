@@ -22,7 +22,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        1.2.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Plates integration for %{library}
 
 Group:          Development/Libraries
@@ -70,7 +70,7 @@ Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    >= 2.2
 Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    <  4
 Requires:       php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
 Requires:       php-composer(%{gh_owner}/zend-expressive-router)     <  3
-Requires:       php-composer(%{gh_owner}/zend-expressive-template)   >= 1.04
+Requires:       php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0.4
 Requires:       php-composer(%{gh_owner}/zend-expressive-template)   <  2
 # From phpcompatinfo report for version 1.2.0
 Requires:       php-reflection
@@ -179,6 +179,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar  3 2017 Remi Collet <remi@remirepo.net> - 1.2.1-2
+- fix typo in dependency version
+
 * Fri Mar  3 2017 Remi Collet <remi@remirepo.net> - 1.2.1-1
 - Update to 1.2.1
 - raise dependency on container-interop/container-interop 1.2
