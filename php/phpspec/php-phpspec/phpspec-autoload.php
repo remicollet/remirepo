@@ -14,6 +14,6 @@ if (is_dir(getcwd().'/spec')) {
 
 // Dependencies (Rely on include_path as in PHPUnit dependencies + circular dependencies)
 require_once 'phpspec/php-diff/autoload.php';
-require_once 'Prophecy/autoload.php';
 require_once 'SebastianBergmann/Exporter/autoload.php';
+require_once 'Prophecy/autoload.php'; // After exporter to avoid newer version
 require_once 'Doctrine/Instantiator/autoload.php';

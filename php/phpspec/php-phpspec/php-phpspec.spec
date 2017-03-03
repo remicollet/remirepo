@@ -14,7 +14,7 @@
 
 Name:           php-phpspec
 Version:        3.2.3
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Specification-oriented BDD framework for PHP
 
 Group:          Development/Libraries
@@ -31,6 +31,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-composer(phpspec/prophecy)         >= 1.4
 BuildRequires:  php-composer(phpspec/php-diff)         >= 1.0.0
+BuildRequires:  php-composer(sebastian/exporter)       <  3
 BuildRequires:  php-composer(sebastian/exporter)       >= 1.0
 BuildRequires:  php-composer(symfony/console)          >= 2.3.0
 BuildRequires:  php-composer(symfony/event-dispatcher) >= 2.1
@@ -187,6 +188,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar  3 2017 Remi Collet <remi@remirepo.net> - 3.2.3-3
+- fix autoloader for dep. with multiple versions
+
 * Sun Jan 29 2017 Remi Collet <remi@fedoraproject.org> - 3.2.3-1
 - update to 3.2.3
 
