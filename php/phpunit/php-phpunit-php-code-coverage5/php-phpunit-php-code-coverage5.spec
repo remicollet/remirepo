@@ -24,7 +24,7 @@
 %global ver_major    5
 %global ver_minor    0
 %global ver_patch    2
-%global specrel      1
+%global specrel      2
 %if %{bootstrap}
 %global with_tests   0%{?_with_tests:1}
 %else
@@ -37,9 +37,16 @@ Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_s
 Summary:        PHP code coverage information
 
 Group:          Development/Libraries
-License:        BSD
+# Main license is BSD
+# BSD: D3
+# MIT: boostrap, d3, holder, html5shiv, jquery, respond
+# ASL 2.0: nvd3
+License:        BSD and MIT ans ASL 2.0
 URL:            https://github.com/%{gh_vendor}/%{gh_project}
 Source0:        https://github.com/%{gh_vendor}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+
+# RPM specific changes: use system .ttf file
+Patch0:         %{name}-fonts.patch
 
 BuildArch:      noarch
 BuildRequires:  php-fedora-autoloader-devel
@@ -96,7 +103,23 @@ Requires:       php-tokenizer
 # Autoloader
 Requires:       php-composer(fedora/autoloader)
 
+# Composer
 Provides:       php-composer(%{pk_vendor}/%{pk_project}) = %{version}
+# Bundled assets in HTML template
+Provides:       bundled(js-bootstrap) = 3.3.7
+Provides:       bundled(js-d3)        = 3.5.17
+Provides:       bundled(js-holder)    = 2.7.1
+Provides:       bundled(js-html5shiv) = 3.7.3
+Provides:       bundled(js-jquery)    = 3.1.1
+Provides:       bundled(js-nvd3)      = 1.8.1
+Provides:       bundled(js-respond)   = 1.1.2
+%if 0%{?fedora} >= 19
+%global with_glyphicons 1
+Requires:       glyphicons-halflings-fonts
+%else
+%global with_glyphicons 0
+Provides:       bundled(glyphicons-halflings-fonts) = unknown
+%endif
 
 
 %description
@@ -108,6 +131,12 @@ Autoloader: %{php_home}/%{ns_vendor}/%{ns_project}%{ver_major}/autoload.php
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+
+%if %{with_glyphicons}
+%patch0 -p0 -b .rpm
+find src -name \*.rpm -delete -print
+rm src/Report/Html/Renderer/Template/fonts/glyphicons-halflings-regular.ttf
+%endif
 
 
 %build
@@ -166,6 +195,11 @@ done
 
 
 %changelog
+* Fri Mar  3 2017 Remi Collet <remi@remirepo.net> - 5.0.2-2
+- handle bundle assets
+- fix license tag for bundled assets
+- add dependency on glyphicons-halflings-fonts
+
 * Wed Mar  1 2017 Remi Collet <remi@remirepo.net> - 5.0.2-1
 - update to 5.0.2
 - raise dependency on phpunit/php-token-stream 1.4.11
