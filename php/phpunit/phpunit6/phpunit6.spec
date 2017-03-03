@@ -21,7 +21,7 @@
 %global ver_major    6
 %global ver_minor    0
 %global ver_patch    8
-%global specrel      1
+%global specrel      2
 
 Name:           %{pk_project}%{ver_major}
 Version:        %{ver_major}.%{ver_minor}.%{ver_patch}
@@ -85,8 +85,8 @@ BuildRequires:  php-fedora-autoloader-devel
 #        "sebastian/environment": "^2.0",
 #        "sebastian/exporter": "^2.0 || ^3.0",
 #        "sebastian/global-state": "^1.1 || ^2.0",
-#        "sebastian/object-enumerator": "^2.0",
-#        "sebastian/resource-operations": "^1.0 || ^3.0",
+#        "sebastian/object-enumerator": "^2.0 || ^3.0",
+#        "sebastian/resource-operations": "^1.0",
 #        "sebastian/version": "^2.0",
 Requires:       php(language) >= 7.0
 Requires:       php-cli
@@ -118,9 +118,9 @@ Requires:       php-composer(sebastian/exporter) <  4
 Requires:       php-composer(sebastian/global-state) >= 1.1
 Requires:       php-composer(sebastian/global-state) <  3
 Requires:       php-composer(sebastian/object-enumerator) >= 2.0
-Requires:       php-composer(sebastian/object-enumerator) <  3
+Requires:       php-composer(sebastian/object-enumerator) <  4
 Requires:       php-composer(sebastian/resource-operations) >= 1.0
-Requires:       php-composer(sebastian/resource-operations) <  4
+Requires:       php-composer(sebastian/resource-operations) <  2
 Requires:       php-composer(sebastian/version) >= 2.0
 Requires:       php-composer(sebastian/version) <  3
 Requires:       php-composer(myclabs/deep-copy) >= 1.3
@@ -176,12 +176,12 @@ require_once 'SebastianBergmann/CodeCoverage5/autoload.php';
 require_once 'PHP/Timer/Autoload.php';
 require_once '%{ns_vendor}/Framework/MockObject/autoload.php';
 require_once 'Prophecy/autoload.php';
-require_once 'SebastianBergmann/Comparator/autoload.php';
+require_once (stream_resolve_include_path('SebastianBergmann/Comparator2/autoload.php') ?: 'SebastianBergmann/Comparator/autoload.php');
 require_once 'SebastianBergmann/Diff/autoload.php';
 require_once 'SebastianBergmann/Environment/autoload.php';
-require_once 'SebastianBergmann/Exporter/autoload.php';
-require_once 'SebastianBergmann/GlobalState/autoload.php';
-require_once 'SebastianBergmann/ObjectEnumerator/autoload.php';
+require_once (stream_resolve_include_path('SebastianBergmann/Exporter3/autoload.php') ?: 'SebastianBergmann/Exporter/autoload.php');
+require_once (stream_resolve_include_path('SebastianBergmann/GlobalState2/autoload.php') ?: 'SebastianBergmann/GlobalState/autoload.php');
+require_once (stream_resolve_include_path('SebastianBergmann/ObjectEnumerator3/autoload.php') ?: 'SebastianBergmann/ObjectEnumerator/autoload.php');
 require_once 'SebastianBergmann/ResourceOperations/autoload.php';
 require_once 'SebastianBergmann/Version/autoload.php';
 require_once 'DeepCopy/autoload.php';
@@ -216,8 +216,13 @@ ln -s %{name} %{buildroot}%{_bindir}/phpunit
 OPT="--testsuite=small --no-coverage"
 sed -e 's:@PATH@:%{buildroot}%{php_home}/%{ns_vendor}:' -i tests/bootstrap.php
 
-php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-    ./phpunit $OPT --verbose
+ret=0
+for cmd in php70 php71 php; do
+  if which $cmd; then
+     $cmd -d include_path=.:%{buildroot}%{php_home}:%{php_home} ./phpunit $OPT --verbose || ret=1
+  fi
+done
+exit $ret
 
 
 
@@ -234,6 +239,9 @@ php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
 
 
 %changelog
+* Fri Mar  3 2017 Remi Collet <remi@remirepo.net> - 6.0.8-2
+- fix autoloader for dep. with multiple versions
+
 * Thu Mar  2 2017 Remi Collet <remi@remirepo.net> - 6.0.8-1
 - Update to 6.0.8
 
