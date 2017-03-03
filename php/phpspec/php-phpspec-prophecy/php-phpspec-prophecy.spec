@@ -20,7 +20,7 @@
 
 Name:           php-phpspec-prophecy
 Version:        1.7.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Highly opinionated mocking framework for PHP
 
 Group:          Development/Libraries
@@ -134,6 +134,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar  3 2017 Remi Collet <remi@remirepo.net> - 1.7.0-2
+- fix autoloader for dep. with multiple versions
+
 * Fri Mar  3 2017 Remi Collet <remi@remirepo.net> - 1.7.0-1
 - Update to 1.7.0
 
