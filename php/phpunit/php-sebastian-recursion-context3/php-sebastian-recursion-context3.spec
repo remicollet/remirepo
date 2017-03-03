@@ -31,7 +31,6 @@ License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{name}-%{version}-%{gh_short}.tar.gz
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 7.0
 BuildRequires:  php-fedora-autoloader-devel
@@ -66,7 +65,6 @@ Provides functionality to recursively process PHP variables.
 
 
 %install
-rm -rf     %{buildroot}
 mkdir -p   %{buildroot}%{php_home}/SebastianBergmann
 cp -pr src %{buildroot}%{php_home}/SebastianBergmann/RecursionContext%{major}
 
@@ -90,12 +88,7 @@ exit $ret
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc README.md composer.json
