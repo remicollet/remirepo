@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    2c69f4d424f85062fe40f7689797d6d32c76b711
+%global gh_commit    e0e33ce4eaf59ba77ead9ce45256692aa29ecb38
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150717
 %global gh_owner     FriendsOfPHP
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-cs-fixer
-Version:        2.1.0
+Version:        2.1.1
 Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A tool to automatically fix PHP code style
 
@@ -53,10 +53,14 @@ BuildRequires:  php-spl
 BuildRequires:  php-xml
 # From composer.json,     "require-dev": {
 #        "gecko-packages/gecko-php-unit": "^2.0",
+#        "justinrainbow/json-schema": "^5.0",
 #        "phpunit/phpunit": "^4.5|^5",
-#        "satooshi/php-coveralls": "^1.0"
-BuildRequires:  php-composer(phpunit/phpunit) >= 4.5
+#        "satooshi/php-coveralls": "^1.0",
+#        "symfony/phpunit-bridge": "^3.2"
 BuildRequires:  php-composer(gecko-packages/gecko-php-unit) >= 2.0
+BuildRequires:  php-composer(justinrainbow/json-schema) >= 5
+BuildRequires:  php-composer(phpunit/phpunit) >= 4.5
+BuildRequires:  php-composer(symfony/phpunit-bridge)
 # Autoloader
 BuildRequires:  php-composer(fedora/autoloader)
 %endif
@@ -71,6 +75,7 @@ BuildRequires:  php-composer(fedora/autoloader)
 #        "symfony/finder": "^2.2 || ^3.0",
 #        "symfony/polyfill-php54": "^1.0",
 #        "symfony/polyfill-php55": "^1.3",
+#        "symfony/polyfill-xml": "^1.3",
 #        "symfony/process": "^2.3 || ^3.0",
 #        "symfony/stopwatch": "^2.5 || ^3.0"
 # use 5.4 to avoid polyfill
@@ -137,6 +142,8 @@ mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/GeckoPackages/PHPUnit/autoload.php';
+require_once '%{php_home}/Symfony/Bridge/PhpUnit/autoload.php';
+require_once '%{php_home}/JsonSchema5/autoload.php';
 require_once '%{buildroot}%{php_home}/PhpCsFixer/autoload.php';
 \Fedora\Autoloader\Autoload::addPsr4('PhpCsFixer\\Tests\\', dirname(__DIR__) . '/tests');
 EOF
@@ -183,6 +190,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar  3 2017 Remi Collet <remi@remirepo.net> - 2.1.1-1
+- Update to 2.1.1
+
 * Sat Feb 11 2017 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - update to 2.1.0
 - add dependency on symfony/polyfill-php55 (for EPEL-7)

@@ -3,14 +3,11 @@
 =================
 php-tecnickcom-tc-lib-color 1.12.6 (waiting for phpunit6)
 php-tecnickcom-tc-lib-barcode 1.15.6
+php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 
 =================
  Pending
 =================
-3/3	3/3	php-phpspec-3.2.3-3.fc27
-3/3	3/3	php-phpspec-3.2.3-3.fc26
-3/3	3/3	php-phpspec-prophecy-1.7.0-2.fc27
-3/3	3/3	php-phpspec-prophecy-1.7.0-2.fc26
 
 =================
  Testing
@@ -125,6 +122,10 @@ php-tecnickcom-tc-lib-barcode 1.15.6
 =================
  March, 2017
 =================
+3/3	3/3	php-phpspec-3.2.3-3.fc27
+3/3	3/3	php-phpspec-3.2.3-3.fc26
+3/3	3/3	php-phpspec-prophecy-1.7.0-2.fc27
+3/3	3/3	php-phpspec-prophecy-1.7.0-2.fc26
 3/3	3/3	php-zendframework-zend-expressive-zendviewrenderer-1.3.0-1.fc27
 3/3	3/3	php-zendframework-zend-expressive-zendviewrenderer-1.3.0-1.fc26
 3/3	3/3	php-zendframework-zend-expressive-platesrenderer-1.2.1-2.fc27
