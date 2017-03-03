@@ -13,8 +13,8 @@
 %global gh_project   recursion-context
 %global pk_vendor    sebastian
 %global pk_project   %{gh_project}
-%global php_home     %{_datadir}/php
 %global major        3
+%global php_home     %{_datadir}/php
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 %else
@@ -49,7 +49,7 @@ Requires:       php-spl
 # Autoloader
 Requires:       php-composer(fedora/autoloader)
 
-Provides:       php-composer(%{pk_vendor}-%{pk_project}) = %{version}
+Provides:       php-composer(%{pk_vendor}/%{pk_project}) = %{version}
 
 
 %description
