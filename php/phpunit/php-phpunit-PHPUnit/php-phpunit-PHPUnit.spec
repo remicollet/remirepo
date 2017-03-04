@@ -18,11 +18,11 @@
 %global pear_channel pear.phpunit.de
 %global major        5.7
 %global minor        15
-%global specrel      1
+%global specrel      2
 
 Name:           php-phpunit-PHPUnit
 Version:        %{major}.%{minor}
-Release:        %{?gh_date:1%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
+Release:        %{?gh_date:1%{specrel}.%{?prever}%{!?prever:%{gh_date}.%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
@@ -95,38 +95,38 @@ BuildRequires:  php-composer(fedora/autoloader)
 #        "ext-libxml": "*"
 Requires:       php(language) >= 5.6
 Requires:       php-cli
-Requires:       php-composer(phpunit/php-file-iterator) >= 1.4
 Requires:       php-composer(phpunit/php-file-iterator) <  2
-Requires:       php-composer(phpunit/php-text-template) >= 1.2
+Requires:       php-composer(phpunit/php-file-iterator) >= 1.4
 Requires:       php-composer(phpunit/php-text-template) <  2
-Requires:       php-composer(phpunit/php-code-coverage) >= 4.0.4
+Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-code-coverage) <  5
-Requires:       php-composer(phpunit/php-timer) >= 1.0.6
+Requires:       php-composer(phpunit/php-code-coverage) >= 4.0.4
 Requires:       php-composer(phpunit/php-timer) <  2
-Requires:       php-composer(phpunit/phpunit-mock-objects) >= 3.2
+Requires:       php-composer(phpunit/php-timer) >= 1.0.6
 Requires:       php-composer(phpunit/phpunit-mock-objects) <  4
-Requires:       php-composer(phpspec/prophecy) >= 1.6.2
+Requires:       php-composer(phpunit/phpunit-mock-objects) >= 3.2
 Requires:       php-composer(phpspec/prophecy) <  2
-Requires:       php-composer(sebastian/comparator) >= 1.2.4
+Requires:       php-composer(phpspec/prophecy) >= 1.6.2
 Requires:       php-composer(sebastian/comparator) <  2
-Requires:       php-composer(sebastian/diff) >= 1.2
+Requires:       php-composer(sebastian/comparator) >= 1.2.4
 Requires:       php-composer(sebastian/diff) <  2
-Requires:       php-composer(sebastian/environment) >= 1.3.4
+Requires:       php-composer(sebastian/diff) >= 1.2
 Requires:       php-composer(sebastian/environment) <  3
-Requires:       php-composer(sebastian/exporter) >= 2.0
+Requires:       php-composer(sebastian/environment) >= 1.3.4
 Requires:       php-composer(sebastian/exporter) <  3
-Requires:       php-composer(sebastian/global-state) >= 1.1
+Requires:       php-composer(sebastian/exporter) >= 2.0
 Requires:       php-composer(sebastian/global-state) <  2
-Requires:       php-composer(sebastian/object-enumerator) >= 2.0
+Requires:       php-composer(sebastian/global-state) >= 1.1
 Requires:       php-composer(sebastian/object-enumerator) <  3
-Requires:       php-composer(sebastian/resource-operations) >= 1.0
+Requires:       php-composer(sebastian/object-enumerator) >= 2.0
 Requires:       php-composer(sebastian/resource-operations) <  2
-Requires:       php-composer(sebastian/version) >= 1.0.3
+Requires:       php-composer(sebastian/resource-operations) >= 1.0
 Requires:       php-composer(sebastian/version) <  3
-Requires:       php-composer(myclabs/deep-copy) >= 1.3
+Requires:       php-composer(sebastian/version) >= 1.0.3
 Requires:       php-composer(myclabs/deep-copy) <  2
-Requires:       php-composer(symfony/yaml) >= 2.1
+Requires:       php-composer(myclabs/deep-copy) >= 1.3
 Requires:       php-composer(symfony/yaml) <  3
+Requires:       php-composer(symfony/yaml) >= 2.1
 Requires:       php-dom
 Requires:       php-json
 Requires:       php-mbstring
@@ -135,12 +135,13 @@ Requires:       php-libxml
 # From composer.json, "suggest": {
 #        "phpunit/php-invoker": "~1.1",
 #        "ext-xdebug": "*"
-Requires:       php-composer(phpunit/php-invoker) >= 1.1
 Requires:       php-composer(phpunit/php-invoker) <  2
+Requires:       php-composer(phpunit/php-invoker) >= 1.1
 # For our autoload patch
-Requires:       php-composer(doctrine/instantiator) >= 1.0.4
 Requires:       php-composer(doctrine/instantiator) <  2
+Requires:       php-composer(doctrine/instantiator) >= 1.0.4
 Requires:       php-composer(fedora/autoloader)
+Requires:       php-composer(sebastian/recursion-context) <  3
 Requires:       php-composer(sebastian/recursion-context) >= 2.0
 # From phpcompatinfo report for version 5.6.0
 Requires:       php-reflection
@@ -233,6 +234,9 @@ fi
 
 
 %changelog
+* Sat Mar  4 2017 Remi Collet <remi@remirepo.net> - 5.7.15-2
+- fix dependency on sebastian/recursion-context
+
 * Thu Mar  2 2017 Remi Collet <remi@remirepo.net> - 5.7.15-1
 - Update to 5.7.15
 
