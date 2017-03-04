@@ -118,6 +118,8 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 =================
  March, 2017
 =================
+4/3	4/3	php-sebastian-code-unit-reverse-lookup-1.0.1-1.fc27
+4/3	4/3	php-sebastian-code-unit-reverse-lookup-1.0.1-1.fc26
 4/3	4/3	php-phpspec-prophecy-1.7.0-3.fc27
 4/3	4/3	php-phpspec-prophecy-1.7.0-3.fc26
 4/3	4/3	php-phpunit-PHPUnit-5.7.15-2.fc27

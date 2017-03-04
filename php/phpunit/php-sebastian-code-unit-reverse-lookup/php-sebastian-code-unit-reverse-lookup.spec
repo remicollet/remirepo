@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    c36f5e7cfce482fde5bf8d10d41a53591e0198fe
+%global gh_commit    4419fcdb5eabb9caa61a27c7a1db532a6b55dd18
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   code-unit-reverse-lookup
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-sebastian-%{gh_project}
-Version:        1.0.0
-Release:        2%{?dist}
+Version:        1.0.1
+Release:        1%{?dist}
 Summary:        Looks up which function or method a line of code belongs to
 
 Group:          Development/Libraries
@@ -35,13 +35,13 @@ BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-fedora-autoloader-devel
 %if %{with_tests}
 # from composer.json, "require-dev": {
-#        "phpunit/phpunit": "~5"
+#        "phpunit/phpunit": "^5.7 || ^6.0"
 # Ignore min version on purpose, avoid bootstrap (tested with 4.8)
 BuildRequires:  php-composer(phpunit/phpunit)
 %endif
 
 # from composer.json, "require": {
-#        "php": ">=5.6"
+#        "php": "^5.6 || ^7.0"
 Requires:       php(language) >= 5.6
 # From phpcompatinfo report for version 1.0.0
 Requires:       php-reflection
@@ -91,7 +91,7 @@ if which php56; then
 fi
 if which php71; then
   php71 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
-  %{_bindir}/phpunit --verbose || ret=1
+  %{_bindir}/phpunit6 --verbose || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -120,6 +120,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar  4 2017 Remi Collet <remi@remirepo.net> - 1.0.1-1
+- Update to 1.0.1 (no change)
+
 * Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
 - switch to fedora/autoloader
 
