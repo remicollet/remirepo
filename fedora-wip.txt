@@ -112,16 +112,20 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 27/2	php-phpunit-PHP-Timer-1.0.9-1.fc25
 27/2	php-phpunit-PHP-Timer-1.0.9-1.fc24
 27/2	php-phpunit-PHP-Timer-1.0.9-1.el7
-24/2	php-bartlett-php-compatinfo-db-1.18.0-1.fc25
-24/2	php-bartlett-php-compatinfo-db-1.18.0-1.fc24
 24/2	php-bartlett-php-compatinfo-db-1.18.0-1.el7
-24/2	php-zendframework-zendpdf-2.0.2-4.fc25
-24/2	php-zendframework-zendpdf-2.0.2-4.fc24
 =================
  Stable
 =================
  March, 2017
 =================
+4/3	4/3	php-phpspec-prophecy-1.7.0-3.fc27
+4/3	4/3	php-phpspec-prophecy-1.7.0-3.fc26
+4/3	4/3	php-phpunit-PHPUnit-5.7.15-2.fc27
+4/3	4/3	php-phpunit-PHPUnit-5.7.15-2.fc26
+4/3	24/2	php-bartlett-php-compatinfo-db-1.18.0-1.fc25
+4/3	24/2	php-bartlett-php-compatinfo-db-1.18.0-1.fc24
+4/3	24/2	php-zendframework-zendpdf-2.0.2-4.fc25
+4/3	24/2	php-zendframework-zendpdf-2.0.2-4.fc24
 3/3	3/3	php-phpspec-3.2.3-3.fc27
 3/3	3/3	php-phpspec-3.2.3-3.fc26
 3/3	3/3	php-phpspec-prophecy-1.7.0-2.fc27
