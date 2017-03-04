@@ -20,7 +20,7 @@
 
 Name:           php-phpspec-prophecy
 Version:        1.7.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Highly opinionated mocking framework for PHP
 
 Group:          Development/Libraries
@@ -53,8 +53,9 @@ Requires:       php-composer(phpdocumentor/reflection-docblock) >= 2.0
 Requires:       php-composer(phpdocumentor/reflection-docblock) <  4
 Requires:       php-composer(sebastian/comparator)              >= 1.1
 Requires:       php-composer(sebastian/comparator)              <  3
-Requires:       php-composer(sebastian/recursion-context)       >= 1.0
-Requires:       php-composer(sebastian/recursion-context)       <  4
+# recursion-context will be pulled by phpspec or phpunit or phpunit6
+#Requires:       php-composer(sebastian/recursion-context)       >= 1.0
+#Requires:       php-composer(sebastian/recursion-context)       <  4
 # use 1.0.4 to ensure we have the autoloader
 Requires:       php-composer(doctrine/instantiator)             >= 1.0.4
 Requires:       php-composer(doctrine/instantiator)             <  2
@@ -134,6 +135,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar  4 2017 Remi Collet <remi@remirepo.net> - 1.7.0-3
+- drop implicit dependency on sebastian/recursion-context
+
 * Fri Mar  3 2017 Remi Collet <remi@remirepo.net> - 1.7.0-2
 - fix autoloader for dep. with multiple versions
 
