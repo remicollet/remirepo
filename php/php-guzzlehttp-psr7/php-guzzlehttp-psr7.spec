@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-guzzlehttp-psr7
 #
-# Copyright (c) 2015-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2015-2017 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,8 @@
 
 %global github_owner     guzzle
 %global github_name      psr7
-%global github_version   1.3.1
-%global github_commit    5c6447c9df362e8f8093bda8f5d8873fe5c7f65b
+%global github_version   1.4.1
+%global github_commit    0d6c7ca039329247e4f0f8f8f6506810e8248855
 
 %global composer_vendor  guzzlehttp
 %global composer_project psr7
@@ -37,40 +37,45 @@ Summary:       PSR-7 message implementation
 Group:         Development/Libraries
 License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
-Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+
+# GitHub export does not include tests.
+# Run php-guzzlehttp-psr7-get-source.sh to create full source.
+Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
+Source1:       %{name}-get-source.sh
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
 ## composer.json
-BuildRequires: php(language)                  >= %{php_min_ver}
+BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
+BuildRequires: php-composer(psr/http-message) <  %{psr_http_message_max_ver}
 BuildRequires: php-composer(psr/http-message) >= %{psr_http_message_min_ver}
-## phpcompatinfo (computed from version 1.3.1)
+## phpcompatinfo (computed from version 1.4.1)
 BuildRequires: php-hash
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
 BuildRequires: php-zlib
 ## Autoloader
-BuildRequires: php-composer(symfony/class-loader)
+BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 # composer.json
-Requires:      php(language)                  >= %{php_min_ver}
-Requires:      php-composer(psr/http-message) >= %{psr_http_message_min_ver}
+Requires:      php(language) >= %{php_min_ver}
 Requires:      php-composer(psr/http-message) <  %{psr_http_message_max_ver}
-# phpcompatinfo (computed from version 1.3.1)
+Requires:      php-composer(psr/http-message) >= %{psr_http_message_min_ver}
+# phpcompatinfo (computed from version 1.4.1)
 Requires:      php-hash
 Requires:      php-pcre
 Requires:      php-spl
 # Autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:      php-composer(fedora/autoloader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
-Provides:      php-composer(psr/http-message-implementation)        = 1.0
+Provides:      php-composer(psr/http-message-implementation) = 1.0
 
 %description
 PSR-7 message implementation, several stream decorators, and some helpful
@@ -80,36 +85,24 @@ functionality like query string parsing.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+
+%build
 : Create autoloader
 cat <<'AUTOLOAD' | tee src/autoload.php
 <?php
 /**
  * Autoloader for %{name} and its' dependencies
  * (created by %{name}-%{version}-%{release}).
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
  */
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+\Fedora\Autoloader\Autoload::addPsr4('GuzzleHttp\\Psr7\\', __DIR__);
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('GuzzleHttp\\Psr7\\', dirname(dirname(__DIR__)));
-
-require_once __DIR__ . '/functions_include.php';
-require_once '%{phpdir}/Psr/Http/Message/autoload.php';
-
-return $fedoraClassLoader;
+\Fedora\Autoloader\Dependencies::required([
+    __DIR__.'/functions_include.php',
+    '%{phpdir}/Psr/Http/Message/autoload.php',
+]);
 AUTOLOAD
-
-
-%build
-# Empty build section, nothing required
 
 
 %install
@@ -121,21 +114,18 @@ cp -rp src/* %{buildroot}%{phpdir}/GuzzleHttp/Psr7/
 
 %check
 %if %{with_tests}
-sed "s#require.*autoload.*#require '%{buildroot}%{phpdir}/GuzzleHttp/Psr7/autoload.php';#" \
-    -i tests/bootstrap.php
+BOOTSTRAP=%{buildroot}%{phpdir}/GuzzleHttp/Psr7/autoload.php
 
-run=0
-if which php56; then
-   php56 %{_bindir}/phpunit --verbose
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit --verbose
-   run=1
-fi
-if [ $run -eq 0 ]; then
-   %{_bindir}/phpunit --verbose
-fi
+: Upstream tests
+%{_bindir}/phpunit --verbose --bootstrap $BOOTSTRAP
+
+: Upstream tests with SCLs if available
+SCL_RETURN_CODE=0
+for SCL in %{?rhel:php55} php56 php70 php71; do
+    if which $SCL; then
+        $SCL %{_bindir}/phpunit --verbose --bootstrap $BOOTSTRAP || SCL_RETURN_CODE=1
+    fi
+done
 %else
 : Tests skipped
 %endif
@@ -156,6 +146,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar 04 2017 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.1-1
+- Updated to 1.4.1 (RHBZ #1425429)
+- Switch autoloader to php-composer(fedora/autoloader)
+- Test with SCLs if available
+
 * Sun Jul 03 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.1-1
 - Updated to 1.3.1 (RHBZ #1352354)
 
