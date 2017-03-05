@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        7.0.5
-%global Patchlevel 0
+%global Patchlevel 1
 %global incsuffixe -7
 %global libsuffixe -7.Q16HDRI
 %global with_tests 0%{!?_without_tests:1}
@@ -494,8 +494,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar  5 2017 Remi Collet <remi@remirepo.net> - 7.0.5.1-1
+- update to version 7.0.5 patch level 1
+
 * Tue Feb 21 2017 Remi Collet <remi@remirepo.net> - 7.0.5.0-1
-- update to version 7.0.8
+- update to version 7.0.5
 
 * Sat Feb 18 2017 Remi Collet <remi@remirepo.net> - 7.0.4.10-1
 - update to version 7.0.4 patchlevel 10
