@@ -12,8 +12,8 @@
 
 %global github_owner     doctrine
 %global github_name      DoctrineBundle
-%global github_version   1.6.6
-%global github_commit    0f0c4df366bd1d36d38a27e2f5ff128e118ac969
+%global github_version   1.6.7
+%global github_commit    a01d99bc6c9a6c8a8ace0012690099dd957ce9b9
 
 %global composer_vendor  doctrine
 %global composer_project doctrine-bundle
@@ -87,7 +87,7 @@ BuildRequires: php-composer(symfony/yaml)                   <  %{symfony_max_ver
 BuildRequires: php-composer(symfony/yaml)                   >= %{symfony_min_ver}
 BuildRequires: php-composer(twig/twig)                      <  %{twig_max_ver}
 BuildRequires: php-composer(twig/twig)                      >= %{twig_min_ver}
-## phpcompatinfo (computed from version 1.6.4)
+## phpcompatinfo (computed from version 1.6.7)
 BuildRequires: php-dom
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -112,7 +112,7 @@ Requires:      php-composer(symfony/doctrine-bridge)        >= %{symfony_min_ver
 Requires:      php-composer(symfony/doctrine-bridge)        <  %{symfony_max_ver}
 Requires:      php-composer(symfony/framework-bundle)       >= %{symfony_min_ver}
 Requires:      php-composer(symfony/framework-bundle)       <  %{symfony_max_ver}
-# phpcompatinfo (computed from version 1.6.4)
+# phpcompatinfo (computed from version 1.6.7)
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
@@ -126,11 +126,8 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 %if 0%{?fedora} >= 21
 Suggests:      php-composer(doctrine/orm)
 Suggests:      php-composer(symfony/web-profiler-bundle)
-Suggests:      php-composer(twig/twig)                   <  %{twig_max_ver}
+Suggests:      php-composer(twig/twig)
 %endif
-Conflicts:     php-composer(doctrine/orm)                <  %{orm_min_ver}
-Conflicts:     php-composer(symfony/web-profiler-bundle) <  %{symfony_min_ver}
-Conflicts:     php-composer(twig/twig)                   <  %{twig_min_ver}
 
 %description
 Doctrine DBAL & ORM Bundle for the Symfony Framework.
@@ -161,7 +158,7 @@ require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
 \Fedora\Autoloader\Autoload::addPsr4('Doctrine\\Bundle\\DoctrineBundle\\', __DIR__);
 
-\Fedora\Autoloader\Dependencies::required(array(
+\Fedora\Autoloader\Dependencies::required([
     '%{phpdir}/Doctrine/Bundle/DoctrineCacheBundle/autoload.php',
     '%{phpdir}/Doctrine/DBAL/autoload.php',
     '%{phpdir}/jdorn-sql-formatter/autoload.php',
@@ -169,16 +166,16 @@ require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
     '%{phpdir}/Symfony/Bundle/FrameworkBundle/autoload.php',
     '%{phpdir}/Symfony/Component/Console/autoload.php',
     '%{phpdir}/Symfony/Component/DependencyInjection/autoload.php',
-));
+]);
 
-\Fedora\Autoloader\Dependencies::optional(array(
+\Fedora\Autoloader\Dependencies::optional([
     '%{phpdir}/Doctrine/ORM/autoload.php',
     '%{phpdir}/Symfony/Bundle/WebProfilerBundle/autoload.php',
-    array(
+    [
         '%{phpdir}/Twig2/autoload.php',
         '%{phpdir}/Twig/autoload.php',
-    ),
-));
+    ],
+]);
 AUTOLOAD
 
 
@@ -223,6 +220,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar 04 2017 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.6.7-1
+- Updated to 1.6.7 (RHBZ #1416390)
+- Removed optional dependencies' conflicts
+- Changed autoloader to use short array format
+
 * Sun Jan  8 2017 Remi Collet <remi@fedoraproject.org> - 1.6.6-1
 - update to 1.6.6
 - allow twig 2
