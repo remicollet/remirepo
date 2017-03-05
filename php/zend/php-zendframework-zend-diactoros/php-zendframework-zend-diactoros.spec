@@ -14,7 +14,6 @@
 %global github_name      zend-diactoros
 %global github_version   1.3.10
 %global github_commit    83e8d98b9915de76c659ce27d683c02a0f99fa90
-%global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  zendframework
 %global composer_project zend-diactoros
@@ -41,8 +40,8 @@ URL:           https://zendframework.github.io/%{gh_project}/
 
 # GitHub export does not include tests.
 # Run php-zendframework-zend-diactoros-get-source.sh to create full source.
-Source0:       %{name}-%{github_version}-%{github_short}.tgz
-Source1:       makesrc.sh
+Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
+Source1:       %{name}-get-source.sh
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -51,8 +50,9 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language)                  >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
+BuildRequires: php-composer(psr/http-message) <  %{psr_http_message_max_ver}
 BuildRequires: php-composer(psr/http-message) >= %{psr_http_message_min_ver}
-## phpcompatinfo (computed from version 1.3.7)
+## phpcompatinfo (computed from version 1.3.10)
 ### NOTE: curl, gd, gmp, and shmop are all optional for
 ###       ZendTest\Diactoros\StreamTest::getResourceFor67()
 ###       (test/StreamTest.php) but the first one found wins
@@ -67,10 +67,10 @@ BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 # composer.json
-Requires:      php(language)                  >= %{php_min_ver}
-Requires:      php-composer(psr/http-message) >= %{psr_http_message_min_ver}
+Requires:      php(language) >= %{php_min_ver}
 Requires:      php-composer(psr/http-message) <  %{psr_http_message_max_ver}
-# phpcompatinfo (computed from version 1.3.7)
+Requires:      php-composer(psr/http-message) >= %{psr_http_message_min_ver}
+# phpcompatinfo (computed from version 1.3.10)
 Requires:      php-json
 Requires:      php-pcre
 Requires:      php-spl
@@ -79,7 +79,7 @@ Requires:      php-composer(fedora/autoloader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
-Provides:      php-composer(psr/http-message-implementation)        = 1.0.0
+Provides:      php-composer(psr/http-message-implementation) = 1.0.0
 
 %description
 A PHP package containing implementations of the accepted PSR-7 HTTP message
@@ -139,22 +139,17 @@ require_once '%{buildroot}%{phpdir}/Zend/Diactoros/autoload.php';
 ));
 BOOTSTRAP
 
-# remirepo:11
-run=0
-ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit --bootstrap ./bootstrap.php || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit --bootstrap ./bootstrap.php || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose --bootstrap ./bootstrap.php
-# remirepo:2
-fi
-exit $ret
+: Upstream tests
+%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+
+: Upstream tests with SCLs if available
+SCL_RETURN_CODE=0
+for SCL in %{?rhel:php55} php56 php70 php71; do
+    if which $SCL; then
+        $SCL %{_bindir}/phpunit --verbose --bootstrap bootstrap.php || SCL_RETURN_CODE=1
+    fi
+done
+exit $SCL_RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -175,6 +170,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 05 2017 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.10-1
+- Updated to 1.3.10 (RHBZ #1411062)
+- Test with SCLs if available
+
 * Mon Jan 23 2017 Remi Collet <remi@remirepo.net> - 1.3.10-1
 - update to 1.3.10
 
