@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-punic
 #
-# Copyright (c) 2015-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2015-2017 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -47,10 +47,10 @@ BuildArch:     noarch
 BuildRequires: python
 # Tests
 %if %{with_tests}
-BuildRequires: %{_bindir}/phpunit
+BuildRequires: php-composer(phpunit/phpunit)
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 1.6.4)
+## phpcompatinfo (computed from version 1.6.5)
 BuildRequires: php-date
 BuildRequires: php-iconv
 BuildRequires: php-intl
@@ -58,13 +58,14 @@ BuildRequires: php-json
 BuildRequires: php-mbstring
 BuildRequires: php-pcre
 BuildRequires: php-spl
+BuildRequires: php-zip
 ## Autoloader
 BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.6.4)
+# phpcompatinfo (computed from version 1.6.5)
 Requires:      php-date
 Requires:      php-iconv
 Requires:      php-intl
@@ -128,13 +129,21 @@ ln -s \
 %check
 %if %{with_tests}
 : Skip tests known to fail
-#sed 's/function testDescribeInterval/function SKIP_testDescribeInterval/' \
-#    -i tests/Calendar/CalendarTest.php
+sed 's/function testDescribeInterval/function SKIP_testDescribeInterval/' \
+    -i tests/Calendar/CalendarTest.php
 
-%{_bindir}/phpunit \
-  -d memory_limit=-1 \
-  --bootstrap %{buildroot}%{phpdir}/Punic/autoload.php \
-  --verbose
+BOOTSTRAP=%{buildroot}%{phpdir}/Punic/autoload.php
+
+%{_bindir}/phpunit --verbose --bootstrap $BOOTSTRAP
+
+: Upstream tests with SCLs if available
+SCL_RETURN_CODE=0
+for SCL in %{?rhel:php54 php55} php56 php70 php71; do
+    if which $SCL; then
+        $SCL %{_bindir}/phpunit --verbose --bootstrap $BOOTSTRAP || SCL_RETURN_CODE=1
+    fi
+done
+exit $SCL_RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -156,6 +165,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar 04 2017 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.6.5-1
+- Update to 1.6.5 (RHBZ #1419293)
+- Test with SCLs if available
+
 * Sat Feb  4 2017 Remi Collet <remi@remirepo.net> - 1.6.5-1
 - update to 1.6.5
 
