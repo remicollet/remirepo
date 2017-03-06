@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #116 ref version 0.4.1 ] {
+Extension [ <persistent> extension #118 ref version 0.4.2 ] {
 
   - Functions {
     Function [ <internal:ref> function Ref\refcounted ] {

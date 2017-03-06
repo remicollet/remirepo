@@ -18,14 +18,14 @@
 
 Summary:        Soft and Weak references support in PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        0.4.1
+Version:        0.4.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 
-BuildRequires:  %{?scl_prefix}php-devel > 7
+BuildRequires:  %{?scl_prefix}php-devel >= 7.0.3
 BuildRequires:  %{?scl_prefix}php-pear
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
@@ -96,6 +96,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -116,6 +118,8 @@ make %{?_smp_mflags}
 
 
 %install
+%{?dtsenable}
+
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -209,6 +213,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Mon Mar  6 2017 Remi Collet <remi@remirepo.net> - 0.4.2-1
+- Update to 0.4.2 (stable)
+
 * Mon Jan 16 2017 Remi Collet <remi@fedoraproject.org> - 0.4.1-1
 - initial package, version 0.4.1 (stable)
 
