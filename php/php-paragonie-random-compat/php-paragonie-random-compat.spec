@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-paragonie-random-compat
 #
-# Copyright (c) 2015-2016 Shawn Iwinski <shawn@iwin.ski>
+# Copyright (c) 2015-2017 Shawn Iwinski <shawn@iwin.ski>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -14,7 +14,6 @@
 %global github_name      random_compat
 %global github_version   2.0.9
 %global github_commit    6968531206671f94377b01dc7888d5d1b858a01b
-%global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  paragonie
 %global composer_project random_compat
@@ -37,9 +36,9 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 
 # GitHub export does not include tests.
-# Run makesrc.sh to create full source.
-Source0:       %{name}-%{version}-%{github_short}.tgz
-Source1:       makesrc.sh
+# Run php-paragonie-random-compat-get-source.sh to create full source.
+Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
+Source1:       %{name}-get-source.sh
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -48,14 +47,14 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 2.0.4)
+## phpcompatinfo (computed from version 2.0.9)
 BuildRequires: php-pcre
 BuildRequires: php-zlib
 %endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 2.0.4)
+# phpcompatinfo (computed from version 2.0.9)
 Requires:      php-pcre
 # Weak dependencies
 %if 0%{?fedora} >= 21
@@ -101,7 +100,7 @@ BOOTSTRAP=%{buildroot}%{phpdir}/random_compat/autoload.php
 
 : Upstream tests with SCLs if available
 SCL_RETURN_CODE=0
-for SCL in php56 php70 php71; do
+for SCL in %{?rhel:php54 php55} php56 php70 php71; do
     if which $SCL; then
         $SCL %{_bindir}/phpunit --verbose --bootstrap $BOOTSTRAP || SCL_RETURN_CODE=1
     fi
@@ -126,6 +125,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 05 2017 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.0.9-1
+- Updated to 2.0.9 (RHBZ #1385987)
+
 * Sat Mar  4 2017 Remi Collet <remi@remirepo.net> - 2.0.9-1
 - Update to 2.0.9
 
