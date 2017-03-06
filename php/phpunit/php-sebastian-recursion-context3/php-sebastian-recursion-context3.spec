@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global bootstrap    0
+%global bootstrap    1
 %global gh_commit    5b0cd723502bac3b006cbf3dbf7a1e3fcefe4fa8
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann

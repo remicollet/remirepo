@@ -9,7 +9,7 @@
 
 %global bootstrap    1
 # Github
-%global gh_commit    531553c4795a1df54114342d68ca337d5d81c8a0
+%global gh_commit    4e99e1c4f9b05cbf4d6e84b100b3ff4107cf8cd1
 #global gh_date      20150924
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_vendor    sebastianbergmann
@@ -23,8 +23,8 @@
 %global php_home     %{_datadir}/php
 %global ver_major    5
 %global ver_minor    0
-%global ver_patch    2
-%global specrel      2
+%global ver_patch    3
+%global specrel      1
 %if %{bootstrap}
 %global with_tests   0%{?_with_tests:1}
 %else
@@ -33,7 +33,7 @@
 
 Name:           php-%{pk_vendor}-%{pk_project}%{ver_major}
 Version:        %{ver_major}.%{ver_minor}.%{ver_patch}
-Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
+Release:        %{?gh_date:1%{specrel}.%{?prever}%{!?prever:%{gh_date}.%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        PHP code coverage information
 
 Group:          Development/Libraries
@@ -41,7 +41,7 @@ Group:          Development/Libraries
 # BSD: D3
 # MIT: boostrap, d3, holder, html5shiv, jquery, respond
 # ASL 2.0: nvd3
-License:        BSD and MIT ans ASL 2.0
+License:        BSD and MIT and ASL 2.0
 URL:            https://github.com/%{gh_vendor}/%{gh_project}
 Source0:        https://github.com/%{gh_vendor}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
@@ -188,13 +188,16 @@ done
 %files
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc README.md CONTRIBUTING.md
+%doc README.md
 %doc ChangeLog-%{ver_major}.%{ver_minor}.md
 %doc composer.json
 %{php_home}/%{ns_vendor}/%{ns_project}%{ver_major}
 
 
 %changelog
+* Mon Mar  6 2017 Remi Collet <remi@remirepo.net> - 5.0.3-1
+- Update to 5.0.3
+
 * Fri Mar  3 2017 Remi Collet <remi@remirepo.net> - 5.0.2-2
 - handle bundle assets
 - fix license tag for bundled assets
