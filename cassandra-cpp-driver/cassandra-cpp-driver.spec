@@ -17,7 +17,7 @@
 Name:          cassandra-cpp-driver
 Summary:       DataStax C/C++ Driver for Apache Cassandra
 Version:       2.5.0
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       ASL 2.0
 Group:         System Environment/Libraries
 
@@ -54,6 +54,7 @@ find examples -name .gitignore -exec rm {} \; -print
 
 
 %build
+export CXXFLAGS="$RPM_OPT_FLAGS -Wno-implicit-fallthrough"
 %cmake
 
 make %{_smp_mflags}
@@ -86,6 +87,11 @@ rm %{buildroot}%{_libdir}//pkgconfig/cassandra_static.pc
 
 
 %changelog
+* Mon Mar  6 2017 Remi Collet <remi@fedoraproject.org> - 2.5.0-2
+- use -Wno-implicit-fallthrough, workaround for GCC 7
+- open https://datastax-oss.atlassian.net/browse/CPP-438
+  Broken bulid with GCC 7 and OpenSSL 1.1
+
 * Fri Oct 21 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
 - update to 2.5.0
 
