@@ -18,8 +18,8 @@
 
 Summary:        Libuv wrapper
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        0.1.1
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.1.2
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -221,6 +221,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Mon Mar  6 2017 Remi Collet <remi@remirepo.net> - 0.1.2-1
+- Update to 0.1.2 (beta)
+
 * Wed Jan  4 2017 Remi Collet <remi@fedoraproject.org> - 0.1.1-3
 - rebuild against new libuv (EL-7)
 
