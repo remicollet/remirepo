@@ -13,8 +13,8 @@
 
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.8.17
-%global github_commit    c423a13a031c9388b7f9103f176b1872c00c7ffa
+%global github_version   2.8.18
+%global github_commit    8c28bf706b3bf4250d18535ee46a8a5d7a5825e1
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -1924,6 +1924,7 @@ sed -e 's/testCopyForOriginUrlsAndExistingLocalFileDefaultsToCopy/SKIP_testCopyF
 %if 0%{?fedora} > 0 && 0%{?fedora} < 24
 : Skip test failing with old tzdata
 rm src/Symfony/Component/Form/Tests/Extension/Core/Type/DateTypeTest.php
+rm src/Symfony/Component/Form/Tests/Extension/Core/Type/BirthdayTypeTest.php
 %endif
 %endif
 
@@ -2704,6 +2705,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Mon Mar  6 2017 Remi Collet <remi@remirepo.net> - 2.8.18-1
+- Update to 2.8.18
+
 * Mon Feb  6 2017 Remi Collet <remi@fedoraproject.org> - 2.8.17-1
 - Update to 2.8.17
 
