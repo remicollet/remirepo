@@ -2,11 +2,12 @@
 
 TMPSIG=$(mktemp)
 TMPLNK=$(mktemp)
+TMPSIG2=$(mktemp)
 
 cd /home/rpmbuild/site/rpms
 
 #for dep in *.{i386,ppc,ppc64,x86_64} fedora/*/*/{i386,ppc,ppc64,x86_64}
-for dep in fedora/{22,23,24,25}/*/{i386,x86_64} enterprise/{5,6,7}/*/{i386,x86_64}
+for dep in fedora/{22,23,24,25,26}/*/{i386,x86_64} enterprise/{5,6,7}/*/{i386,x86_64}
 do
 	arch=${dep##*/}
 
@@ -27,12 +28,26 @@ done
 find SRPMS -name \*.rpm -a -newer SRPMS/repodata -print >>$TMPSIG
 
 
-if [ -s $TMPSIG ]
-then	echo "À signer:"; sort < $TMPSIG
-	echo "== Signature des $(cat $TMPSIG | wc -l) nouveaux RPM =="
-	if rpmsign --addsign $(cat $TMPSIG)
-	then	echo done.
-	else 	exit 1
+if [ -s $TMPSIG ]; then
+    echo "À signer:"; sort < $TMPSIG
+
+    grep fc26    $TMPSIG  > $TMPSIG2
+    grep src.rpm $TMPSIG >> $TMPSIG2
+    if [ -s $TMPSIG2 ]; then
+		echo "== Signature des $(cat $TMPSIG2 | wc -l) nouveaux RPM (new) =="
+		if rpmsign --define '_gpg_path /home/remi/.gnupg2017' --define "_gpg_name Remi's RPM repository" --addsign $(cat $TMPSIG2)
+		then	echo done.
+		else 	exit 1
+		fi
+	fi
+
+	grep -v fc26 $TMPSIG | grep -v src.rpm > $TMPSIG2
+    if [ -s $TMPSIG2 ]; then
+		echo "== Signature des $(cat $TMPSIG2 | wc -l) nouveaux RPM (old) =="
+		if rpmsign --define '_gpg_path /home/remi/.gnupgrpm' --define "_gpg_name Remi Collet" --addsign $(cat $TMPSIG2)
+		then	echo done.
+		else 	exit 1
+		fi
 	fi
 else 	echo "Rien à signer."
 fi
@@ -51,7 +66,7 @@ else 	echo "Rien à lier."
 fi
 
 #for dep in *.{i386,ppc,ppc64,x86_64} fedora/*/*/{i386,ppc,ppc64,x86_64}
-for dep in SRPMS fedora/{22,23,24,25}/*/{i386,x86_64} enterprise/{5,6,7}/*/{i386,x86_64}
+for dep in SRPMS fedora/{22,23,24,25,26}/*/{i386,x86_64} enterprise/{5,6,7}/*/{i386,x86_64}
 do
 	if [ -d $dep/repodata -a $dep -nt $dep/repodata -a ! -f $dep/.closed ]
 	then	echo "== Actualisation de $dep =="

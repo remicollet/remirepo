@@ -14,14 +14,10 @@
 
 Name:           remi-release
 Version:        %{fedora}
-%if %{fedora} >= 25
+%if %{fedora} >= 26
 Release:        1%{?dist}
 %else
-%if %{fedora} >= 24
-Release:        2%{?dist}
-%else
-Release:        4%{?dist}
-%endif
+Release:        3%{?dist}
 %endif
 Summary:        Configuration for remi repository
 Summary(fr):	Configuration pour le dépôt remi
@@ -38,9 +34,9 @@ Source5:        remi-php70-test-fc.repo
 Source6:        remi-php71-fc.repo
 Source7:        remi-php71-test-fc.repo
 Source8:        remi-debug-fc.repo
+Source9:        RPM-GPG-KEY-remi2017
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}
-BuildArchitectures: noarch
+BuildArch:      noarch
 
 %if %{fedora} < 21
 Requires:       yum
@@ -98,6 +94,7 @@ rm -rf %{buildroot}
 
 # PGP
 install -Dp -m 644 %{SOURCE0} %{buildroot}%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-remi
+install -Dp -m 644 %{SOURCE9} %{buildroot}%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-remi2017
 
 # YUM
 install -Dp -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/yum.repos.d/remi.repo
@@ -109,7 +106,7 @@ install -Dp -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php56.
 install -Dp -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php70.repo
 install -Dp -m 644 %{SOURCE5} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php70-test.repo
 %endif
-%if %{fedora} >= 22
+%if %{fedora} >= 22 && %{fedora} <= 25
 install -Dp -m 644 %{SOURCE6} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php71.repo
 install -Dp -m 644 %{SOURCE7} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php71-test.repo
 %endif
@@ -117,18 +114,22 @@ install -Dp -m 644 %{SOURCE7} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php71-
 install -Dp -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-debuginfo.repo
 %endif
 
-
-%clean
-rm -rf %{buildroot}
+%if %{fedora} >= 26
+: Use new GPG Key
+sed -e 's/RPM-GPG-KEY-remi/RPM-GPG-KEY-remi2017/' \
+    -i %{buildroot}%{_sysconfdir}/yum.repos.d/*repo
+%endif
 
 
 %files
-%defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/yum.repos.d/remi*.repo
-%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-remi
+%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-remi*
 
 
 %changelog
+* Mon Mar  6 2017 Remi Collet <remi@remirepo.net> - 26-1, 25-3 and 24-3
+- Add the GPG Key used for Fedora 26
+
 * Sun Sep 11 2016 Remi Collet <remi@remirepo.net> - 25-1
 - Fedora release 25
 

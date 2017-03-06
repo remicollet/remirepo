@@ -2,26 +2,30 @@
 #set -x
 TMP=/tmp/liste.$(basename $PWD)
 
-if [ ${1:-check} != nocheck ]; then
-	echo "+ Controle des signatures"
-	rpm -K *.rpm | grep -v 'gpg OK' | cut -d: -f1 | tee $TMP
-	if [ -s $TMP ]
-	then	rpmsign --addsign $(cat $TMP)
-	else	echo OK.
-	fi
-fi
-
 nom=${PWD#/home/rpmbuild/site/rpms/}
 if [ "$nom" = "SRPMS" ]
 then
   dis=fedora
-  ver=17
+  ver=26
   old=5
 else
   dis=${nom%%/*}
   ver=${nom#$dis/}
   ver=${ver%%/*}
   old=2
+fi
+
+if [ ${1:-check} != nocheck ]; then
+	echo "+ Controle des signatures"
+	rpm -K *.rpm | grep -v 'gpg OK' | cut -d: -f1 | tee $TMP
+	if [ -s $TMP ]
+	then
+		if [ $dis == fedora -a $ver -ge 26 ]
+		then rpmsign --define '_gpg_path /home/remi/.gnupg2017' --define "_gpg_name Remi's RPM repository"  --addsign $(cat $TMP)
+		else rpmsign --define '_gpg_path /home/remi/.gnupgrpm'  --define "_gpg_name Remi Collet"            --addsign $(cat $TMP)
+		fi
+	else	echo OK.
+	fi
 fi
 
 echo "+ Nettoyage des anciens ($old)"
