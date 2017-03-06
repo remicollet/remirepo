@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0bf561dfe75ba80441c22adecc0529056671a7d2
+%global gh_commit    2b9e2f71b722f7c53918ab0c25f7646c2013f17d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nikic
 %global gh_project   PHP-Parser
@@ -14,16 +14,10 @@
 %global php_home     %{_datadir}/php
 %global with_tests   0%{!?_without_tests:1}
 %global major        3
-%global minor        0.4
+%global minor        0.5
 
 %global eolv1   0
 %global eolv2   0
-%global script  0
-%if 0%{?fedora} >= 26
-%global script  1
-%endif
-# remirepo:1
-%global script  1
 
 Name:           php-%{gh_owner}-%{pk_project}%{major}
 Version:        %{major}.%{minor}
@@ -73,12 +67,7 @@ Obsoletes:      php-PHPParser < %{major}
 %if %{eolv2}
 Obsoletes:      php-%{gh_owner}-%{pk_project} < %{major}
 %endif
-%if %{script}
 Requires:       php-cli
-# previous version provides the php-parse command
-Conflicts:      php-PHPParser < 1.4.1-4
-Conflicts:      php-%{gh_owner}-%{pk_project} < 2.1.1-2
-%endif
 
 Provides:       php-composer(%{gh_owner}/%{pk_project}) = %{version}
 
@@ -86,13 +75,8 @@ Provides:       php-composer(%{gh_owner}/%{pk_project}) = %{version}
 %description
 This is a PHP 5.2 to PHP 7.1 parser written in PHP.
 Its purpose is to simplify static code analysis and manipulation.
-%if %{script}
-This package provides the library version 3 and the php-parse command.
-%else
-This package provides the library version 3.
-%endif
-The php-%{gh_owner}-%{pk_project} package provides the library version 2.
-The php-PHPParser package provides the library version 1.
+
+This package provides the library version %{major} and the php-parse%{major} command.
 
 Documentation: https://github.com/nikic/PHP-Parser/tree/master/doc
 
@@ -103,10 +87,6 @@ Autoloader: %{php_home}/PhpParser%{major}/autoload.php
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
-
-%if ! %{script}
-chmod -x bin/*
-%endif
 
 
 %build
@@ -121,10 +101,8 @@ mkdir -p                 %{buildroot}%{php_home}
 cp -pr lib/PhpParser     %{buildroot}%{php_home}/PhpParser%{major}
 cp -p  lib/bootstrap.php %{buildroot}%{php_home}/PhpParser%{major}/autoload.php
 
-%if %{script}
 : Command
-install -Dpm 0755 bin/php-parse %{buildroot}%{_bindir}/php-parse
-%endif
+install -Dpm 0755 bin/php-parse %{buildroot}%{_bindir}/php-parse%{major}
 
 
 %check
@@ -169,15 +147,15 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc composer.json
 %doc *.md
-%if %{script}
-%{_bindir}/php-parse
-%else
-%doc bin/php-parse
-%endif
+%{_bindir}/php-parse%{major}
 %{php_home}/PhpParser%{major}
 
 
 %changelog
+* Mon Mar  6 2017 Remi Collet <remi@remirepo.net> - 3.0.5-1
+- Update to 3.0.5
+- always provide the command, with version suffix
+
 * Sat Feb 11 2017 Remi Collet <remi@fedoraproject.org> - 3.0.4-1
 - update to 3.0.4
 

@@ -12,6 +12,8 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 =================
  Testing
 =================
+6/3	php-nikic-php-parser3-3.0.5-1.fc25
+6/3	php-nikic-php-parser3-3.0.5-1.fc24
 3/3	php-zendframework-zend-servicemanager-2.7.8-1.fc25
 3/3	php-zendframework-zend-servicemanager-2.7.8-1.fc24
 3/3	php-horde-Horde-Core-2.27.8-1.fc25
@@ -118,6 +120,8 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 =================
  March, 2017
 =================
+6/3	6/3	php-nikic-php-parser3-3.0.5-1.fc27
+6/3	6/3	php-nikic-php-parser3-3.0.5-1.fc26
 4/3	4/3	php-sebastian-code-unit-reverse-lookup-1.0.1-1.fc27
 4/3	4/3	php-sebastian-code-unit-reverse-lookup-1.0.1-1.fc26
 4/3	4/3	php-phpspec-prophecy-1.7.0-3.fc27
