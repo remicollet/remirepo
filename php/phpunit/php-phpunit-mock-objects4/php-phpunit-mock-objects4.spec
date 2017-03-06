@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global bootstrap    0
+%global bootstrap    1
 # Github
 %global gh_commit    eabce450df194817a7d7e27e19013569a903a2bf
 #global gh_date      20150902
@@ -24,7 +24,7 @@
 %global ver_major    4
 %global ver_minor    0
 %global ver_patch    1
-%global specrel      1
+%global specrel      2
 %if %{bootstrap}
 %global with_tests   0%{?_with_tests:1}
 %else
@@ -105,7 +105,7 @@ cat <<EOF | tee -a src/autoload.php
 /* dependencies */
 require_once 'Text/Template/Autoload.php';
 require_once 'Doctrine/Instantiator/autoload.php';
-require_once 'SebastianBergmann/Exporter/autoload.php';
+require_once 'SebastianBergmann/Exporter3/autoload.php';
 EOF
 
 
@@ -149,6 +149,9 @@ exit $ret
 
 
 %changelog
+* Mon Mar  6 2017 Remi Collet <remi@remirepo.net> - 4.0.1-2
+- fix autoloader
+
 * Fri Mar  3 2017 Remi Collet <remi@remirepo.net> - 4.0.1-1
 - Update to 4.0.1
 - raise dependency on sebastian/exporter 3.0
