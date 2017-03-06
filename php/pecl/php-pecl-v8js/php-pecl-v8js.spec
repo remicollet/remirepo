@@ -17,15 +17,12 @@
 
 Summary:        V8 Javascript Engine for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.3.3
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.3.4
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/phpv8/v8js/pull/266
-Patch0:         %{pecl_name}-pr266.patch
 
 # See http://pkgs.fedoraproject.org/cgit/rpms/v8.git/tree/v8.spec#n49
 # arm is excluded because of bz1334406
@@ -83,8 +80,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-%patch0 -p1 -b .pr266
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_V8JS_VERSION/{s/.* "//;s/".*$//;p}' php_v8js_macros.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
@@ -116,6 +111,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -136,6 +133,8 @@ make %{?_smp_mflags}
 
 
 %install
+%{?dtsenable}
+
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -235,6 +234,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Mon Mar  6 2017 Remi Collet <remi@remirepo.net> - 1.3.4-1
+- Update to 1.3.4
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.3.3-2
 - rebuild with PHP 7.1.0 GA
 
