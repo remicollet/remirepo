@@ -38,7 +38,7 @@
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.9.6
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -141,6 +141,10 @@ sed -e 's/role="test"/role="src"/' \
 
 
 cd NTS
+%if 0%{?fedora} >= 26
+sed -e 's/SSL_library_init/OPENSSL_init_ssl/' -i config.m4
+%endif
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_SWOOLE_VERSION/{s/.* "//;s/".*$//;p}' php_swoole.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
@@ -285,6 +289,10 @@ cd ../ZTS
 
 
 %changelog
+* Mon Mar  6 2017 Remi Collet <remi@remirepo.net> - 1.9.6-2
+- fix F26 build
+- open https://github.com/swoole/swoole-src/issues/1118
+
 * Fri Feb 24 2017 Remi Collet <remi@remirepo.net> - 1.9.6-1
 - Update to 1.9.6 (stable)
 - add --enable-ringbuffer, --enable-thread build options
