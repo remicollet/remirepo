@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a795611394b3c05164fd0eb291b492b39339cba4
+%global gh_commit    b17e6153cb7f33c7e44eb59578dc12eee5dc8e12
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     composer
 %global gh_project   ca-bundle
@@ -14,7 +14,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-composer-ca-bundle
-Version:        1.0.6
+Version:        1.0.7
 Release:        1%{?dist}
 Summary:        Lets you find a path to the system CA
 
@@ -32,11 +32,19 @@ Patch0:         %{name}-rpm.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
-# For tests
 BuildRequires:  php(language) >= 5.3.2
 BuildRequires:  php-openssl
 BuildRequires:  php-pcre
 BuildRequires:  php-cli
+# From composer.json, "require": {
+#        "phpunit/phpunit": "^4.5",
+#        "psr/log": "^1.0",
+#        "symfony/process": "^2.5 || ^3.0"
+BuildRequires:  phpunit
+BuildRequires:  php-composer(psr/log) <  2
+BuildRequires:  php-composer(psr/log) >= 1.0
+BuildRequires:  php-composer(symfony/process) <  3
+BuildRequires:  php-composer(symfony/process) >= 2.5
 # Autoloader
 BuildRequires:  php-composer(fedora/autoloader)
 # ca-certificates
@@ -63,6 +71,8 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 %description
 Small utility library that lets you find a path to the system CA bundle.
 
+Autoloader: %{php_home}/Composer/CaBundle/autoload.php
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
@@ -87,20 +97,21 @@ cp -pr src %{buildroot}%{php_home}/Composer/CaBundle
 
 %check
 %if %{with_tests}
-php -r '
-use Composer\CaBundle\CaBundle as CA;
-require "%{buildroot}%{php_home}/Composer/CaBundle/autoload.php";
-$file = CA::getSystemCaRootBundlePath();
-if ($file != "/etc/pki/tls/certs/ca-bundle.crt") {
-    echo "Unexpected $file\n";
-    exit(1);
-}
-if (!CA::validateCaFile($file)) {
-    echo "Cannot validate $file\n";
-    exit(1);
-}
-echo "OK\n";
-'
+mkdir vendor
+cat << 'EOF' | tee vendor/autoload.php
+<?php
+require_once '%{buildroot}%{php_home}/Composer/CaBundle/autoload.php';
+require_once '%{php_home}/Psr/Log/autoload.php';
+require_once '%{php_home}/Symfony/Component/Process/autoload.php';
+EOF
+
+ret=0
+for cmd in php56 php70 php71 php; do
+  if which $cmd; then
+    $cmd %{_bindir}/phpunit --verbose || ret=1
+  fi
+done
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -121,6 +132,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar  6 2017 Remi Collet <remi@remirepo.net> - 1.0.7-1
+- Update to 1.0.7
+- run upstream test suite
+
 * Thu Nov  3 2016 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
 - update to 1.0.6 (no change)
 

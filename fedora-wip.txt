@@ -120,6 +120,8 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 =================
  March, 2017
 =================
+6/3	6/3	php-composer-ca-bundle-1.0.7-1.fc27
+6/3	6/3	php-composer-ca-bundle-1.0.7-1.fc26
 6/3	6/3	php-symfony-2.8.18-1.fc27
 6/3	6/3	php-symfony-2.8.18-1.fc26
 6/3	6/3	php-nikic-php-parser3-3.0.5-1.fc27
