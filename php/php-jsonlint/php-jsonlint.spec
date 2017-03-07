@@ -13,8 +13,8 @@
 
 %global github_owner   Seldaek
 %global github_name    jsonlint
-%global github_version 1.5.0
-%global github_commit  19495c181d6d53a0a13414154e52817e3b504189
+%global github_version 1.6.0
+%global github_commit  791f8c594f300d246cdf01c6b3e1e19611e301d8
 
 # "php": "^5.3 || ^7.0"
 %global php_min_ver    5.3
@@ -24,16 +24,13 @@
 
 Name:          php-%{github_name}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       JSON Lint for PHP
 
 Group:         Development/Libraries
 License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
-
-# Autoloader
-Source1:        %{name}-autoload.php
 
 # Bin usage without Composer autoloader
 Patch0:        %{name}-bin-without-composer-autoloader.patch
@@ -43,8 +40,8 @@ BuildArch:     noarch
 %if %{with_tests}
 # For tests: composer.json
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-composer(phpunit/phpunit)
-# For tests: phpcompatinfo (computed from version 1.5.0)
+BuildRequires: php-composer(phpunit/phpunit) >= 4.5
+# For tests: phpcompatinfo (computed from version 1.6.0)
 BuildRequires: php-json
 BuildRequires: php-pcre
 # For autoloader
@@ -52,7 +49,7 @@ BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.5.0)
+# phpcompatinfo (computed from version 1.6.0)
 Requires:      php-cli
 Requires:      php-pcre
 # For autoloader
@@ -77,12 +74,18 @@ Autoloader: %{_datadir}/php/Seld/JsonLint/autoload.php
 %prep
 %setup -q -n %{github_name}-%{github_commit}
 
-cp %{SOURCE1} src/Seld/JsonLint/autoload.php
 %patch0 -p1
 
 
 %build
-# Empty build section, nothing to build
+: Generate autoloader
+cat << 'EOF' | tee src/Seld/JsonLint/autoload.php
+<?php
+/* Autoloader for %{name} and its dependencies */
+
+require_once '%{_datadir}/php/Fedora/Autoloader/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('Seld\\JsonLint\\', __DIR__);
+EOF
 
 
 %install
@@ -132,6 +135,10 @@ exit $ret
 
 
 %changelog
+* Tue Mar  7 2017 Remi Collet <remi@remirepo.net> - 1.6.0-1
+- Update to 1.6.0
+- generate autoloader in spec
+
 * Fri Jan 13 2017 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.5.0-2
 - Rename bin from %%{_bindir}/jsonlint to %%{_bindir}/jsonlint-php to avoid
   conflict with package python2-demjson (RHBZ #1409281)
