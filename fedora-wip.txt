@@ -4,6 +4,11 @@
 php-tecnickcom-tc-lib-color 1.12.6 (waiting for phpunit6)
 php-tecnickcom-tc-lib-barcode 1.15.6
 php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
+Net_DNS2 1.4.3
+Net_IDNA2 0.2.0
+sqlsrv 4.1.7preview
+php-jsonlint 1.6.0
+php-zendframework-zend-ldap 2.8.0
 
 =================
  Pending
@@ -12,6 +17,11 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 =================
  Testing
 =================
+7/3	wordpress-4.7.3-1.fc25
+7/3	wordpress-4.7.3-1.fc24
+7/3	wordpress-4.7.3-1.el7
+7/3	wordpress-4.7.3-1.el6
+7/3	wordpress-4.7.3-1.el5
 6/3	php-phpmyadmin-motranslator-3.0-1.fc25
 6/3	php-phpmyadmin-motranslator-3.0-1.fc24
 6/3	php-phpmyadmin-motranslator-3.0-1.el7
@@ -80,45 +90,22 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 27/2	php-horde-Horde-Service-Weather-2.5.4-1.fc24
 27/2	php-horde-Horde-Service-Weather-2.5.4-1.el7
 27/2	php-horde-Horde-Service-Weather-2.5.4-1.el6
-27/2	php-horde-Horde-Prefs-2.8.1-1.fc25
-27/2	php-horde-Horde-Prefs-2.8.1-1.fc24
 27/2	php-horde-Horde-Prefs-2.8.1-1.el7
 27/2	php-horde-Horde-Prefs-2.8.1-1.el6
-27/2	php-horde-Horde-Mime-2.10.3-1.fc25
-27/2	php-horde-Horde-Mime-2.10.3-1.fc24
 27/2	php-horde-Horde-Mime-2.10.3-1.el7
 27/2	php-horde-Horde-Mime-2.10.3-1.el6
-27/2	php-horde-Horde-Log-2.3.0-1.fc25
-27/2	php-horde-Horde-Log-2.3.0-1.fc24
 27/2	php-horde-Horde-Log-2.3.0-1.el7
 27/2	php-horde-Horde-Log-2.3.0-1.el6
-27/2	php-horde-Horde-Ldap-2.4.0-1.fc25
-27/2	php-horde-Horde-Ldap-2.4.0-1.fc24
 27/2	php-horde-Horde-Ldap-2.4.0-1.el7
 27/2	php-horde-Horde-Ldap-2.4.0-1.el6
-27/2	php-horde-Horde-Idna-1.1.0-1.fc25
-27/2	php-horde-Horde-Idna-1.1.0-1.fc24
 27/2	php-horde-Horde-Idna-1.1.0-1.el7
 27/2	php-horde-Horde-Idna-1.1.0-1.el6
-27/2	php-horde-Horde-Db-2.4.0-1.fc25
-27/2	php-horde-Horde-Db-2.4.0-1.fc24
 27/2	php-horde-Horde-Db-2.4.0-1.el7
 27/2	php-horde-Horde-Db-2.4.0-1.el6
-27/2	php-horde-Horde-Cache-2.5.5-1.fc25
-27/2	php-horde-Horde-Cache-2.5.5-1.fc24
 27/2	php-horde-Horde-Cache-2.5.5-1.el7
 27/2	php-horde-Horde-Cache-2.5.5-1.el6
-27/2	php-phpunit-PHP-TokenStream-1.4.11-1.fc25
-27/2	php-phpunit-PHP-TokenStream-1.4.11-1.fc24
 27/2	php-phpunit-PHP-TokenStream-1.4.11-1.el7
-27/2	php-pear-crypt-gpg-1.6.0-1.fc25
-27/2	php-pear-crypt-gpg-1.6.0-1.fc24
 27/2	php-pear-crypt-gpg-1.6.0-1.el7
-27/2	php-pecl-xdebug-2.5.1-1.fc25
-27/2	php-nette-php-generator-2.6.0-1.fc25
-27/2	php-nette-mail-2.4.2-1.fc25
-27/2	php-phpunit-PHP-Timer-1.0.9-1.fc25
-27/2	php-phpunit-PHP-Timer-1.0.9-1.fc24
 27/2	php-phpunit-PHP-Timer-1.0.9-1.el7
 24/2	php-bartlett-php-compatinfo-db-1.18.0-1.el7
 =================
@@ -126,6 +113,31 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 =================
  March, 2017
 =================
+7/3	7/3	wordpress-4.7.3-1.fc27
+7/3	7/3	wordpress-4.7.3-1.fc26
+7/3	27/2	php-horde-Horde-Prefs-2.8.1-1.fc25
+7/3	27/2	php-horde-Horde-Prefs-2.8.1-1.fc24
+7/3	27/2	php-horde-Horde-Mime-2.10.3-1.fc25
+7/3	27/2	php-horde-Horde-Mime-2.10.3-1.fc24
+7/3	27/2	php-horde-Horde-Log-2.3.0-1.fc25
+7/3	27/2	php-horde-Horde-Log-2.3.0-1.fc24
+7/3	27/2	php-horde-Horde-Ldap-2.4.0-1.fc25
+7/3	27/2	php-horde-Horde-Ldap-2.4.0-1.fc24
+7/3	27/2	php-horde-Horde-Idna-1.1.0-1.fc25
+7/3	27/2	php-horde-Horde-Idna-1.1.0-1.fc24
+7/3	27/2	php-horde-Horde-Db-2.4.0-1.fc25
+7/3	27/2	php-horde-Horde-Db-2.4.0-1.fc24
+7/3	27/2	php-horde-Horde-Cache-2.5.5-1.fc25
+7/3	27/2	php-horde-Horde-Cache-2.5.5-1.fc24
+7/3	27/2	php-phpunit-PHP-TokenStream-1.4.11-1.fc25
+7/3	27/2	php-phpunit-PHP-TokenStream-1.4.11-1.fc24
+7/3	27/2	php-pear-crypt-gpg-1.6.0-1.fc25
+7/3	27/2	php-pear-crypt-gpg-1.6.0-1.fc24
+7/3	27/2	php-pecl-xdebug-2.5.1-1.fc25
+7/3	27/2	php-nette-php-generator-2.6.0-1.fc25
+7/3	27/2	php-nette-mail-2.4.2-1.fc25
+7/3	27/2	php-phpunit-PHP-Timer-1.0.9-1.fc25
+7/3	27/2	php-phpunit-PHP-Timer-1.0.9-1.fc24
 6/3	6/3	php-phpunit-php-code-coverage5-5.0.3-1.fc27
 6/3	6/3	php-phpunit-php-code-coverage5-5.0.3-1.fc26
 6/3	6/3	php-phpmyadmin-motranslator-3.0-1.fc27
