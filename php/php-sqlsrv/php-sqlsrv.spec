@@ -13,7 +13,6 @@
 %global gh_owner    Microsoft
 %global gh_project  msphpsql
 %global from_pecl   1
-
 %global extname       sqlsrv
 %global with_zts      0%{!?_without_zts:%{?__ztsphp:1}}
 # After 20-pdo.ini
@@ -21,15 +20,16 @@
 
 Name:          %{?scl_prefix}php-sqlsrv
 Summary:       Microsoft Drivers for PHP for SQL Server
-Version:       4.1.6.1
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+%global tarversion 4.1.7preview
+Version:       4.1.7.0
+Release:       0.1.preview%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
 
 URL:           https://github.com/Microsoft/msphpsql
 %if %{from_pecl}
-Source0:       http://pecl.php.net/get/%{extname}-%{version}.tgz
-Source1:       http://pecl.php.net/get/pdo_%{extname}-%{version}.tgz
+Source0:       http://pecl.php.net/get/%{extname}-%{tarversion}.tgz
+Source1:       http://pecl.php.net/get/pdo_%{extname}-%{tarversion}.tgz
 %else
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 %endif
@@ -93,12 +93,12 @@ Package built for PHP %(%{__php} -n -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VER
 mkdir NTS
 
 tar xf %{SOURCE0}
-mv %{extname}-%{version}/LICENSE .
-mv %{extname}-%{version} NTS/%{extname}
+mv %{extname}-%{tarversion}/LICENSE .
+mv %{extname}-%{tarversion} NTS/%{extname}
 mv package.xml NTS/%{extname}
 
 tar xf %{SOURCE1}
-mv pdo_%{extname}-%{version} NTS/pdo_%{extname}
+mv pdo_%{extname}-%{tarversion} NTS/pdo_%{extname}
 mv package.xml NTS/pdo_%{extname}
 %else
 %setup -qc
@@ -110,7 +110,7 @@ cd NTS
 # Sanity check, really often broken
 extmaj=$(sed -n '/#define SQLVERSION_MAJOR/{s/.*MAJOR //;s/\r//;p}' sqlsrv/shared/version.h)
 extmin=$(sed -n '/#define SQLVERSION_MINOR/{s/.*MINOR //;s/\r//;p}' sqlsrv/shared/version.h)
-extrel=$(sed -n '/#define SQLVERSION_RELEASE/{s/.*ASE //;s/\r//;p}' sqlsrv/shared/version.h)
+extrel=$(sed -n '/#define SQLVERSION_PATCH/{s/.*PATCH //;s/\r//;p}' sqlsrv/shared/version.h)
 extbld=$(sed -n '/#define SQLVERSION_BUILD/{s/.*BUILD //;s/\r//;p}' sqlsrv/shared/version.h)
 extver=${extmaj}.${extmin}.${extrel}.${extbld}
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -258,6 +258,9 @@ fi
 
 
 %changelog
+* Tue Mar  7 2017 Remi Collet <remi@remirepo.net> - 4.1.7.0-0.1.preview
+- update to 4.1.7preview (devel)
+
 * Thu Feb  9 2017 Remi Collet <remi@remirepo.net> - 4.1.6.1-1
 - update to 4.1.6.1 (devel)
 

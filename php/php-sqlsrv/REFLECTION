@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #125 sqlsrv version 4.1.6.1 ] {
+Extension [ <persistent> extension #125 sqlsrv version 4.1.7-preview ] {
 
   - INI {
     Entry [ sqlsrv.WarningsReturnAsErrors <ALL> ]
@@ -124,7 +124,7 @@ Extension [ <persistent> extension #125 sqlsrv version 4.1.6.1 ] {
         Parameter #0 [ <required> $conn ]
       }
     }
-    Function [ <internal:sqlsrv> function &sqlsrv_errors ] {
+    Function [ <internal:sqlsrv> function sqlsrv_errors ] {
 
       - Parameters [1] {
         Parameter #0 [ <optional> $errors_and_or_warnings ]
@@ -143,7 +143,7 @@ Extension [ <persistent> extension #125 sqlsrv version 4.1.6.1 ] {
         Parameter #0 [ <required> $setting ]
       }
     }
-    Function [ <internal:sqlsrv> function &sqlsrv_prepare ] {
+    Function [ <internal:sqlsrv> function sqlsrv_prepare ] {
 
       - Parameters [4] {
         Parameter #0 [ <required> $conn ]
@@ -158,7 +158,7 @@ Extension [ <persistent> extension #125 sqlsrv version 4.1.6.1 ] {
         Parameter #0 [ <required> $stmt ]
       }
     }
-    Function [ <internal:sqlsrv> function &sqlsrv_query ] {
+    Function [ <internal:sqlsrv> function sqlsrv_query ] {
 
       - Parameters [4] {
         Parameter #0 [ <required> $conn ]
@@ -173,7 +173,7 @@ Extension [ <persistent> extension #125 sqlsrv version 4.1.6.1 ] {
         Parameter #0 [ <required> $stmt ]
       }
     }
-    Function [ <internal:sqlsrv> function &sqlsrv_get_field ] {
+    Function [ <internal:sqlsrv> function sqlsrv_get_field ] {
 
       - Parameters [3] {
         Parameter #0 [ <required> $stmt ]
@@ -181,7 +181,7 @@ Extension [ <persistent> extension #125 sqlsrv version 4.1.6.1 ] {
         Parameter #2 [ <optional> $get_as_type ]
       }
     }
-    Function [ <internal:sqlsrv> function &sqlsrv_fetch_array ] {
+    Function [ <internal:sqlsrv> function sqlsrv_fetch_array ] {
 
       - Parameters [4] {
         Parameter #0 [ <required> $stmt ]
@@ -190,7 +190,7 @@ Extension [ <persistent> extension #125 sqlsrv version 4.1.6.1 ] {
         Parameter #3 [ <optional> $offset ]
       }
     }
-    Function [ <internal:sqlsrv> function &sqlsrv_fetch_object ] {
+    Function [ <internal:sqlsrv> function sqlsrv_fetch_object ] {
 
       - Parameters [5] {
         Parameter #0 [ <required> $stmt ]
@@ -266,7 +266,7 @@ Extension [ <persistent> extension #125 sqlsrv version 4.1.6.1 ] {
         Parameter #0 [ <required> $conn ]
       }
     }
-    Function [ <internal:sqlsrv> function &sqlsrv_field_metadata ] {
+    Function [ <internal:sqlsrv> function sqlsrv_field_metadata ] {
 
       - Parameters [1] {
         Parameter #0 [ <required> $stmt ]

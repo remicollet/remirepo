@@ -17,6 +17,7 @@ php-zendframework-zend-ldap 2.8.0
 =================
  Testing
 =================
+7/3	wordpress-4.7.3-1.fc26
 7/3	wordpress-4.7.3-1.fc25
 7/3	wordpress-4.7.3-1.fc24
 7/3	wordpress-4.7.3-1.el7
@@ -114,7 +115,6 @@ php-zendframework-zend-ldap 2.8.0
  March, 2017
 =================
 7/3	7/3	wordpress-4.7.3-1.fc27
-7/3	7/3	wordpress-4.7.3-1.fc26
 7/3	27/2	php-horde-Horde-Prefs-2.8.1-1.fc25
 7/3	27/2	php-horde-Horde-Prefs-2.8.1-1.fc24
 7/3	27/2	php-horde-Horde-Mime-2.10.3-1.fc25
