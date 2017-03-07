@@ -13,6 +13,8 @@ Net_IDNA2 0.2.0
 =================
  Testing
 =================
+7/3	php-sebastian-exporter3-3.0.0-1.fc26
+7/3	php-sebastian-recursion-context3-3.0.0-1.fc26
 7/3	php-zendframework-zend-ldap-2.8.0-1.fc26
 7/3	php-zendframework-zend-ldap-2.8.0-1.fc25
 7/3	php-zendframework-zend-ldap-2.8.0-1.fc24
@@ -116,6 +118,8 @@ Net_IDNA2 0.2.0
 =================
  March, 2017
 =================
+7/3	7/3	php-sebastian-exporter3-3.0.0-1.fc27
+7/3	7/3	php-sebastian-recursion-context3-3.0.0-1.fc27
 7/3	7/3	php-zendframework-zend-ldap-2.8.0-1.fc27
 7/3	7/3	php-pear-Net-DNS2-1.4.3-1.fc27
 7/3	7/3	php-jsonlint-1.6.0-1.fc27
