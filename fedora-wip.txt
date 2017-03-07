@@ -4,7 +4,6 @@
 php-tecnickcom-tc-lib-color 1.12.6 (waiting for phpunit6)
 php-tecnickcom-tc-lib-barcode 1.15.6
 php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
-Net_DNS2 1.4.3
 Net_IDNA2 0.2.0
 sqlsrv 4.1.7preview
 php-jsonlint 1.6.0
@@ -17,6 +16,8 @@ php-zendframework-zend-ldap 2.8.0
 =================
  Testing
 =================
+7/3	php-pear-Net-DNS2-1.4.3-1.fc26
+7/3	php-pear-Net-DNS2-1.4.3-1.fc25
 7/3	php-jsonlint-1.6.0-1.fc26
 7/3	wordpress-4.7.3-1.fc26
 7/3	wordpress-4.7.3-1.fc25
@@ -115,6 +116,7 @@ php-zendframework-zend-ldap 2.8.0
 =================
  March, 2017
 =================
+7/3	7/3	php-pear-Net-DNS2-1.4.3-1.fc27
 7/3	7/3	php-jsonlint-1.6.0-1.fc27
 7/3	7/3	wordpress-4.7.3-1.fc27
 7/3	27/2	php-horde-Horde-Prefs-2.8.1-1.fc25

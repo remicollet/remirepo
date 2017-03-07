@@ -11,8 +11,8 @@
 %global pear_name Net_DNS2
 
 Name:           php-pear-Net-DNS2
-Version:        1.4.2
-Release:        2%{?dist}
+Version:        1.4.3
+Release:        1%{?dist}
 Summary:        PHP Resolver library used to communicate with a DNS server
 
 Group:          Development/Libraries
@@ -20,10 +20,8 @@ License:        BSD
 URL:            http://pear.php.net/package/Net_DNS2
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
 
-# Fix include path furing the test suite
+# Fix include path during the test suite
 Patch0:         %{pear_name}-incl.patch
-# Upstream patch for PHP 7
-Patch1:         %{pear_name}-php7.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -74,7 +72,6 @@ sed -e 's/md5sum="[^"]*"//' \
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
 %patch0 -p1
-%patch1 -p1
 
 
 %build
@@ -102,14 +99,19 @@ rm -rf %{buildroot}
 
 %check
 cd %{pear_name}-%{version}/tests
-if ping -c 1 google.com &>/dev/null
+if ! ping -c 1 google.com &>/dev/null
 then
-  suite=AllTests.php
-else
-  : Resolver test disabled
-  suite=Net_DNS2_ParserTest.php
+  : Internet needed for tests
+  exit 0
 fi
-phpunit --include-path=.. $suite
+
+ret=0
+for cmd in php56 php70 php71 php; do
+  if which $cmd; then
+    $cmd %{_bindir}/phpunit --verbose --include-path=.. AllTests.php || ret=1
+  fi
+done
+exit $ret
 
 
 %post
@@ -134,6 +136,10 @@ fi
 
 
 %changelog
+* Tue Mar  7 2017 Remi Collet <remi@remirepo.net> - 1.4.3-1
+- Update to 1.4.3
+- only run test suite when connected to internet
+
 * Tue Nov 29 2016 Remi Collet <remi@fedoraproject.org> - 1.4.2-2
 - use upstream patch for PHP 7
 
