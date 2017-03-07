@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    14c5b862899ad8bb6cd02c567f394ec5dadc039d
+%global gh_commit    a9284a7440e17ce0ba697670bb4db1baf2340acd
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-ldap
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.1
+Version:        2.8.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -47,14 +47,15 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 #        "zendframework/zend-config": "^2.5",
 #        "zendframework/zend-eventmanager": "^2.6.3 || ^3.0.1",
 #        "zendframework/zend-stdlib": "^2.7 || ^3.0",
-#        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "^4.5",
-#        "php-mock/php-mock-phpunit": "~0.3"
+#        "php-mock/php-mock-phpunit": "~0.3",
+#        "zendframework/zend-coding-standard": "~1.0.0",
+#        "phpunit/phpunit": "^4.6"
 BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.3
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
-BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.5
 BuildRequires:  php-composer(php-mock/php-mock-phpunit)         >= 0.3
+BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.6
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
@@ -151,6 +152,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar  7 2017 Remi Collet <remi@remirepo.net> - 2.8.0-1
+- Update to 2.8.0
+
 * Wed May 25 2016 Remi Collet <remi@fedoraproject.org> - 2.7.1-1
 - update to 2.7.1
 
