@@ -12,8 +12,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   3.23.1
-%global github_commit    7d319413995f9326e7aa41e02bcc799490038deb
+%global github_version   3.23.2
+%global github_commit    e22280859c36396f07000b9bc54fb9ae56f4c744
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -36,7 +36,7 @@
 # "guzzlehttp/promises": "~1.0"
 %global guzzle_promises_min_ver 1.0
 %global guzzle_promises_max_ver 2.0
-# "guzzlehttp/psr7": "~1.3.1"
+# "guzzlehttp/psr7": "^1.3.1, !=1.4.0"
 #     NOTE: Keeping previous max of 2.0 instead of changing to 1.4
 %global guzzle_psr7_min_ver 1.3.1
 %global guzzle_psr7_max_ver 2.0
@@ -271,6 +271,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar  7 2017 Remi Collet <remi@remirepo.net> - 3.23.2-1
+- Update to 3.23.2
+
 * Tue Feb 28 2017 Remi Collet <remi@remirepo.net> - 3.23.1-1
 - update to 3.23.1
 
