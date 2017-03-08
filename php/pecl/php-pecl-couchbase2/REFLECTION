@@ -1,17 +1,32 @@
-Extension [ <persistent> extension #155 couchbase version 2.2.4 ] {
+Extension [ <persistent> extension #163 couchbase version 2.3.0 ] {
 
   - Dependencies {
     Dependency [ json (Required) ]
-    Dependency [ pcs (Required) ]
+    Dependency [ igbinary (Required) ]
   }
 
   - INI {
     Entry [ couchbase.log_level <ALL> ]
       Current = 'WARN'
     }
+    Entry [ couchbase.encoder.format <ALL> ]
+      Current = 'json'
+    }
+    Entry [ couchbase.encoder.compression <ALL> ]
+      Current = 'off'
+    }
+    Entry [ couchbase.encoder.compression_threshold <ALL> ]
+      Current = '0'
+    }
+    Entry [ couchbase.encoder.compression_factor <ALL> ]
+      Current = '0.0'
+    }
+    Entry [ couchbase.decoder.json_arrays <ALL> ]
+      Current = '0'
+    }
   }
 
-  - Constants [114] {
+  - Constants [146] {
     Constant [ integer COUCHBASE_PERSISTTO_MASTER ] { 1 }
     Constant [ integer COUCHBASE_PERSISTTO_ONE ] { 1 }
     Constant [ integer COUCHBASE_PERSISTTO_TWO ] { 2 }
@@ -126,21 +141,181 @@ Extension [ <persistent> extension #155 couchbase version 2.2.4 ] {
     Constant [ integer COUCHBASE_TMPFAIL ] { 11 }
     Constant [ integer COUCHBASE_KEYALREADYEXISTS ] { 12 }
     Constant [ integer COUCHBASE_KEYNOTFOUND ] { 13 }
+    Constant [ integer COUCHBASE_VAL_MASK ] { 31 }
+    Constant [ integer COUCHBASE_VAL_IS_STRING ] { 0 }
+    Constant [ integer COUCHBASE_VAL_IS_LONG ] { 1 }
+    Constant [ integer COUCHBASE_VAL_IS_DOUBLE ] { 2 }
+    Constant [ integer COUCHBASE_VAL_IS_BOOL ] { 3 }
+    Constant [ integer COUCHBASE_VAL_IS_SERIALIZED ] { 4 }
+    Constant [ integer COUCHBASE_VAL_IS_IGBINARY ] { 5 }
+    Constant [ integer COUCHBASE_VAL_IS_JSON ] { 6 }
+    Constant [ integer COUCHBASE_COMPRESSION_MASK ] { 224 }
+    Constant [ integer COUCHBASE_COMPRESSION_NONE ] { 0 }
+    Constant [ integer COUCHBASE_COMPRESSION_ZLIB ] { 32 }
+    Constant [ integer COUCHBASE_COMPRESSION_FASTLZ ] { 64 }
+    Constant [ integer COUCHBASE_COMPRESSION_MCISCOMPRESSED ] { 16 }
+    Constant [ integer COUCHBASE_SERTYPE_JSON ] { 0 }
+    Constant [ integer COUCHBASE_SERTYPE_IGBINARY ] { 1 }
+    Constant [ integer COUCHBASE_SERTYPE_PHP ] { 2 }
+    Constant [ integer COUCHBASE_CMPRTYPE_NONE ] { 0 }
+    Constant [ integer COUCHBASE_CMPRTYPE_ZLIB ] { 1 }
+    Constant [ integer COUCHBASE_CMPRTYPE_FASTLZ ] { 2 }
+    Constant [ integer COUCHBASE_CFFMT_MASK ] { -16777216 }
+    Constant [ integer COUCHBASE_CFFMT_PRIVATE ] { 16777216 }
+    Constant [ integer COUCHBASE_CFFMT_JSON ] { 33554432 }
+    Constant [ integer COUCHBASE_CFFMT_RAW ] { 50331648 }
+    Constant [ integer COUCHBASE_CFFMT_STRING ] { 67108864 }
+    Constant [ integer Couchbase\ENCODER_FORMAT_JSON ] { 0 }
+    Constant [ integer Couchbase\ENCODER_FORMAT_IGBINARY ] { 1 }
+    Constant [ integer Couchbase\ENCODER_FORMAT_PHP ] { 2 }
+    Constant [ integer Couchbase\ENCODER_COMPRESSION_NONE ] { 0 }
+    Constant [ integer Couchbase\ENCODER_COMPRESSION_ZLIB ] { 1 }
+    Constant [ integer Couchbase\ENCODER_COMPRESSION_FASTLZ ] { 2 }
+    Constant [ integer Couchbase\HAVE_IGBINARY ] { 1 }
+    Constant [ integer Couchbase\HAVE_ZLIB ] { 1 }
   }
 
   - Functions {
+    Function [ <internal:couchbase> function Couchbase\fastlzCompress ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $data ]
+      }
+    }
+    Function [ <internal:couchbase> function Couchbase\fastlzDecompress ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $data ]
+      }
+    }
+    Function [ <internal:couchbase> function Couchbase\zlibCompress ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $data ]
+      }
+    }
+    Function [ <internal:couchbase> function Couchbase\zlibDecompress ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $data ]
+      }
+    }
+    Function [ <internal:couchbase> function Couchbase\passthruEncoder ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $value ]
+      }
+    }
+    Function [ <internal:couchbase> function Couchbase\passthruDecoder ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $bytes ]
+        Parameter #1 [ <required> $flags ]
+        Parameter #2 [ <required> $datatype ]
+      }
+    }
+    Function [ <internal:couchbase> function Couchbase\defaultEncoder ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $value ]
+      }
+    }
+    Function [ <internal:couchbase> function Couchbase\defaultDecoder ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $bytes ]
+        Parameter #1 [ <required> $flags ]
+        Parameter #2 [ <required> $datatype ]
+      }
+    }
+    Function [ <internal:couchbase> function Couchbase\basicEncoderV1 ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $value ]
+        Parameter #1 [ <required> $options ]
+      }
+    }
+    Function [ <internal:couchbase> function Couchbase\basicDecoderV1 ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $bytes ]
+        Parameter #1 [ <required> $flags ]
+        Parameter #2 [ <required> $datatype ]
+        Parameter #3 [ <required> $options ]
+      }
+    }
     Function [ <internal:couchbase> function couchbase_fastlz_compress ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $data ]
+      }
     }
     Function [ <internal:couchbase> function couchbase_fastlz_decompress ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $data ]
+      }
     }
     Function [ <internal:couchbase> function couchbase_zlib_compress ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $data ]
+      }
     }
     Function [ <internal:couchbase> function couchbase_zlib_decompress ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $data ]
+      }
+    }
+    Function [ <internal:couchbase> function couchbase_passthru_encoder ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $value ]
+      }
+    }
+    Function [ <internal:couchbase> function couchbase_passthru_decoder ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $bytes ]
+        Parameter #1 [ <required> $flags ]
+        Parameter #2 [ <required> $datatype ]
+      }
+    }
+    Function [ <internal:couchbase> function couchbase_default_encoder ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $value ]
+      }
+    }
+    Function [ <internal:couchbase> function couchbase_default_decoder ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $bytes ]
+        Parameter #1 [ <required> $flags ]
+        Parameter #2 [ <required> $datatype ]
+      }
+    }
+    Function [ <internal:couchbase> function couchbase_basic_encoder_v1 ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $value ]
+        Parameter #1 [ <required> $options ]
+      }
+    }
+    Function [ <internal:couchbase> function couchbase_basic_decoder_v1 ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $bytes ]
+        Parameter #1 [ <required> $flags ]
+        Parameter #2 [ <required> $datatype ]
+        Parameter #3 [ <required> $options ]
+      }
     }
   }
 
-  - Classes [7] {
-    Class [ <internal:couchbase> class CouchbaseException extends Exception implements Throwable ] {
+  - Classes [41] {
+    Class [ <internal:couchbase> class Couchbase\Exception extends Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -197,7 +372,7 @@ Extension [ <persistent> extension #155 couchbase version 2.2.4 ] {
       }
     }
 
-    Class [ <internal:couchbase> class CouchbaseMetaDoc ] {
+    Class [ <internal:couchbase> class Couchbase\Document ] {
 
       - Constants [0] {
       }
@@ -220,7 +395,7 @@ Extension [ <persistent> extension #155 couchbase version 2.2.4 ] {
       }
     }
 
-    Class [ <internal:couchbase> class CouchbaseDocumentFragment ] {
+    Class [ <internal:couchbase> class Couchbase\DocumentFragment ] {
 
       - Constants [0] {
       }
@@ -242,9 +417,1064 @@ Extension [ <persistent> extension #155 couchbase version 2.2.4 ] {
       }
     }
 
-    Class [ <internal:couchbase> class CouchbaseN1qlIndex ] {
+    Class [ <internal:couchbase> final class Couchbase\Cluster ] {
 
       - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:couchbase, ctor> final public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $connstr ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method openBucket ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $password ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method manager ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $username ]
+            Parameter #1 [ <required> $password ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method authenticate ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $authenticator ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\ClusterManager ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method listBuckets ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method createBucket ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $options ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method removeBucket ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $connstr ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method info ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\Bucket ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [40] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final private method __get ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:couchbase> final private method __set ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method setTranscoder ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> callable $encoder ]
+            Parameter #1 [ <required> callable $decoder ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method get ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $ids ]
+            Parameter #1 [ <required> $options ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method getAndLock ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $ids ]
+            Parameter #1 [ <required> $lockTime ]
+            Parameter #2 [ <required> $options ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method getAndTouch ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $ids ]
+            Parameter #1 [ <required> $expiry ]
+            Parameter #2 [ <required> $options ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method getFromReplica ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $ids ]
+            Parameter #1 [ <required> $options ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method upsert ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $val ]
+            Parameter #2 [ <required> $options ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method insert ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $val ]
+            Parameter #2 [ <required> $options ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method replace ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $val ]
+            Parameter #2 [ <required> $options ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method append ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $val ]
+            Parameter #2 [ <required> $options ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method prepend ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $val ]
+            Parameter #2 [ <required> $options ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method remove ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $options ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method touch ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $expiry ]
+            Parameter #2 [ <required> $options ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method counter ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $delta ]
+            Parameter #2 [ <required> $options ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method lookupIn ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $id ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method retrieveIn ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> ...$(paths) ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method mutateIn ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $cas ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method manager ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method query ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $query ]
+            Parameter #1 [ <required> $jsonAsArray ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method mapSize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $id ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method mapAdd ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $key ]
+            Parameter #2 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method mapRemove ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method mapGet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method setAdd ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method setExists ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method setRemove ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method listSize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $id ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method listPush ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method listShift ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method listRemove ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method listGet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method listSet ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $index ]
+            Parameter #2 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method listExists ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method setSize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $id ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method queueSize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $id ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method queueAdd ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method queueExists ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method queueRemove ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $id ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\BucketManager ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [14] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method info ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method flush ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method listDesignDocuments ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal, deprecated:couchbase> final public method getDesignDocuments ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method getDesignDocument ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method removeDesignDocument ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method upsertDesignDocument ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $document ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method insertDesignDocument ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $document ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method listN1qlIndexes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method createN1qlPrimaryIndex ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $customName ]
+            Parameter #1 [ <required> $ignoreIfExist ]
+            Parameter #2 [ <required> $defer ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method createN1qlIndex ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $indexName ]
+            Parameter #1 [ <required> $fields ]
+            Parameter #2 [ <required> $whereClause ]
+            Parameter #3 [ <required> $ignoreIfExist ]
+            Parameter #4 [ <required> $defer ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method dropN1qlPrimaryIndex ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $customName ]
+            Parameter #1 [ <required> $ignoreIfNotExist ]
+            Parameter #2 [ <optional> $defer ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method dropN1qlIndex ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $indexName ]
+            Parameter #1 [ <required> $ignoreIfNotExist ]
+            Parameter #2 [ <optional> $defer ]
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:couchbase> interface Couchbase\Authenticator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\ClassicAuthenticator implements Couchbase\Authenticator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:couchbase, ctor> final public method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method cluster ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $username ]
+            Parameter #1 [ <required> $password ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method bucket ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $password ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\MutationToken ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:couchbase> final static public method from ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $bucketName ]
+            Parameter #1 [ <required> $vbucketId ]
+            Parameter #2 [ <required> $vbucketUuid ]
+            Parameter #3 [ <required> $sequenceNumber ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method bucketName ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method vbucketId ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method vbucketUuid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method sequenceNumber ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\MutationState ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:couchbase> final static public method from ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $source ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method add ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $source ]
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:couchbase> interface Couchbase\ViewQueryEncodable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:couchbase> abstract public method encode ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\ViewQuery implements Couchbase\ViewQueryEncodable ] {
+
+      - Constants [5] {
+        Constant [ integer UPDATE_BEFORE ] { 1 }
+        Constant [ integer UPDATE_NONE ] { 2 }
+        Constant [ integer UPDATE_AFTER ] { 3 }
+        Constant [ integer ORDER_ASCENDING ] { 1 }
+        Constant [ integer ORDER_DESCENDING ] { 2 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [2] {
+        Method [ <internal:couchbase> final static public method from ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $designDocumentName ]
+            Parameter #1 [ <required> $viewName ]
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method fromSpatial ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $designDocumentName ]
+            Parameter #1 [ <required> $viewName ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [17] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype Couchbase\ViewQueryEncodable> final public method encode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method limit ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $limit ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method skip ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $skip ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method consistency ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $consistency ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method stale ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $consistency ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method custom ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $options ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method order ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $order ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method reduce ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $reduce ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method group ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $group ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method groupLevel ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $group_level ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method group_level ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $group_level ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method key ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method keys ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $keys ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method range ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $startKey ]
+            Parameter #1 [ <required> $endKey ]
+            Parameter #2 [ <required> $inclusiveEnd ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method idRange ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $startKeyDocumentId ]
+            Parameter #1 [ <required> $endKeyDocumentId ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method id_range ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $startKeyDocumentId ]
+            Parameter #1 [ <required> $endKeyDocumentId ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\SpatialViewQuery implements Couchbase\ViewQueryEncodable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:couchbase> final static public method from ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $designDocumentName ]
+            Parameter #1 [ <required> $viewName ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [10] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype Couchbase\ViewQueryEncodable> final public method encode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method limit ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $limit ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method skip ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $skip ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method consistency ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $consistency ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method stale ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $consistency ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method bbox ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $bbox ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method startRange ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $range ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method endRange ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $range ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method custom ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $options ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\N1qlQuery ] {
+
+      - Constants [3] {
+        Constant [ integer NOT_BOUNDED ] { 1 }
+        Constant [ integer REQUEST_PLUS ] { 2 }
+        Constant [ integer STATEMENT_PLUS ] { 3 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:couchbase> final static public method fromString ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $statement ]
+          }
+        }
+      }
+
+      - Properties [1] {
+        Property [ <default> public $options ]
+      }
+
+      - Methods [7] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method adhoc ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $adhoc ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method crossBucket ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $crossBucket ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method positionalParams ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $params ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method namedParams ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $params ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method consistency ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $consistency ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method consistentWith ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $mutationState ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> class Couchbase\N1qlIndex ] {
+
+      - Constants [3] {
+        Constant [ integer VIEW ] { 2 }
+        Constant [ integer GSI ] { 1 }
+        Constant [ integer UNSPECIFIED ] { 0 }
       }
 
       - Static properties [0] {
@@ -264,11 +1494,747 @@ Extension [ <persistent> extension #155 couchbase version 2.2.4 ] {
         Property [ <default> public $condition ]
       }
 
+      - Methods [1] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\LookupInBuilder ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method get ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $path ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method exists ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $path ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method execute ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\MutateInBuilder ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [14] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method insert ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <required> $value ]
+            Parameter #2 [ <required> $createParents ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method upsert ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <required> $value ]
+            Parameter #2 [ <required> $createParents ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method replace ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method remove ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $path ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method arrayPrepend ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <required> $value ]
+            Parameter #2 [ <required> $createParents ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method arrayAppend ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <required> $value ]
+            Parameter #2 [ <required> $createParents ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method arrayInsert ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method arrayPrependAll ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <required> $values ]
+            Parameter #2 [ <required> $createParents ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method arrayAppendAll ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <required> $values ]
+            Parameter #2 [ <required> $createParents ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method arrayInsertAll ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <required> $values ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method arrayAddUnique ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <required> $value ]
+            Parameter #2 [ <required> $createParents ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method counter ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <required> $delta ]
+            Parameter #2 [ <required> $createParents ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method execute ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\SearchQuery implements JsonSerializable ] {
+
+      - Constants [3] {
+        Constant [ string HIGHLIGHT_HTML ] { html }
+        Constant [ string HIGHLIGHT_ANSI ] { ansi }
+        Constant [ string HIGHLIGHT_SIMPLE ] { simple }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [20] {
+        Method [ <internal:couchbase> final static public method booleanField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method boolean ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method conjuncts ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> ...$(queries) ]
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method dateRange ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method disjuncts ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> ...$(queries) ]
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method docId ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> ...$(documentIds) ]
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method match ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $match ]
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method matchAll ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method matchNone ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method matchPhrase ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $matchPhrase ]
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method numericRange ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method phrase ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> ...$(terms) ]
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method prefix ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $prefix ]
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method queryString ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $queryString ]
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method regexp ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $regexp ]
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method term ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $term ]
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method wildcard ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $wildcard ]
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method termFacet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $field ]
+            Parameter #1 [ <required> $limit ]
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method dateRangeFacet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $field ]
+            Parameter #1 [ <required> $limit ]
+          }
+        }
+
+        Method [ <internal:couchbase> final static public method numericRangeFacet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $field ]
+            Parameter #1 [ <required> $limit ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [10] {
+        Method [ <internal:couchbase, ctor> final public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $indexName ]
+            Parameter #1 [ <required> $queryPart ]
+          }
+        }
+
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method limit ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $limit ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method skip ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $skip ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method explain ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $explain ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method serverSideTimeout ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serverSideTimeout ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method consistentWith ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $mutationState ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method fields ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> ...$(fields) ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method highlight ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $style ]
+            Parameter #1 [ <required> ...$(fields) ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method addFacet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $facet ]
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:couchbase> interface Couchbase\SearchQueryPart ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
       - Methods [0] {
       }
     }
 
-    Class [ <internal:couchbase> class _CouchbaseCluster ] {
+    Class [ <internal:couchbase> final class Couchbase\BooleanFieldSearchQuery implements JsonSerializable, Couchbase\SearchQueryPart ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method boost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $boost ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method field ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\BooleanSearchQuery implements JsonSerializable, Couchbase\SearchQueryPart ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method boost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $boost ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method must ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> ...$(queries) ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method mustNot ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> ...$(queries) ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method should ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> ...$(queries) ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\ConjunctionSearchQuery implements JsonSerializable, Couchbase\SearchQueryPart ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method boost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $boost ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method every ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> ...$(queries) ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\DateRangeSearchQuery implements JsonSerializable, Couchbase\SearchQueryPart ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [7] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method boost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $boost ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method field ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method start ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $start ]
+            Parameter #1 [ <required> $inclusive ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method end ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $end ]
+            Parameter #1 [ <required> $inclusive ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method dateTimeParser ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $dateTimeParser ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\DisjunctionSearchQuery implements JsonSerializable, Couchbase\SearchQueryPart ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method boost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $boost ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method either ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> ...$(queries) ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method min ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $min ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\DocIdSearchQuery implements JsonSerializable, Couchbase\SearchQueryPart ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method boost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $boost ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method field ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method docIds ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> ...$(documentIds) ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\MatchAllSearchQuery implements JsonSerializable, Couchbase\SearchQueryPart ] {
 
       - Constants [0] {
       }
@@ -283,18 +2249,28 @@ Extension [ <persistent> extension #155 couchbase version 2.2.4 ] {
       }
 
       - Methods [3] {
-        Method [ <internal:couchbase, ctor> public method __construct ] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
         }
 
-        Method [ <internal:couchbase> public method connect ] {
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
         }
 
-        Method [ <internal:couchbase> public method http_request ] {
+        Method [ <internal:couchbase> final public method boost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $boost ]
+          }
         }
       }
     }
 
-    Class [ <internal:couchbase> class _CouchbaseBucket ] {
+    Class [ <internal:couchbase> final class Couchbase\MatchNoneSearchQuery implements JsonSerializable, Couchbase\SearchQueryPart ] {
 
       - Constants [0] {
       }
@@ -308,79 +2284,29 @@ Extension [ <persistent> extension #155 couchbase version 2.2.4 ] {
       - Properties [0] {
       }
 
-      - Methods [23] {
-        Method [ <internal:couchbase, ctor> public method __construct ] {
+      - Methods [3] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
         }
 
-        Method [ <internal:couchbase> public method insert ] {
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
         }
 
-        Method [ <internal:couchbase> public method upsert ] {
-        }
+        Method [ <internal:couchbase> final public method boost ] {
 
-        Method [ <internal:couchbase> public method replace ] {
-        }
-
-        Method [ <internal:couchbase> public method append ] {
-        }
-
-        Method [ <internal:couchbase> public method prepend ] {
-        }
-
-        Method [ <internal:couchbase> public method remove ] {
-        }
-
-        Method [ <internal:couchbase> public method get ] {
-        }
-
-        Method [ <internal:couchbase> public method getFromReplica ] {
-        }
-
-        Method [ <internal:couchbase> public method touch ] {
-        }
-
-        Method [ <internal:couchbase> public method counter ] {
-        }
-
-        Method [ <internal:couchbase> public method unlock ] {
-        }
-
-        Method [ <internal:couchbase> public method n1ql_request ] {
-        }
-
-        Method [ <internal:couchbase> public method http_request ] {
-        }
-
-        Method [ <internal:couchbase> public method fts_request ] {
-        }
-
-        Method [ <internal:couchbase> public method subdoc_request ] {
-        }
-
-        Method [ <internal:couchbase> public method durability ] {
-        }
-
-        Method [ <internal:couchbase> public method n1ix_list ] {
-        }
-
-        Method [ <internal:couchbase> public method n1ix_create ] {
-        }
-
-        Method [ <internal:couchbase> public method n1ix_drop ] {
-        }
-
-        Method [ <internal:couchbase> public method setTranscoder ] {
-        }
-
-        Method [ <internal:couchbase> public method setOption ] {
-        }
-
-        Method [ <internal:couchbase> public method getOption ] {
+          - Parameters [1] {
+            Parameter #0 [ <required> $boost ]
+          }
         }
       }
     }
 
-    Class [ <internal:couchbase> class CouchbaseMutationToken ] {
+    Class [ <internal:couchbase> final class Couchbase\MatchPhraseSearchQuery implements JsonSerializable, Couchbase\SearchQueryPart ] {
 
       - Constants [0] {
       }
@@ -391,14 +2317,553 @@ Extension [ <persistent> extension #155 couchbase version 2.2.4 ] {
       - Static methods [0] {
       }
 
-      - Properties [4] {
-        Property [ <default> public $bucket ]
-        Property [ <default> public $vbucketID ]
-        Property [ <default> public $vbucketUUID ]
-        Property [ <default> public $sequenceNumber ]
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method boost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $boost ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method field ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method analyzer ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $analyzer ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\MatchSearchQuery implements JsonSerializable, Couchbase\SearchQueryPart ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [7] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method boost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $boost ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method field ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method analyzer ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $analyzer ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method prefixLength ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $prefixLength ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method fuzziness ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fuzziness ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\NumericRangeSearchQuery implements JsonSerializable, Couchbase\SearchQueryPart ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method boost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $boost ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method field ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method min ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $min ]
+            Parameter #1 [ <required> $inclusive ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method max ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $max ]
+            Parameter #1 [ <required> $inclusive ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\PhraseSearchQuery implements JsonSerializable, Couchbase\SearchQueryPart ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method boost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $boost ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method field ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\PrefixSearchQuery implements JsonSerializable, Couchbase\SearchQueryPart ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method boost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $boost ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method field ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\QueryStringSearchQuery implements JsonSerializable, Couchbase\SearchQueryPart ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method boost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $boost ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\RegexpSearchQuery implements JsonSerializable, Couchbase\SearchQueryPart ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method boost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $boost ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method field ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\TermSearchQuery implements JsonSerializable, Couchbase\SearchQueryPart ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method boost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $boost ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method field ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method prefixLength ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $prefixLength ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method fuzziness ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fuzziness ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\WildcardSearchQuery implements JsonSerializable, Couchbase\SearchQueryPart ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method boost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $boost ]
+          }
+        }
+
+        Method [ <internal:couchbase> final public method field ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:couchbase> interface Couchbase\SearchFacet ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
       }
 
       - Methods [0] {
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\TermSearchFacet implements JsonSerializable, Couchbase\SearchFacet ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\NumericRangeSearchFacet implements JsonSerializable, Couchbase\SearchFacet ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method addRange ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $min ]
+            Parameter #2 [ <required> $max ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> final class Couchbase\DateRangeSearchFacet implements JsonSerializable, Couchbase\SearchFacet ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:couchbase, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:couchbase> final public method addRange ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $start ]
+            Parameter #2 [ <optional> $end ]
+          }
+        }
       }
     }
   }

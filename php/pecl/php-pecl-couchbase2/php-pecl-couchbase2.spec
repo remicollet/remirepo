@@ -15,28 +15,28 @@
 %global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 
 %if "%{php_version}" < "5.6"
-# After igbinary, pcs (and XDebug for 5.4)
+# After igbinary, (and XDebug for 5.4)
 %global ini_name  z-%{pecl_name}.ini
 %else
-# After 40-igbinary, 40-pcs and 40-json
+# After 40-igbinary and 40-json
 %global ini_name  50-%{pecl_name}.ini
 %endif
 #global        prever beta4
 
 Summary:       Couchbase Server PHP extension
 Name:          %{?sub_prefix}php-pecl-couchbase2
-Version:       2.2.4
+Version:       2.3.0
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
-BuildRequires: %{?scl_prefix}php-devel >= 5.3.0
+BuildRequires: %{?scl_prefix}php-devel >= 5.4
 BuildRequires: %{?scl_prefix}php-pear
-BuildRequires: %{?scl_prefix}php-pecl-pcs-devel
+BuildRequires: %{?scl_prefix}php-pecl-igbinary-devel
 BuildRequires: %{?scl_prefix}php-json
-BuildRequires: libcouchbase-devel
+BuildRequires: libcouchbase-devel >= 2.7.2
 BuildRequires: fastlz-devel
 BuildRequires: zlib-devel
 # to ensure compatibility with XDebug
@@ -44,9 +44,7 @@ BuildRequires: %{?scl_prefix}php-pecl-xdebug
 
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
-Requires:      %{?scl_prefix}php-pcs%{?_isa}
 Requires:      %{?scl_prefix}php-json%{?_isa}
-# used in embded php code
 Requires:      %{?scl_prefix}php-igbinary%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
@@ -136,6 +134,11 @@ extension=%{pecl_name}.so
 
 ; Configuration
 ;couchbase.log_level = 'WARN'
+;couchbase.encoder.format = 'json'
+;couchbase.encoder.compression = 'off'
+;couchbase.encoder.compression_threshold = 0
+;couchbase.encoder.compression_factor = 0.0
+;couchbase.decoder.json_arrays = 0
 EOF
 
 %if 0%{?__ztsphp:1}
@@ -195,7 +198,7 @@ done
 : minimal NTS load test
 %{__php} -n \
    -d extension=tokenizer.so \
-   -d extension=pcs.so \
+   -d extension=igbinary.so \
    -d extension=json.so \
    -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
    -m | grep %{pecl_name}
@@ -204,7 +207,7 @@ done
 : minimal ZTS load test
 %{__ztsphp} -n \
    -d extension=tokenizer.so \
-   -d extension=pcs.so \
+   -d extension=igbinary.so \
    -d extension=json.so \
    -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
    -m | grep %{pecl_name}
@@ -247,6 +250,13 @@ fi
 
 
 %changelog
+* Wed Mar  8 2017 Remi Collet <remi@remirepo.net> - 2.3.0-1
+- Update to 2.3.0
+- drop dependency on pcs extension
+- add dependency on igbinary extension
+- raise dependency on libcouchbase 2.7.2
+- update default configuration with new options
+
 * Tue Dec 27 2016 Remi Collet <remi@fedoraproject.org> - 2.2.4-1
 - Update to 2.2.4
 - add dependency on pcs extension
