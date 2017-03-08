@@ -17,7 +17,7 @@ require_once $vendorDir . '/Fedora/Autoloader/autoload.php';
 	$vendorDir . '/Composer/Semver/autoload.php',
 	$vendorDir . '/Psr/Log/autoload.php',
 	array(
+		$vendorDir . '/JsonSchema5/autoload.php',
 		$vendorDir . '/JsonSchema4/autoload.php',
-		$vendorDir . '/JsonSchema2/autoload.php',
 )));
 

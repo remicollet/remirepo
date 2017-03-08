@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    989d68725bc8ebf97e795d4feb386f52adb096e3
+%global gh_commit    b19655f1304a3365213204bcf9a9b84476d0d265
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
 %global gh_owner     composer
@@ -16,7 +16,7 @@
 #global prever       RC
 
 Name:           composer
-Version:        1.3.3
+Version:        1.4.0
 Release:        1%{?dist}
 Summary:        Dependency Manager for PHP
 
@@ -37,7 +37,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-cli
 %if %{with_tests}
-BuildRequires:  php-composer(justinrainbow/json-schema) >= 2.0
+BuildRequires:  php-composer(justinrainbow/json-schema) >= 3.0
 BuildRequires:  php-composer(composer/spdx-licenses)    >= 1.0
 BuildRequires:  php-composer(composer/ca-bundle)        >= 1.0
 BuildRequires:  php-composer(composer/semver)           >= 1.0
@@ -63,7 +63,7 @@ BuildRequires:  php-PsrLog          >= 1.0.0-8
 
 # From composer.json, "require": {
 #        "php": "^5.3.2 || ^7.0",
-#        "justinrainbow/json-schema": "^1.6 || ^2.0 || ^3.0 || ^4.0",
+#        "justinrainbow/json-schema": "^3.0 || ^4.0 || ^5.0",
 #        "composer/ca-bundle": "^1.0",
 #        "composer/semver": "^1.0",
 #        "composer/spdx-licenses": "^1.0",
@@ -77,8 +77,8 @@ BuildRequires:  php-PsrLog          >= 1.0.0-8
 #        "psr/log": "^1.0"
 Requires:       php(language)                           >= 5.3.2
 Requires:       php-cli
-Requires:       php-composer(justinrainbow/json-schema) >= 2.0
-Requires:       php-composer(justinrainbow/json-schema) <  5
+Requires:       php-composer(justinrainbow/json-schema) >= 3.0
+Requires:       php-composer(justinrainbow/json-schema) <  6
 Requires:       php-composer(composer/spdx-licenses)    >= 1.0
 Requires:       php-composer(composer/spdx-licenses)    <  2
 Requires:       php-composer(composer/ca-bundle)        >= 1.0
@@ -263,6 +263,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar  8 2017 Remi Collet <remi@remirepo.net> - 1.4.0-1
+- Update to 1.4.0
+- raise dependency on justinrainbow/json-schema version 3 to 5
+
 * Wed Mar  8 2017 Remi Collet <remi@remirepo.net> - 1.3.3-1
 - Update to 1.3.3
 
