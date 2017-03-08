@@ -1,8 +1,6 @@
 {
     "php-google-recaptcha": "google\/recaptcha",
     "php-phpmyadmin-sql-parser": "phpmyadmin\/sql-parser",
-    "php-phpmyadmin-shapefile": "phpmyadmin\/shapefile",
-    "php-phpmyadmin-motranslator": "phpmyadmin\/motranslator",
     "php-ZendFramework": "zendframework\/zendframework1",
     "php-phpunit-phpdcd": "sebastian\/phpdcd",
     "php-tecnickcom-tc-lib-pdf-parser": "tecnickcom\/tc-lib-pdf-parser",
@@ -14,7 +12,6 @@
     "php-tecnickcom-tc-lib-unicode": "tecnickcom\/tc-lib-unicode",
     "php-tecnickcom-tc-lib-unicode-data": "tecnickcom\/tc-lib-unicode-data",
     "php-tedivm-jshrink": "tedivm\/jshrink",
-    "php-phpunit-php-code-coverage5": "phpunit\/php-code-coverage",
     "php-phpunit-mock-objects4": "phpunit\/phpunit-mock-objects",
     "php-sebastian-comparator2": "sebastian\/comparator",
     "php-sebastian-exporter3": "sebastian\/exporter",

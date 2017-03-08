@@ -13,6 +13,8 @@ Net_IDNA2 0.2.0
 =================
  Testing
 =================
+8/3	php-pear-XML-RSS-1.1.0-1.fc26
+8/3	php-pear-XML-RSS-1.1.0-1.fc25
 8/3	php-pecl-mongodb-1.2.6-1.fc26
 8/3	mongo-c-driver-1.6.1-2.fc26
 7/3	php-pear-Auth-SASL-1.1.0-1.fc26
@@ -108,6 +110,7 @@ Net_IDNA2 0.2.0
 =================
  March, 2017
 =================
+8/3	8/3	php-pear-XML-RSS-1.1.0-1.fc27
 8/3	8/3	php-pecl-mongodb-1.2.6-1.fc27
 8/3	8/3	mongo-c-driver-1.6.1-2.fc27
 8/3	27/2	php-horde-Horde-Vfs-2.4.0-1.fc25
