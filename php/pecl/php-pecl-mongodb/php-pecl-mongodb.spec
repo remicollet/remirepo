@@ -40,15 +40,12 @@
 
 Summary:        MongoDB driver for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.2.5
+Version:        1.2.6
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        ASL 2.0
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-
-# https://github.com/mongodb/mongo-php-driver/pull/526
-Patch1:         526.patch
 
 BuildRequires:  %{?scl_prefix}php-devel > 5.4
 BuildRequires:  %{?scl_prefix}php-pear
@@ -56,11 +53,11 @@ BuildRequires:  %{?scl_prefix}php-json
 BuildRequires:  cyrus-sasl-devel
 BuildRequires:  openssl-devel
 %if %{with_syslib}
-BuildRequires:  pkgconfig(libbson-1.0)    >= 1.5
-BuildRequires:  pkgconfig(libmongoc-1.0)  >= 1.5
+BuildRequires:  pkgconfig(libbson-1.0)    >= 1.6
+BuildRequires:  pkgconfig(libmongoc-1.0)  >= 1.6
 %else
-Provides:       bundled(libbson) = 1.5.0
-Provides:       bundled(mongo-c-driver) = 1.5.0
+Provides:       bundled(libbson) = 1.6.1
+Provides:       bundled(mongo-c-driver) = 1.6.1
 %endif
 %if %{with_tests}
 BuildRequires:  mongodb-server
@@ -128,9 +125,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-%if %{with_syslib}
-%patch1 -p1 -b .526
-%endif
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define MONGODB_VERSION_S/{s/.* "//;s/".*$//;p}' php_phongo.h)
@@ -272,7 +266,7 @@ if [ -s server.pid ] ; then
   : Drop known to fail tests
 %if "%{mongo_version}" < "3.4"
     ### With mongodb 3.2
-    rm ?TS/tests/standalone/bug0487-002.phpt
+    rm ?TS/tests/standalone/bug0231.phpt
 %endif
 %if "%{mongo_version}" < "3.2"
     ### With mongodb 3.0
@@ -333,6 +327,9 @@ exit $ret
 
 
 %changelog
+* Wed Mar  8 2017 Remi Collet <remi@remirepo.net> - 1.2.6-1
+- Update to 1.2.6
+
 * Wed Feb 01 2017 Remi Collet <remi@fedoraproject.org> - 1.2.5-1
 - Update to 1.2.5
 

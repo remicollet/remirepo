@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #166 mongodb version 1.2.5 ] {
+Extension [ <persistent> extension #168 mongodb version 1.2.6 ] {
 
   - Dependencies {
     Dependency [ date (Required) ]
@@ -14,7 +14,7 @@ Extension [ <persistent> extension #166 mongodb version 1.2.5 ] {
   }
 
   - Constants [2] {
-    Constant [ string MONGODB_VERSION ] { 1.2.5 }
+    Constant [ string MONGODB_VERSION ] { 1.2.6 }
     Constant [ string MONGODB_STABILITY ] { stable }
   }
 
