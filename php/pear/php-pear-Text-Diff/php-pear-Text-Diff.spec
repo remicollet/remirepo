@@ -11,7 +11,7 @@
 %define pear_name Text_Diff
 
 Name:           php-pear-Text-Diff
-Version:        1.2.1
+Version:        1.2.2
 Release:        1%{?dist}
 Summary:        Engine for performing and rendering text diffs
 
@@ -28,12 +28,16 @@ BuildRequires:  php-pcre
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 # From package.xml
-Requires:       php(language) >= 5.2.0
+Requires:       php(language) >= 5.3
 Requires:       php-pear(PEAR)
-# From phpcompatinfo report for 1.2.0
+# From phpcompatinfo report for 1.3.0
 Requires:       php-pcre
+%if 0%{?fedora}
+Suggests:       php-pecl(xdiff)
+%endif
 
 Provides:       php-pear(%{pear_name}) = %{version}
+Provides:       php-composer(pear/text_diff) = %{version}
 
 
 %description
@@ -102,6 +106,10 @@ fi
 
 
 %changelog
+* Thu Mar  9 2017 Remi Collet <remi@remirepo.net> - 1.2.2-1
+- Update to 1.2.2
+- add composer virtual provides
+
 * Sat Sep 19 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - Update to 1.2.1
 
