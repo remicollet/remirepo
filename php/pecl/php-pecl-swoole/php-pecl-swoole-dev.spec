@@ -37,6 +37,8 @@ Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
+Patch0:         %{pecl_name}-upstream.patch
+
 BuildRequires:  %{?scl_prefix}php-devel >= 5.5
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-sockets
@@ -132,9 +134,7 @@ sed -e 's/role="test"/role="src"/' \
 
 
 cd NTS
-%if 0%{?fedora} >= 26
-sed -e 's/SSL_library_init/OPENSSL_init_ssl/' -i config.m4
-%endif
+%patch0 -p1 -b .upstream
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_SWOOLE_VERSION/{s/.* "//;s/".*$//;p}' php_swoole.h)
@@ -181,6 +181,7 @@ peclbuild() {
     --enable-thread \
     --enable-mysqlnd \
     --enable-coroutine \
+    --with-libdir=%{_lib} \
     --with-php-config=$1
 
 make %{?_smp_mflags}
@@ -278,7 +279,8 @@ cd ../ZTS
 
 %changelog
 * Mon Mar  6 2017 Remi Collet <remi@remirepo.net> - 2.0.6-3
-- open https://github.com/swoole/swoole-src/issues/1118
+- add upstream patch for
+  https://github.com/swoole/swoole-src/issues/1118
 - open https://github.com/swoole/swoole-src/issues/1119
 
 * Fri Feb 24 2017 Remi Collet <remi@remirepo.net> - 2.0.6-2
