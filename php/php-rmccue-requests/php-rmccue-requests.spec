@@ -1,3 +1,12 @@
+# remirepo spec file for php-rmccue-requests
+#
+# Fedora spec file for php-rmccue-requests
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 Name:       php-rmccue-requests
 Version:    1.7.0
 Release:    2%{?dist}
@@ -14,7 +23,7 @@ BuildRequires: php-composer(fedora/autoloader)
 BuildRequires: php-fedora-autoloader-devel
 BuildRequires: php-zip
 BuildRequires: phpunit 
-BuildRequires: procps-ng
+#BuildRequires: procps-ng
 
 Requires:   php(language) >= 5.5.0
 Requires:   php-composer(fedora/autoloader)
@@ -74,19 +83,22 @@ cp -ar library/* %{buildroot}/%{_datadir}/php/rmccue/Requests
 sed -i "s:include.*:require('%{buildroot}/%{_datadir}/php/rmccue/Requests/autoload.php');:" \
     tests/bootstrap.php
 
-if [ "$(netstat -ln | grep 8080)" != "" ]
+port=$(expr 8070 + %{?fedora}%{?rhel})
+: use port $port to allow parallel build
+
+if [ "$(netstat -ln | grep $port)" != "" ]
 then
     kill php
 fi
 
-%{_bindir}/php -S 127.0.0.1:8080 \
+%{_bindir}/php -S 127.0.0.1:$port \
     test-server-26334a7583c96ae1f966a5d88af9aafaf279f948/bin/serve.php &
 PHPPID=$!
 
 pushd tests
 # The request test server doesn't run over TLS so we skip HTTPS tests. The other tests fail if they
 # can't resolve domain names, so they are skipped as well.
-REQUESTS_TEST_HOST="127.0.0.1:8080" phpunit --bootstrap bootstrap.php \
+REQUESTS_TEST_HOST="127.0.0.1:$port" phpunit --no-coverage --bootstrap bootstrap.php \
     --filter \
     ^\(\(?!\(testHTTPS\|testAlternateNameSupport\|testSNISupport\|testAlternatePort\)\).\)*$ || \
     (kill $PHPPID && exit 1)
@@ -96,6 +108,7 @@ kill $PHPPID
 
 
 %files
+%{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc CHANGELOG.md
 %doc composer.json
@@ -106,6 +119,9 @@ kill $PHPPID
 
 
 %changelog
+* Thu Mar  9 2017 Remi Collet <remi@remirepo.net> - 1.7.0-2
+- backport for #remirepo
+
 * Sun Mar 05 2017 Randy Barlow <bowlofeggs@fedoraproject.org> - 1.7.0-2
 - Change license tag to ISC and BSD.
 - Use a better method for killing the test server.
