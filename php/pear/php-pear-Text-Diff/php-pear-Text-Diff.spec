@@ -61,10 +61,6 @@ cd %{pear_name}-%{version}
 rm -rf %{buildroot} docdir
 %{__pear} install --nodeps --packagingroot %{buildroot} %{pear_name}.xml
 
-# Move documentation
-mkdir -p docdir
-mv %{buildroot}%{pear_docdir}/* docdir
-
 # Clean up unnecessary files
 rm -rf %{buildroot}%{pear_metadir}/.??*
 
@@ -99,7 +95,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc %{pear_name}-%{version}/docdir/%{pear_name}/*
+%doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{pear_name}.xml
 %{pear_testdir}/%{pear_name}
 %{pear_phpdir}/Text
@@ -109,6 +105,7 @@ fi
 * Thu Mar  9 2017 Remi Collet <remi@remirepo.net> - 1.2.2-1
 - Update to 1.2.2
 - add composer virtual provides
+- keep documentation in pear directory
 
 * Sat Sep 19 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - Update to 1.2.1
