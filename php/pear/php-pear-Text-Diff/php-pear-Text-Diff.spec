@@ -12,7 +12,7 @@
 
 Name:           php-pear-Text-Diff
 Version:        1.2.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Engine for performing and rendering text diffs
 
 Group:          Development/Libraries
@@ -102,7 +102,7 @@ fi
 
 
 %changelog
-* Thu Mar  9 2017 Remi Collet <remi@remirepo.net> - 1.2.2-1
+* Thu Mar  9 2017 Remi Collet <remi@remirepo.net> - 1.2.2-2
 - Update to 1.2.2
 - add composer virtual provides
 - keep documentation in pear directory
