@@ -9,7 +9,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global prever beta1
+%global prever rc1
 %{!?_pkgdocdir: %global _pkgdocdir %{_datadir}/doc/%{name}-%{version}}
 %if 0%{?fedora} >= 21
 # nginx 1.6 with nginx-filesystem
@@ -23,7 +23,7 @@
 
 Name: phpMyAdmin
 Version: 4.7.0
-Release: 0.1.%{prever}%{?dist}
+Release: 0.2.%{prever}%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -57,7 +57,7 @@ Suggests:  httpd
 #        "ext-xml": "*",
 #        "ext-pcre": "*",
 #        "ext-json": "*",
-#        "phpmyadmin/sql-parser": "^4.1",
+#        "phpmyadmin/sql-parser": "^4.1.2",
 #        "phpmyadmin/motranslator": "^3.0",
 #        "phpmyadmin/shapefile": "^2.0",
 #        "tecnickcom/tcpdf": "^6.2",
@@ -71,7 +71,7 @@ Requires:  php-xml
 Requires:  php-pcre
 Requires:  php-json
 Requires:  php-composer(phpmyadmin/sql-parser)   <  5
-Requires:  php-composer(phpmyadmin/sql-parser)   >= 4.1
+Requires:  php-composer(phpmyadmin/sql-parser)   >= 4.1.2
 Requires:  php-composer(phpmyadmin/motranslator) <  4
 Requires:  php-composer(phpmyadmin/motranslator) >= 3.0
 Requires:  php-composer(phpmyadmin/shapefile)    <  3
@@ -247,6 +247,10 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 
 
 %changelog
+* Thu Mar  9 2017 Remi Collet <remi@remirepo.net> 4.7.0-0.2.rc1
+- update to 4.7.0-rc1
+- raise dependency on phpmyadmin/sql-parser version 4.1.2
+
 * Fri Jan 27 2017 Remi Collet <remi@remirepo.net> 4.7.0-0.1.beta1
 - update to 4.7.0-beta1
 - raise dependency on phpmyadmin/sql-parser version 4.1
