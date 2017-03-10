@@ -124,7 +124,7 @@
 %endif
 
 %global rcver        RC1
-%global rpmrel       1
+%global rpmrel       2
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -160,6 +160,7 @@ Source51: opcache-default.blacklist
 Source52: 20-oci8.ini
 
 # Build fixes
+Patch1: php-7.0.17-interbase.patch
 Patch5: php-7.0.0-includedir.patch
 Patch6: php-5.6.3-embed.patch
 Patch7: php-5.3.0-recode.patch
@@ -201,7 +202,8 @@ BuildRequires: httpd-devel >= 2.0.46-1, pam-devel
 # to ensure we are using httpd with filesystem feature (see #1081453)
 BuildRequires: httpd-filesystem
 %endif
-BuildRequires: libstdc++-devel, openssl-devel
+BuildRequires: libstdc++-devel
+BuildRequires: openssl-devel
 %if %{with_sqlite3}
 # For SQLite3 extension
 BuildRequires: sqlite-devel >= 3.6.0
@@ -873,6 +875,7 @@ support for JavaScript Object Notation (JSON) to PHP.
 %setup -q -n php-%{version}%{?rcver}
 %endif
 
+%patch1 -p1 -b .fb_config
 %patch5 -p1 -b .includedir
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
@@ -1178,8 +1181,8 @@ build --libdir=%{_libdir}/php \
       --with-pdo-oci=shared,instantclient,%{_root_prefix},%{oraclever} \
 %endif
 %if %{with_interbase}
-      --with-interbase=shared,%{_libdir}/firebird \
-      --with-pdo-firebird=shared,%{_libdir}/firebird \
+      --with-interbase=shared \
+      --with-pdo-firebird=shared \
 %endif
       --enable-dom=shared \
       --with-pgsql=shared \
@@ -1821,6 +1824,9 @@ fi
 
 
 %changelog
+* Fri Mar 10 2017 Remi Collet <remi@fedoraproject.org> 7.0.17-0.2.RC1
+- add patch for firebird configuration
+
 * Tue Feb 28 2017 Remi Collet <remi@fedoraproject.org> 7.0.17-0.1.RC1
 - Update to 7.0.17RC1
 
