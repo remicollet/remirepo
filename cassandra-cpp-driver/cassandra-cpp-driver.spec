@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 
-%global gh_commit   a57e5d289d1ea500ccd958de6b75a5b4e0519377
+%global gh_commit   8e4f51422ea71c6ec2e9b8eb20b2bb3051a3d63a
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    datastax
 %global gh_project  cpp-driver
@@ -16,8 +16,8 @@
 
 Name:          cassandra-cpp-driver
 Summary:       DataStax C/C++ Driver for Apache Cassandra
-Version:       2.5.0
-Release:       2%{?dist}
+Version:       2.6.0
+Release:       1%{?dist}
 License:       ASL 2.0
 Group:         System Environment/Libraries
 
@@ -54,7 +54,9 @@ find examples -name .gitignore -exec rm {} \; -print
 
 
 %build
+%if 0%{?fedora} >= 26
 export CXXFLAGS="$RPM_OPT_FLAGS -Wno-implicit-fallthrough"
+%endif
 %cmake
 
 make %{_smp_mflags}
@@ -87,10 +89,15 @@ rm %{buildroot}%{_libdir}//pkgconfig/cassandra_static.pc
 
 
 %changelog
+* Fri Mar 10 2017 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0
+- open https://datastax-oss.atlassian.net/browse/CPP-442
+  Broken build on EL-6 64-bit
+
 * Mon Mar  6 2017 Remi Collet <remi@fedoraproject.org> - 2.5.0-2
 - use -Wno-implicit-fallthrough, workaround for GCC 7
 - open https://datastax-oss.atlassian.net/browse/CPP-438
-  Broken bulid with GCC 7 and OpenSSL 1.1
+  Broken build with GCC 7 and OpenSSL 1.1
 
 * Fri Oct 21 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
 - update to 2.5.0
