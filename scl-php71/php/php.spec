@@ -125,7 +125,7 @@
 %endif
 
 %global rcver        RC1
-%global rpmrel       1
+%global rpmrel       2
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1179,8 +1179,8 @@ build --libdir=%{_libdir}/php \
       --with-pdo-oci=shared,instantclient,%{_root_prefix},%{oraclever} \
 %endif
 %if %{with_interbase}
-      --with-interbase=shared,%{_libdir}/firebird \
-      --with-pdo-firebird=shared,%{_libdir}/firebird \
+      --with-interbase=shared \
+      --with-pdo-firebird=shared \
 %endif
       --enable-dom=shared \
       --with-pgsql=shared \
@@ -1808,6 +1808,9 @@ fi
 
 
 %changelog
+* Fri Mar 10 2017 Remi Collet <remi@fedoraproject.org> 7.1.3-0.2.RC1
+- fix interbase build on F26
+
 * Tue Feb 28 2017 Remi Collet <remi@fedoraproject.org> 7.1.3-0.1.RC1
 - Update to 7.1.3RC1
 
