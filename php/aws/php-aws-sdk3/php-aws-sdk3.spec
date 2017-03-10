@@ -37,8 +37,7 @@
 %global guzzle_promises_min_ver 1.0
 %global guzzle_promises_max_ver 2.0
 # "guzzlehttp/psr7": "^1.3.1, !=1.4.0"
-#     NOTE: Keeping previous max of 2.0 instead of changing to 1.4
-%global guzzle_psr7_min_ver 1.3.1
+%global guzzle_psr7_min_ver 1.4.1
 %global guzzle_psr7_max_ver 2.0
 # "mtdowling/jmespath.php": "~2.2"
 %global jmespath_min_ver 2.2
@@ -83,11 +82,16 @@ BuildRequires: php-composer(fedora/autoloader)
 ## Classmap
 BuildRequires: php-composer(theseer/autoload)
 ## composer.json
+BuildRequires: php-composer(andrewsville/php-token-reflection) <  %{tokenreflection_max_ver}
 BuildRequires: php-composer(andrewsville/php-token-reflection) >= %{tokenreflection_min_ver}
+BuildRequires: php-composer(aws/aws-php-sns-message-validator) <  %{aws_sns_message_validator_max_ver}
 BuildRequires: php-composer(aws/aws-php-sns-message-validator) >= %{aws_sns_message_validator_min_ver}
+BuildRequires: php-composer(doctrine/cache)                    <  %{doctrine_cache_max_ver}
 BuildRequires: php-composer(doctrine/cache)                    >= %{doctrine_cache_min_ver}
+BuildRequires: php-composer(nette/neon)                        <  %{nette_neon_max_ver}
 BuildRequires: php-composer(nette/neon)                        >= %{nette_neon_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
+BuildRequires: php-composer(psr/cache)                         <  %{psr_cache_max_ver}
 BuildRequires: php-composer(psr/cache)                         >= %{psr_cache_min_ver}
 BuildRequires: php-dom
 BuildRequires: php-json
@@ -95,7 +99,7 @@ BuildRequires: php-openssl
 BuildRequires: php-pcre
 BuildRequires: php-simplexml
 BuildRequires: php-spl
-## phpcompatinfo (computed from version 3.21.0)
+## phpcompatinfo (computed from version 3.24.1)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -117,7 +121,7 @@ Requires:      php-composer(guzzlehttp/psr7)        <  %{guzzle_psr7_max_ver}
 Requires:      php-composer(guzzlehttp/psr7)        >= %{guzzle_psr7_min_ver}
 Requires:      php-composer(mtdowling/jmespath.php) <  %{jmespath_max_ver}
 Requires:      php-composer(mtdowling/jmespath.php) >= %{jmespath_min_ver}
-# phpcompatinfo (computed from version 3.21.0)
+# phpcompatinfo (computed from version 3.24.1)
 Requires:      php-date
 Requires:      php-filter
 Requires:      php-hash
@@ -137,11 +141,7 @@ Requires:      php-composer(fedora/autoloader)
 Suggests:      php-curl
 Suggests:      php-openssl
 Suggests:      php-composer(doctrine/cache)
-Conflicts:     php-doctrine-cache <  %{doctrine_cache_min_ver}
-Conflicts:     php-doctrine-cache >= %{doctrine_cache_max_ver}
 Suggests:      php-composer(aws/aws-php-sns-message-validator)
-Conflicts:     php-aws-php-sns-message-validator <  %{aws_sns_message_validator_min_ver}
-Conflicts:     php-aws-php-sns-message-validator >= %{aws_sns_message_validator_max_ver}
 %endif
 
 # Composer
@@ -238,18 +238,14 @@ export AWS_ACCESS_KEY_ID=foo
 export AWS_SECRET_ACCESS_KEY=bar
 
 : Upstream tests
-%{_bindir}/phpunit -d memory_limit=1G --verbose  --testsuite=unit \
-    --bootstrap bootstrap.php
-
-: Upstream tests with SCLs if available
-SCL_RETURN_CODE=0
-for SCL in php56 php70 php71; do
-    if which $SCL; then
-        $SCL %{_bindir}/phpunit -d memory_limit=1G --verbose  --testsuite=unit \
-            --bootstrap bootstrap.php || SCL_RETURN_CODE=1
+RETURN_CODE=0
+for PHP_CLI in php php56 php70 php71; do
+    if which $PHP_CLI; then
+        $PHP_CLI %{_bindir}/phpunit -d memory_limit=1G --verbose  --testsuite=unit \
+            --bootstrap bootstrap.php || RETURN_CODE=1
     fi
 done
-exit $SCL_RETURN_CODE
+exit $RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -271,6 +267,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar 10 2017 Shawn Iwinski <shawn@iwin.ski> - 3.24.1-1
+- Updated to 3.24.1 (RHBZ #1415013)
+- Added max versions to BuildRequires
+- Removed conflicts for weak dependencies' version constraints
+
 * Fri Mar 10 2017 Remi Collet <remi@remirepo.net> - 3.24.1-1
 - Update to 3.24.1
 
