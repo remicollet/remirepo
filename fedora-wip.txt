@@ -12,13 +12,13 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 =================
  Testing
 =================
+10/3	composer-1.4.1-1.fc26
+10/3	composer-1.4.1-1.fc25
+10/3	composer-1.4.1-1.fc24
+10/3	composer-1.4.1-1.el7
 9/3	php-bartlett-umlwriter-1.2.0-2.fc26
 9/3	php-deepend-Mockery-0.9.9-2.fc26
 9/3	php-pear-1.10.3-2.fc26
-9/3	composer-1.4.0-1.fc26
-9/3	composer-1.4.0-1.fc25
-9/3	composer-1.4.0-1.fc24
-9/3	composer-1.4.0-1.el7
 9/3	php-pear-Net-Socket-1.1.0-2.fc26
 9/3	php-pear-Net-Socket-1.1.0-2.fc25
 8/3	php-pear-XML-RSS-1.1.0-1.fc26
@@ -99,6 +99,11 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 =================
  March, 2017
 =================
+10/3	10/3	composer-1.4.1-1.fc27
+10/3	9/3	composer-1.4.0-1.fc26
+10/3	9/3	composer-1.4.0-1.fc25
+10/3	9/3	composer-1.4.0-1.fc24
+10/3	9/3	composer-1.4.0-1.el7
 10/3	2/3	php-twig2-2.2.0-1.fc25
 10/3	2/3	php-zendframework-zend-form-2.10.0-1.fc25
 10/3	2/3	php-zendframework-zend-form-2.10.0-1.fc24

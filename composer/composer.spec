@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b19655f1304a3365213204bcf9a9b84476d0d265
+%global gh_commit    7ee2a5e1cf32e9c8439445fe8dce2c046c2abebd
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
 %global gh_owner     composer
@@ -16,7 +16,7 @@
 #global prever       RC
 
 Name:           composer
-Version:        1.4.0
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        Dependency Manager for PHP
 
@@ -263,6 +263,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar 10 2017 Remi Collet <remi@remirepo.net> - 1.4.1-1
+- Update to 1.4.1
+
 * Wed Mar  8 2017 Remi Collet <remi@remirepo.net> - 1.4.0-1
 - Update to 1.4.0
 - raise dependency on justinrainbow/json-schema version 3 to 5
