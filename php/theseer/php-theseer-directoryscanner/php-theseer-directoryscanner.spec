@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b1406a99f5e4b1761c84d9e98127c03871bb7b0e
+%global gh_commit    549aa9fdbc47d50365db42d9ade35fdef65f854c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     theseer
 %global gh_project   DirectoryScanner
@@ -15,7 +15,7 @@
 %global pear_channel pear.netpirates.net
 
 Name:           php-theseer-directoryscanner
-Version:        1.3.1
+Version:        1.3.2
 Release:        1%{?dist}
 Summary:        A recursive directory scanner and filter
 
@@ -58,7 +58,16 @@ cp -pr src %{buildroot}%{php_home}/%{gh_project}
 
 
 %check
-phpunit --bootstrap %{buildroot}%{php_home}/%{gh_project}/autoload.php
+ret=0
+for cmd in php56 php70 php71 php; do
+  if which $cmd; then
+    $cmd %{_bindir}/phpunit \
+         --bootstrap %{buildroot}%{php_home}/%{gh_project}/autoload.php \
+         --verbose \
+         --no-coverage || ret=1
+  fi
+done
+exit $ret
 
 
 %clean
@@ -82,6 +91,9 @@ fi
 
 
 %changelog
+* Fri Mar 10 2017 Remi Collet <remi@remirepo.net> - 1.3.2-1
+- Update to 1.3.2 (no change)
+
 * Tue Nov 25 2014 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
 - update to 1.3.1
 
