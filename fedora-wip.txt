@@ -57,17 +57,6 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 3/3	php-horde-Horde-Core-2.27.8-1.el6
 3/3	php-phpunit-PHPUnit-5.7.15-1.fc25
 3/3	php-phpunit-PHPUnit-5.7.15-1.fc24
-2/3	php-twig2-2.2.0-1.fc25
-2/3	php-zendframework-zend-form-2.10.0-1.fc25
-2/3	php-zendframework-zend-form-2.10.0-1.fc24
-2/3	php-zendframework-zend-captcha-2.7.1-1.fc25
-2/3	php-zendframework-zend-captcha-2.7.1-1.fc24
-2/3	php-zendframework-zendservice-recaptcha-3.0.0-3.fc25
-2/3	php-zendframework-zendservice-recaptcha-3.0.0-3.fc24
-2/3	php-zendframework-zend-validator-2.8.2-1.fc25
-2/3	php-zendframework-zend-validator-2.8.2-1.fc24
-2/3	php-pear-PHP-CodeSniffer-2.8.1-1.fc25
-2/3	php-pear-PHP-CodeSniffer-2.8.1-1.fc24
 2/3	php-pear-PHP-CodeSniffer-2.8.1-1.el7
 1/3	php-psr-container-1.0.0-1.el7
 1/3	php-psr-container-1.0.0-1.el6
@@ -110,6 +99,17 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 =================
  March, 2017
 =================
+10/3	2/3	php-twig2-2.2.0-1.fc25
+10/3	2/3	php-zendframework-zend-form-2.10.0-1.fc25
+10/3	2/3	php-zendframework-zend-form-2.10.0-1.fc24
+10/3	2/3	php-zendframework-zend-captcha-2.7.1-1.fc25
+10/3	2/3	php-zendframework-zend-captcha-2.7.1-1.fc24
+10/3	2/3	php-zendframework-zendservice-recaptcha-3.0.0-3.fc25
+10/3	2/3	php-zendframework-zendservice-recaptcha-3.0.0-3.fc24
+10/3	2/3	php-zendframework-zend-validator-2.8.2-1.fc25
+10/3	2/3	php-zendframework-zend-validator-2.8.2-1.fc24
+10/3	2/3	php-pear-PHP-CodeSniffer-2.8.1-1.fc25
+10/3	2/3	php-pear-PHP-CodeSniffer-2.8.1-1.fc24
 9/3	9/3	php-bartlett-umlwriter-1.2.0-2.fc27
 9/3	9/3	php-deepend-Mockery-0.9.9-2.fc27
 9/3	9/3	php-pear-1.10.3-2.fc27
