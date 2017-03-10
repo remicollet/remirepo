@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    2b7e00566afca82a38a1d3adb8e42c118006296e
+%global gh_commit    5a56d15ca10a7b75158178752b2ad8f755eb4f78
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     google
 %global gh_project   recaptcha
@@ -14,7 +14,7 @@
 %global psr0         ReCaptcha
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.2
+Version:        1.1.3
 Release:        1%{?dist}
 Summary:        reCAPTCHA PHP client library
 
@@ -25,21 +25,21 @@ Source0:        %{url}/archive/%{gh_commit}/%{name}-%{version}-%{?gh_short}.tar.
 
 BuildArch:      noarch
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.2
+BuildRequires:  php(language) >= 5.5
 BuildRequires:  php-curl
 BuildRequires:  php-json
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 # For tests, from composer.json "require-dev": {
-#        "phpunit/phpunit": "4.5.*"
-BuildRequires:  php-composer(phpunit/phpunit) >= 4.5
+#        "phpunit/phpunit": "^4.8"
+BuildRequires:  php-composer(phpunit/phpunit) >= 4.8
 %endif
 # For autoloader
 BuildRequires:  php-composer(fedora/autoloader)
 
 # From composer.json, "require": {
-#        "php": ">=5.3.2"
-Requires:       php(language) >= 5.3.2
+#        "php": ">=5.5"
+Requires:       php(language) >= 5.5
 # From phpcompatinfo report for 1.1.2
 Requires:       php-curl
 Requires:       php-json
@@ -87,22 +87,13 @@ cp -pr src/%{psr0} %{buildroot}%{_datadir}/php/%{psr0}
 %check
 %if %{with_tests}
 BOOTSTRAP=%{buildroot}%{_datadir}/php/%{psr0}/autoload.php
-
-# remirepo:11
-run=0
 ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit --bootstrap=$BOOTSTRAP || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit --bootstrap=$BOOTSTRAP || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit  --bootstrap=$BOOTSTRAP --verbose
-# remirepo:2
-fi
+
+for cmd in php56 php70 php71 php; do
+  if which $cmd; then
+    $cmd %{_bindir}/phpunit  --bootstrap=$BOOTSTRAP --verbose || ret=0
+  fi
+done
 exit $ret
 %else
 : Test suite disabled
@@ -118,6 +109,10 @@ exit $ret
 
 
 %changelog
+* Fri Mar 10 2017 Remi Collet <remi@remirepo.net> - 1.1.3-1
+- Update to 1.1.3
+- raise dependency on PHP 5.5
+
 * Sat Jan 21 2017 Remi Collet <remi@remirepo.net> - 1.1.2-1
 - initial package
 
