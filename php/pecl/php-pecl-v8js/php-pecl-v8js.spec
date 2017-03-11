@@ -17,7 +17,7 @@
 
 Summary:        V8 Javascript Engine for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.3.4
+Version:        1.3.5
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -234,6 +234,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Sat Mar 11 2017 Remi Collet <remi@remirepo.net> - 1.3.5-1
+- Update to 1.3.5
+
 * Mon Mar  6 2017 Remi Collet <remi@remirepo.net> - 1.3.4-1
 - Update to 1.3.4
 
