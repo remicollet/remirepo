@@ -13,8 +13,8 @@
     ],
     "require": {
         "php": ">=5.5",
-        "akamai-open/edgegrid-auth": "^0.6.2",
-        "guzzlehttp/guzzle": "^6.0",
+        "akamai-open/edgegrid-auth": "^1.0.0@beta",
+        "guzzlehttp/guzzle": "^6.1.1",
         "psr/log": "^1.0",
         "monolog/monolog": "^1.15",
         "league/climate": "~3.2"
@@ -58,7 +58,11 @@
             "apigen generate"
         ],
         "build-phar": "./tools/build-phar.sh",
-        "fix-cs": "./tools/fix-cs.sh",
+        "fix-cs": [
+            "phpcbf --standard=PSR1,PSR2 ./src ./tests",
+            "php-cs-fixer fix --level=psr2 ./src",
+            "php-cs-fixer fix --level=psr2 ./tests"
+        ],
         "check-version": "./tools/check-version.sh"
     }
 }
