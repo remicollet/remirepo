@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-akamai-open-edgegrid-auth
 #
-# Copyright (c) 2016 Shawn Iwinski <shawn@iwin.ski>
+# Copyright (c) 2016-2017 Shawn Iwinski <shawn@iwin.ski>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,9 @@
 
 %global github_owner     akamai-open
 %global github_name      AkamaiOPEN-edgegrid-php
-%global github_version   0.6.2
-%global github_commit    af67da2d65f8a267f675bfbd7e01f54d78ee0931
+%global github_version   1.0.0
+%global github_commit    9b6de17d90a18a67503f9d3951b066c8602aa41c
+%global github_release   .beta1
 
 %global composer_vendor  akamai-open
 %global composer_project edgegrid-auth
@@ -28,7 +29,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       0.1%{?github_release}%{?dist}
 Summary:       Implements the Akamai {OPEN} EdgeGrid Authentication
 
 Group:         Development/Libraries
@@ -45,7 +46,7 @@ BuildRequires: php-fedora-autoloader-devel
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 0.6.2)
+## phpcompatinfo (computed from version 1.0.0beta1)
 BuildRequires: php-date
 BuildRequires: php-hash
 BuildRequires: php-json
@@ -55,7 +56,7 @@ BuildRequires: php-reflection
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 0.6.2)
+# phpcompatinfo (computed from version 1.0.0beta1)
 Requires:      php-date
 Requires:      php-hash
 Requires:      php-pcre
@@ -107,16 +108,13 @@ sed '/log/d' phpunit.xml.dist > phpunit.xml
 BOOTSTRAP=%{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/autoload-auth.php
 
 : Upstream tests
-%{_bindir}/phpunit --verbose --bootstrap $BOOTSTRAP
-
-: Upstream tests with SCLs if available
-SCL_RETURN_CODE=0
-for SCL in php56 php70 php71; do
-    if which $SCL; then
-       $SCL %{_bindir}/phpunit --bootstrap $BOOTSTRAP || SCL_RETURN_CODE=1
+RETURN_CODE=0
+for PHP_EXEC in php %{?rhel:php54 php55} php56 php70 php71; do
+    if which $PHP_EXEC; then
+       $PHP_EXEC %{_bindir}/phpunit --bootstrap $BOOTSTRAP || RETURN_CODE=1
     fi
 done
-exit $SCL_RETURN_CODE
+exit $RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -141,6 +139,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar 11 2017 Shawn Iwinski <shawn@iwin.ski> - 1.0.0-0.1.beta1
+- Update to 1.0.0beta1 (RHBZ #1413360)
+
 * Mon Dec 26 2016 Shawn Iwinski <shawn@iwin.ski> - 0.6.2-1
 - Update to 0.6.2 (RHBZ #1408684)
 
