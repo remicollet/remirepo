@@ -12,8 +12,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   3.24.1
-%global github_commit    81d79a486c7628d5fd282259bd6f9a0570d3eb41
+%global github_version   3.24.2
+%global github_commit    2b252f300de442cdb5cde18ddc118c2477972e30
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -267,6 +267,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar 11 2017 Remi Collet <remi@remirepo.net> - 3.24.2-1
+- Update to 3.24.2
+
 * Fri Mar 10 2017 Shawn Iwinski <shawn@iwin.ski> - 3.24.1-1
 - Updated to 3.24.1 (RHBZ #1415013)
 - Added max versions to BuildRequires
