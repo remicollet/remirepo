@@ -1,5 +1,5 @@
 # remirepo spec file for roundcubemail, from:
-
+#
 # Fedora spec file for roundcubemail
 #
 # License: MIT
@@ -19,7 +19,7 @@
 %global roundcubedir %{_datadir}/roundcubemail
 %global _logdir /var/log  
 Name: roundcubemail
-Version:  1.2.3
+Version:  1.2.4
 Release:  1%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
@@ -240,6 +240,9 @@ for plug in $(ls); do
   if [ -f $plug/config.inc.php.dist ]; then
     mv $plug/config.inc.php.dist %{buildroot}%{_sysconfdir}/roundcubemail/$plug.inc.php.dist
   fi
+  if [ -d $plug/tests ]; then
+    rm -r $plug/tests
+  fi
 done
 popd
 
@@ -293,6 +296,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar 11 2017 Remi Collet <remi@fedoraproject.org> - 1.2.4-1
+- update to 1.2.4
+- don't install plugin test suites
+
 * Tue Nov 29 2016 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
 - update to 1.2.3
 

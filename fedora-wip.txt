@@ -12,6 +12,9 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 =================
  Testing
 =================
+11/3	roundcubemail-1.2.4-1.fc26
+11/3	roundcubemail-1.2.4-1.fc25
+11/3	roundcubemail-1.2.4-1.fc24
 10/3	composer-1.4.1-1.fc26
 10/3	composer-1.4.1-1.fc25
 10/3	composer-1.4.1-1.fc24
@@ -99,6 +102,7 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 =================
  March, 2017
 =================
+11/3	11/3	roundcubemail-1.2.4-1.fc27
 10/3	10/3	php-theseer-directoryscanner-1.3.2-1.fc27
 10/3	10/3	composer-1.4.1-1.fc27
 10/3	9/3	composer-1.4.0-1.fc26
