@@ -36,7 +36,7 @@ Summary:       PSR HTTP Message implementations
 
 Group:         Development/Libraries
 License:       BSD
-URL:           https://zendframework.github.io/%{gh_project}/
+URL:           https://zendframework.github.io/%{github_name}/
 
 # GitHub export does not include tests.
 # Run php-zendframework-zend-diactoros-get-source.sh to create full source.
@@ -86,7 +86,7 @@ A PHP package containing implementations of the accepted PSR-7 HTTP message
 interfaces [1], as well as a "server" implementation similar to node's
 http.Server [2].
 
-Documentation: https://zendframework.github.io/%{gh_project}/
+Documentation: https://zendframework.github.io/%{github_name}/
 
 Autoloader: %{phpdir}/Zend/Diactoros/autoload.php
 
@@ -98,6 +98,7 @@ Autoloader: %{phpdir}/Zend/Diactoros/autoload.php
 %setup -qn %{github_name}-%{github_commit}
 
 mv LICENSE.md LICENSE
+
 
 %build
 : Create autoloader
