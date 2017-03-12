@@ -12,8 +12,8 @@
 
 %global github_owner     reactphp
 %global github_name      http-client
-%global github_version   0.4.15
-%global github_commit    01e919008363622334f91419a9908b3a51754ccd
+%global github_version   0.4.16
+%global github_commit    307d8f9c9062c9f2fb21cde6ad13afee040cce15
 
 %global composer_vendor  react
 %global composer_project http-client
@@ -49,7 +49,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       Asynchronous HTTP client library
 
 Group:         Development/Libraries
@@ -77,7 +77,7 @@ BuildRequires: php-composer(react/socket-client) <  %{react_socket_client_max_ve
 BuildRequires: php-composer(react/socket-client) >= %{react_socket_client_min_ver}
 BuildRequires: php-composer(react/stream) <  %{react_stream_max_ver}
 BuildRequires: php-composer(react/stream) >= %{react_stream_min_ver}
-## phpcompatinfo (computed from version 0.4.15)
+## phpcompatinfo (computed from version 0.4.16)
 BuildRequires: php-json
 BuildRequires: php-spl
 ## Autoloader
@@ -100,7 +100,7 @@ Requires:      php-composer(react/socket-client) <  %{react_socket_client_max_ve
 Requires:      php-composer(react/socket-client) >= %{react_socket_client_min_ver}
 Requires:      php-composer(react/stream) <  %{react_stream_max_ver}
 Requires:      php-composer(react/stream) >= %{react_stream_min_ver}
-# phpcompatinfo (computed from version 0.4.15)
+# phpcompatinfo (computed from version 0.4.16)
 Requires:      php-spl
 # Autoloader
 Requires:      php-composer(fedora/autoloader)
@@ -181,6 +181,9 @@ exit $SCL_RETURN_CODE
 
 
 %changelog
+* Sat Mar 11 2017 Shawn Iwinski <shawn@iwin.ski> - 0.4.16-1
+- Update to 0.4.16 (RHBZ #1429266)
+
 * Thu Jan 26 2017 Remi Collet <remi@remirepo.net> - 0.4.15-2
 - backport
 
