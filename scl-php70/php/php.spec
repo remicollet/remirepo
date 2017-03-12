@@ -161,6 +161,7 @@ Source52: 20-oci8.ini
 
 # Build fixes
 Patch1: php-7.0.17-interbase.patch
+Patch2: php-7.0.17-openssl11.patch
 Patch5: php-7.0.0-includedir.patch
 Patch6: php-5.6.3-embed.patch
 Patch7: php-5.3.0-recode.patch
@@ -876,6 +877,9 @@ support for JavaScript Object Notation (JSON) to PHP.
 %endif
 
 %patch1 -p1 -b .fb_config
+%if 0%{?fedora} >= 26
+%patch2 -p1 -b .openssl11
+%endif
 %patch5 -p1 -b .includedir
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
@@ -1826,6 +1830,7 @@ fi
 %changelog
 * Fri Mar 10 2017 Remi Collet <remi@fedoraproject.org> 7.0.17-0.2.RC1
 - add patch for firebird configuration
+- add patch for OpenSSL 1.1 on F26
 
 * Tue Feb 28 2017 Remi Collet <remi@fedoraproject.org> 7.0.17-0.1.RC1
 - Update to 7.0.17RC1

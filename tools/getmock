@@ -308,7 +308,7 @@ elif [ $1 = scl56 ]; then
 	done
 
 elif [ $1 = scl70 ]; then
-	for i in 22 23 24 25
+	for i in 22 23 24 25 26
 	do
 		getOneMock scl70fc${i}x $opt
 	done
