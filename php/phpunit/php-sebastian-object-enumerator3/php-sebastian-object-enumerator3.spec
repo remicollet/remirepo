@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    de6e32f7192dfea2e4bedc892434f4830b5c5794
+%global gh_commit    601be3b8ddc75cc8c4e44e8f368c718c8f2d2f38
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -25,9 +25,9 @@
 %endif
 
 Name:           php-%{pk_vendor}-%{pk_project}%{major}
-Version:        3.0.0
+Version:        3.0.1
 %global specrel 1
-Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
+Release:        %{?gh_date:1%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Traverses array and object to enumerate all referenced objects
 
 Group:          Development/Libraries
@@ -51,7 +51,7 @@ BuildRequires:  phpunit6
 Requires:       php(language) >= 7.0
 Requires:       php-composer(%{pk_vendor}/recursion-context) >= 3.0
 Requires:       php-composer(%{pk_vendor}/recursion-context) <  4
-# from phpcompatinfo report for version 3.0.0:
+# from phpcompatinfo report for version 3.0.1:
 Requires:       php-reflection
 Requires:       php-spl
 # Autoloader
@@ -90,7 +90,7 @@ cp -pr src %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}%{major}
 %check
 %if %{with_tests}
 mkdir vendor
-%{_bindir}/phpab --template fedora --output vendor/autoload.php tests
+%{_bindir}/phpab --template fedora --output vendor/autoload.php tests/_fixture
 
 : Run upstream test suite
 ret=0
@@ -114,6 +114,9 @@ exit $ret
 
 
 %changelog
+* Sun Mar 12 2017 Remi Collet <remi@remirepo.net> - 3.0.1-1
+- Update to 3.0.1
+
 * Fri Mar  3 2017 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - update to 3.0.0
 - rename to php-sebastian-object-enumerator3
