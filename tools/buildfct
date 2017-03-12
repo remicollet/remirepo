@@ -5,15 +5,15 @@ alias rhpkg='echo NO PLEASE, use fedpkg'
 
 mocketc=/home/rpmbuild/SPECS/remirepo/tools/mock
 
-alias mockfc22i="  setarch i686  mock --configdir=$mocketc -r fc22i   --arch i686 rebuild "
-alias mockfc22i70="setarch i686  mock --configdir=$mocketc -r fc22i70 --arch i686 rebuild "
-alias mockfc22x="                mock --configdir=$mocketc -r fc22x               rebuild "
-alias mockfc22x70="              mock --configdir=$mocketc -r fc22x70             rebuild "
-alias mockfc22xscl54="           mock --configdir=$mocketc -r fc22xscl54          rebuild "
-alias mockfc22xscl55="           mock --configdir=$mocketc -r fc22xscl55          rebuild "
-alias mockfc22xscl56="           mock --configdir=$mocketc -r fc22xscl56          rebuild "
-alias mockfc22xscl70="           mock --configdir=$mocketc -r fc22xscl70          rebuild "
-alias mockfc22xscl71="           mock --configdir=$mocketc -r fc22xscl71          rebuild "
+#alias mockfc22i="  setarch i686  mock --configdir=$mocketc -r fc22i   --arch i686 rebuild "
+#alias mockfc22i70="setarch i686  mock --configdir=$mocketc -r fc22i70 --arch i686 rebuild "
+#alias mockfc22x="                mock --configdir=$mocketc -r fc22x               rebuild "
+#alias mockfc22x70="              mock --configdir=$mocketc -r fc22x70             rebuild "
+#alias mockfc22xscl54="           mock --configdir=$mocketc -r fc22xscl54          rebuild "
+#alias mockfc22xscl55="           mock --configdir=$mocketc -r fc22xscl55          rebuild "
+#alias mockfc22xscl56="           mock --configdir=$mocketc -r fc22xscl56          rebuild "
+#alias mockfc22xscl70="           mock --configdir=$mocketc -r fc22xscl70          rebuild "
+#alias mockfc22xscl71="           mock --configdir=$mocketc -r fc22xscl71          rebuild "
 
 alias mockfc23i="  setarch i686  mock --configdir=$mocketc -r fc23i   --arch i686 rebuild "
 alias mockfc23i70="setarch i686  mock --configdir=$mocketc -r fc23i70 --arch i686 rebuild "
@@ -115,7 +115,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in 25 26 24 23 22
+  for i in 25 26 24 23
   do
     echo -n "$(date +%X) fc$i "
     setarch i686  mock $quiet --configdir=$mocketc -r fc${i}i --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
@@ -204,8 +204,6 @@ if [ -f "$1" ]; then
   setarch i686    mock $quiet --configdir=$mocketc -r fc24i70 --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
   echo -n "$(date +%X) 70 fc23 "
   setarch i686    mock $quiet --configdir=$mocketc -r fc23i70 --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
-  echo -n "$(date +%X) 70 fc22 "
-  setarch i686    mock $quiet --configdir=$mocketc -r fc22i70 --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
   echo -n "$(date +%X) 70 el6  "
   setarch i686    mock $quiet --configdir=$mocketc -r el6i70  --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
   date +%X
@@ -248,7 +246,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in 25 23 22 24
+  for i in 25 23 24
   do
     echo -n "$(date +%X) test-fc$i "
     setarch i686  mock $quiet --configdir=$mocketc -r fc${i}it  --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
@@ -273,7 +271,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in 25 26 23 24 22
+  for i in 25 26 23 24
   do
     echo -n "$(date +%X) fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}x rebuild $1 && echo " Ok." || echo " Error !"
@@ -321,7 +319,7 @@ fi
 if [ -f "$1" ]; then
   date +%X
   pids=""
-  for i in 26 25 24 23 22
+  for i in 26 25 24 23
   do
     echo -n ""
     (mock $quiet --configdir=$mocketc -r fc${i}x  rebuild $1 && echo "$(date +%X) (56) fc$i  Ok." || echo "fc$1 Error !")&
@@ -357,7 +355,7 @@ if [ -f "$1" ]; then
     (mock $quiet --configdir=$mocketc -r fc${i}x    rebuild $1 && echo "$(date +%X) (70) fc$i  Ok." || echo "fc$1 Error !")&
     pids="$pids $!"
   done
-  for i in 24 23 22
+  for i in 24 23
   do
     echo -n ""
     (mock $quiet --configdir=$mocketc -r fc${i}x70  rebuild $1 && echo "$(date +%X) (70) fc$i  Ok." || echo "fc$1 Error !")&
@@ -428,7 +426,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in 23 24 22
+  for i in 23 24
   do
     echo -n "$(date +%X) 70 fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}x70 rebuild $1 && echo " Ok." || echo " Error !"
@@ -480,7 +478,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in 25 26 24 23 22
+  for i in 25 26 24 23
   do
     echo -n "$(date +%X) scl71 fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}xscl71 rebuild $1 && echo " Ok." || echo " Error !"
@@ -506,7 +504,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in 25 26 24 22 23
+  for i in 25 26 24 23
   do
     echo -n "$(date +%X) scl70 fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}xscl70 rebuild $1 && echo " Ok." || echo " Error !"
@@ -532,7 +530,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in 25 23 24 22
+  for i in 25 23 24
   do
     echo -n "$(date +%X) scl56 fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}xscl56 rebuild $1 && echo " Ok." || echo " Error !"
@@ -558,7 +556,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in 25 23 24 22
+  for i in 25 23 24
   do
     echo -n "$(date +%X) scl55 fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}xscl55 rebuild $1 && echo " Ok." || echo " Error !"
@@ -584,7 +582,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in 25 24 22 23
+  for i in 25 24 23
   do
     echo -n "$(date +%X) scl54 fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}xscl54 rebuild $1 && echo " Ok." || echo " Error !"
@@ -610,7 +608,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in 25 22 24 23
+  for i in 25 24 23
   do
     echo -n "$(date +%X) test-fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}xt rebuild $1 && echo " Ok." || echo " Error !"
