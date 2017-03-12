@@ -185,15 +185,6 @@ fi
 
 
 %check
-%if 0%{__isa_bits} < 64
-: ingore failted see https://github.com/phpv8/v8js/issues/270
-rm ?TS/tests/create_snapshot_basic.phpt
-rm ?TS/tests/memory_limit.phpt
-rm ?TS/tests/set_memory_limit_001.phpt
-rm ?TS/tests/set_memory_limit_003.phpt
-rm ?TS/tests/set_memory_limit_basic.phpt
-%endif
-
 : Minimal load test for NTS extension
 cd NTS
 %{_bindir}/php --no-php-ini \
