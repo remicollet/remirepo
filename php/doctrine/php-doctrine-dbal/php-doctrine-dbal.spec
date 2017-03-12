@@ -27,7 +27,7 @@
 %global doctrine_common_max_ver 2.8
 # "symfony/console": "2.*||^3.0"
 %global symfony_console_min_ver 2.0
-%global symfony_console_max_ver 4
+%global symfony_console_max_ver 4.0
 
 %{!?phpdir:  %global phpdir  %{_datadir}/php}
 
@@ -41,7 +41,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       Doctrine Database Abstraction Layer (DBAL)
 
 Group:         Development/Libraries
@@ -66,35 +66,39 @@ BuildArch: noarch
 %if %{with_tests}
 BuildRequires: php-composer(phpunit/phpunit)
 ## composer.json
-BuildRequires: php(language)                 >= %{php_min_ver}
+BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(doctrine/common) >= %{doctrine_common_min_ver}
 BuildRequires: php-composer(doctrine/common) <  %{doctrine_common_max_ver}
 ## composer.json (optional)
 BuildRequires: php-composer(symfony/console) >= %{symfony_console_min_ver}
 BuildRequires: php-composer(symfony/console) <  %{symfony_console_max_ver}
-## phpcompatinfo (computed from version 2.5.5)
+## phpcompatinfo (computed from version 2.5.12)
 BuildRequires: php-date
 BuildRequires: php-json
 BuildRequires: php-pcre
 BuildRequires: php-pdo
 BuildRequires: php-reflection
 BuildRequires: php-spl
+## Autoloader
+BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 # composer.json
-Requires:      php(language)                 >= %{php_min_ver}
+Requires:      php(language) >= %{php_min_ver}
 Requires:      php-composer(doctrine/common) >= %{doctrine_common_min_ver}
 Requires:      php-composer(doctrine/common) <  %{doctrine_common_max_ver}
 # composer.json (optional)
 Requires:      php-composer(symfony/console) >= %{symfony_console_min_ver}
 Requires:      php-composer(symfony/console) <  %{symfony_console_max_ver}
-# phpcompatinfo (computed from version 2.5.5)
+# phpcompatinfo (computed from version 2.5.12)
 Requires:      php-date
 Requires:      php-json
 Requires:      php-pcre
 Requires:      php-pdo
 Requires:      php-reflection
 Requires:      php-spl
+# Autoloader
+Requires:      php-composer(fedora/autoloader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -131,37 +135,30 @@ fi
 : Remove empty file
 rm -f lib/Doctrine/DBAL/README.markdown
 
+
+%build
 : Create autoloader
 cat <<'AUTOLOAD' | tee lib/Doctrine/DBAL/autoload.php
 <?php
 /**
  * Autoloader for %{name} and its' dependencies
  * (created by %{name}-%{version}-%{release}).
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
  */
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+\Fedora\Autoloader\Autoload::addPsr4('Doctrine\\DBAL\\', __DIR__);
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
+\Fedora\Autoloader\Dependencies::required(array(
+    '%{phpdir}/Doctrine/Common/autoload.php',
+));
 
-$fedoraClassLoader->addPrefix('Doctrine\\DBAL\\', dirname(dirname(__DIR__)));
-
-// Required dependencies
-require_once '%{phpdir}/Doctrine/Common/autoload.php';
-require_once '%{phpdir}/Symfony/Component/Console/autoload.php';
-
-return $fedoraClassLoader;
+\Fedora\Autoloader\Dependencies::optional(array(
+    array(
+        '%{phpdir}/Symfony3/Component/Console/autoload.php',
+        '%{phpdir}/Symfony/Component/Console/autoload.php',
+    ),
+));
 AUTOLOAD
-
-
-%build
-# Empty build section, nothing required
 
 
 %install
@@ -180,29 +177,21 @@ install -pm 0755 bin/doctrine-dbal.php %{buildroot}/%{_bindir}/doctrine-dbal
 mv tests/Doctrine/Tests/TestInit.php tests/Doctrine/Tests/TestInit.php.dist
 cat > tests/Doctrine/Tests/TestInit.php <<'BOOTSTRAP'
 <?php
-$fedoraClassLoader =
-    require_once '%{buildroot}/%{phpdir}/Doctrine/DBAL/autoload.php';
-
-$fedoraClassLoader->addPrefix(
+require_once '%{buildroot}/%{phpdir}/Doctrine/DBAL/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4(
     'Doctrine\\Tests\\',
-    dirname(dirname(dirname(__DIR__))).'/tests'
+    dirname(dirname(dirname(__DIR__))).'/tests/Doctrine/Tests'
 );
 BOOTSTRAP
 
-run=0
-ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose
-fi
-exit $ret
+: Upstream tests
+RETURN_CODE=0
+for PHP_EXEC in php %{?rhel:php54 php55} php56 php70 php71; do
+    if which $PHP_EXEC; then
+        $PHP_EXEC %{_bindir}/phpunit --verbose || RETURN_CODE=1
+    fi
+done
+exit $RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -223,6 +212,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar 11 2017 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.5.12-1
+- Updated to 2.5.12 (RHBZ #1412852)
+- Switch autoloader to php-composer(fedora/autoloader)
+- Run upstream tests with SCLs if available
+
 * Wed Feb  8 2017 Remi Collet <remi@remirepo.net> - 2.5.12-1
 - update to 2.5.12
 

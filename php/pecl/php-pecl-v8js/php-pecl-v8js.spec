@@ -18,11 +18,13 @@
 Summary:        V8 Javascript Engine for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.3.5
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+Patch0:         %{pecl_name}-upstream.patch
 
 # See http://pkgs.fedoraproject.org/cgit/rpms/v8.git/tree/v8.spec#n49
 # arm is excluded because of bz1334406
@@ -80,6 +82,8 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
+%patch0 -p1 -b .upstream
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_V8JS_VERSION/{s/.* "//;s/".*$//;p}' php_v8js_macros.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
@@ -234,6 +238,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Sun Mar 12 2017 Remi Collet <remi@remirepo.net> - 1.3.5-2
+- add upstream for F26 (GCC 7)
+
 * Sat Mar 11 2017 Remi Collet <remi@remirepo.net> - 1.3.5-1
 - Update to 1.3.5
 
