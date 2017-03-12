@@ -12,8 +12,8 @@
 
 %global github_owner     reactphp
 %global github_name      child-process
-%global github_version   0.4.1
-%global github_commit    3ab4f83c6f6c5862f7ca28d999a92d327472a671
+%global github_version   0.4.2
+%global github_commit    be6ebd7763170626794cbcb5c7b7ffdf5c9a4cb4
 
 %global composer_vendor  react
 %global composer_project child-process
@@ -26,9 +26,9 @@
 # "react/event-loop": "0.4.*"
 %global react_event_loop_min_ver 0.4.0
 %global react_event_loop_max_ver 0.5.0
-# "react/stream": "~0.4.2"
-%global react_stream_min_ver 0.4.2
-%global react_stream_max_ver 0.5.0
+# "react/stream": "^0.5 || ^0.4.4"
+%global react_stream_min_ver 0.4.4
+%global react_stream_max_ver 1.0
 # "sebastian/environment": "~1.0"
 %if 0
 %global sebastian_environment_min_ver 1.0
@@ -49,7 +49,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       Library for executing child processes
 
 Group:         Development/Libraries
@@ -71,7 +71,7 @@ BuildRequires: php-composer(react/stream) <  %{react_stream_max_ver}
 BuildRequires: php-composer(react/stream) >= %{react_stream_min_ver}
 BuildRequires: php-composer(sebastian/environment) <  %{sebastian_environment_max_ver}
 BuildRequires: php-composer(sebastian/environment) >= %{sebastian_environment_min_ver}
-## phpcompatinfo (computed from version 0.4.1)
+## phpcompatinfo (computed from version 0.4.2)
 BuildRequires: php-pcntl
 BuildRequires: php-spl
 ## Autoloader
@@ -86,7 +86,7 @@ Requires:      php-composer(react/event-loop) <  %{react_event_loop_max_ver}
 Requires:      php-composer(react/event-loop) >= %{react_event_loop_min_ver}
 Requires:      php-composer(react/stream) <  %{react_stream_max_ver}
 Requires:      php-composer(react/stream) >= %{react_stream_min_ver}
-# phpcompatinfo (computed from version 0.4.1)
+# phpcompatinfo (computed from version 0.4.2)
 Requires:      php-spl
 # Autoloader
 Requires:      php-composer(fedora/autoloader)
@@ -168,6 +168,9 @@ exit $SCL_RETURN_CODE
 
 
 %changelog
+* Sat Mar 11 2017 Shawn Iwinski <shawn@iwin.ski> - 0.4.2-1
+- Update to 0.4.2 (RHBZ #1431348)
+
 * Wed Jan 25 2017 Remi Collet <remi@remirepo.net> - 0.4.1-2
 - backport for remi repo
 
