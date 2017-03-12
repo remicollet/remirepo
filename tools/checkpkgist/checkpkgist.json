@@ -16,6 +16,7 @@
     "php-sebastian-comparator2": "sebastian\/comparator",
     "php-sebastian-object-enumerator3": "sebastian\/object-enumerator",
     "php-justinrainbow-json-schema5": "justinrainbow\/json-schema",
+	"php-sebastian-object-reflector": "sebastian\/object-reflector",
     "php-phpunit-dbunit3": "phpunit\/dbunit",
     "phpcov": "phpunit\/phpcov",
     "phpunit6": "phpunit\/phpunit",
