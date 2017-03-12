@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    601be3b8ddc75cc8c4e44e8f368c718c8f2d2f38
+%global gh_commit    31dd3379d16446c5d86dec32ab1ad1f378581ad8
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -25,7 +25,7 @@
 %endif
 
 Name:           php-%{pk_vendor}-%{pk_project}%{major}
-Version:        3.0.1
+Version:        3.0.2
 %global specrel 1
 Release:        %{?gh_date:1%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Traverses array and object to enumerate all referenced objects
@@ -39,6 +39,9 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 7.0
 BuildRequires:  php-fedora-autoloader-devel
 %if %{with_tests}
+BuildRequires:  php-composer(%{pk_vendor}/object-reflector) <  2
+BuildRequires:  php-composer(%{pk_vendor}/object-reflector) >= 1.0
+BuildRequires:  php-composer(%{pk_vendor}/recursion-context) <  4
 BuildRequires:  php-composer(%{pk_vendor}/recursion-context) >= 3.0
 # From composer.json"require-dev": {
 #        "phpunit/phpunit": "^6.0"
@@ -47,10 +50,13 @@ BuildRequires:  phpunit6
 
 # from composer.json
 #        "php": "^7.0",
+#        "sebastian/object-reflector": "^1.0",
 #        "sebastian/recursion-context": "^3.0"
 Requires:       php(language) >= 7.0
-Requires:       php-composer(%{pk_vendor}/recursion-context) >= 3.0
+Requires:       php-composer(%{pk_vendor}/object-reflector) <  2
+Requires:       php-composer(%{pk_vendor}/object-reflector) >= 1.0
 Requires:       php-composer(%{pk_vendor}/recursion-context) <  4
+Requires:       php-composer(%{pk_vendor}/recursion-context) >= 3.0
 # from phpcompatinfo report for version 3.0.1:
 Requires:       php-reflection
 Requires:       php-spl
@@ -78,6 +84,7 @@ Autoloader: %{php_home}/%{ns_vendor}/%{ns_project}%{major}/autoload.php
 %{_bindir}/phpab --template fedora --output src/autoload.php src
 cat << 'EOF' | tee -a src/autoload.php
 // Dependencies
+require_once 'SebastianBergmann/ObjectReflector/autoload.php';
 require_once 'SebastianBergmann/RecursionContext3/autoload.php';
 EOF
 
@@ -114,6 +121,10 @@ exit $ret
 
 
 %changelog
+* Sun Mar 12 2017 Remi Collet <remi@remirepo.net> - 3.0.2-1
+- Update to 3.0.2
+- add dependency on sebastian/object-reflector
+
 * Sun Mar 12 2017 Remi Collet <remi@remirepo.net> - 3.0.1-1
 - Update to 3.0.1
 
