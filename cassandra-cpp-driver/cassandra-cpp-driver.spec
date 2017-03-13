@@ -17,12 +17,14 @@
 Name:          cassandra-cpp-driver
 Summary:       DataStax C/C++ Driver for Apache Cassandra
 Version:       2.6.0
-Release:       1%{?dist}
+Release:       2%{?dist}
 License:       ASL 2.0
 Group:         System Environment/Libraries
 
 URL:           http://datastax.github.io/cpp-driver/
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+
+Patch0:        4d4453b555ec50701d9f50e8d97e5ef9720a4bfe.patch
 
 BuildRequires: cmake >= 2.6.4
 BuildRequires: libuv-devel
@@ -49,6 +51,7 @@ for %{name}.
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+%patch0 -p1 -b .upstream
 
 find examples -name .gitignore -exec rm {} \; -print
 
@@ -89,6 +92,9 @@ rm %{buildroot}%{_libdir}//pkgconfig/cassandra_static.pc
 
 
 %changelog
+* Mon Mar 13 2017 Remi Collet <remi@fedoraproject.org> - 2.6.0-2
+- add upstream patch for EL-6
+
 * Fri Mar 10 2017 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - update to 2.6.0
 - open https://datastax-oss.atlassian.net/browse/CPP-442
