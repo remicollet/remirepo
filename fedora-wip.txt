@@ -12,6 +12,9 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 =================
  Testing
 =================
+13/3	libsodium-1.0.12-1.fc26
+13/3	libsodium-1.0.12-1.fc25
+13/3	libsodium-1.0.12-1.fc24
 11/3	ImageMagick-6.9.3.0-6.fc26
 11/3	ImageMagick-6.9.3.0-6.fc25
 11/3	roundcubemail-1.1.8-1.el7
@@ -104,6 +107,7 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 =================
  March, 2017
 =================
+13/3	13/3	libsodium-1.0.12-1.fc27
 11/3	11/3	ImageMagick-6.9.3.0-6.fc27
 11/3	11/3	php-zendframework-zend-diactoros-1.3.10-2.fc27
 11/3	24/2	php-bartlett-php-compatinfo-db-1.18.0-1.el7

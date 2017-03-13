@@ -22,8 +22,8 @@ Name:           %{libname}
 # Build for parallel install
 Name:           %{libname}-last
 %endif
-Version:        1.0.11
-Release:        2%{?dist}
+Version:        1.0.12
+Release:        1%{?dist}
 Summary:        The Sodium crypto library
 Group:          System Environment/Libraries
 License:        ISC
@@ -148,6 +148,9 @@ rm -rf %{buildroot}
 %{_libdir}/libsodium.a
 
 %changelog
+* Mon Mar 13 2017 Remi Collet <remi@fedoraproject.org> - 1.0.12-1
+- update to 1.0.12
+
 * Mon Dec 12 2016 Neal Gompa <ngompa13@gmail.com> - 1.0.11-2
 - Add static library subpackage
 
