@@ -22,20 +22,18 @@
 %else
 %global ini_name    40-%{pecl_name}.ini
 %endif
-%global prever      beta1
+%global prever      beta2
 
 %global buildver %(pkg-config --silence-errors --modversion librabbitmq 2>/dev/null || echo 65536)
 
 Summary:       Communicate with any AMQP compliant server
 Name:          %{?sub_prefix}php-pecl-amqp
 Version:       1.9.0
-Release:       0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-
-Patch0:        %{pecl_name}-pr274.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 5.3.0
@@ -117,7 +115,6 @@ sed -e 's/role="test"/role="src"/' \
 mv %{pecl_name}-%{version}%{?prever} NTS
 
 cd NTS
-%patch0 -p1 -b .pr274
 sed -e 's/CFLAGS="-I/CFLAGS="-fPIC -I/' -i config.m4
 
 # Upstream often forget to change this
@@ -312,6 +309,10 @@ fi
 
 
 %changelog
+* Mon Mar 13 2017 Remi Collet <remi@remirepo.net> - 1.9.0-0.2.beta2
+- Update to 1.9.0beta2
+- drop patch merged upstream
+
 * Mon Mar 13 2017 Remi Collet <remi@remirepo.net> - 1.9.0-0.1.beta1
 - Update to 1.9.0beta1
 - add patch from https://github.com/pdezwart/php-amqp/pull/274
