@@ -7,7 +7,7 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    e1d6b8dc2e6abea3185b59da8b52002eb7dc9a87
+%global gh_commit    3319d7707f342e38291eee6b01a4a5f8df1b333b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     onelogin
 %global gh_project   php-saml
@@ -17,7 +17,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Group:          Development/Libraries
-Version:        2.10.4
+Version:        2.10.5
 Release:        1%{?dist}
 Summary:        SAML support for PHP
 
@@ -102,11 +102,11 @@ cp -pr lib/* %{buildroot}%{_datadir}/php/%{php_vendor}/
 %check
 run=0
 if which php56; then
-   php56 %{_bindir}/phpunit --bootstrap tests/bootstrap.php --configuration tests/phpunit.xml || ret=1
+   php56 %{_bindir}/phpunit --no-coverage --bootstrap tests/bootstrap.php --configuration tests/phpunit.xml || ret=1
    run=1
 fi
 if which php71; then
-   php71 %{_bindir}/phpunit --bootstrap tests/bootstrap.php --configuration tests/phpunit.xml || ret=1
+   php71 %{_bindir}/phpunit --no-coverage --bootstrap tests/bootstrap.php --configuration tests/phpunit.xml || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -128,6 +128,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 13 2017 Remi Collet <remi@remirepo.net> - 2.10.5-1
+- Update to 2.10.5
+
 * Wed Mar  1 2017 Remi Collet <remi@remirepo.net> - 2.10.4-1
 - update to 2.10.4
 
