@@ -1650,8 +1650,12 @@ mv $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d/www.conf.default .
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
 install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
 # Environment file
+%if 0%{?fedora} >= 26
+sed -e '/EnvironmentFile/d' -i $RPM_BUILD_ROOT%{_root_initddir}/%{?scl_prefix}php-fpm
+%else
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
 install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
+%endif
 %if %{with_systemd}
 install -m 755 -d $RPM_BUILD_ROOT/run/php-fpm
 # tmpfiles.d
@@ -1959,7 +1963,9 @@ fi
 %config(noreplace) %{_sysconfdir}/php-fpm.conf
 %config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/php-fpm
+%if 0%{?fedora} < 26
 %config(noreplace) %{_sysconfdir}/sysconfig/php-fpm
+%endif
 %if %{with_nginx}
 %config(noreplace) %{_sysconfdir}/nginx/conf.d/php-fpm.conf
 %config(noreplace) %{_sysconfdir}/nginx/default.d/php.conf

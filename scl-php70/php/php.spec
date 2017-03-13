@@ -1447,10 +1447,14 @@ sed -e 's:/run:%{_localstatedir}/run:' \
     -i $RPM_BUILD_ROOT%{_root_sysconfdir}/logrotate.d/%{?scl_prefix}php-fpm
 
 # Environment file
+%if 0%{?fedora} >= 26
+sed -e '/EnvironmentFile/d' -i $RPM_BUILD_ROOT%{_root_initddir}/%{?scl_prefix}php-fpm
+%else
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
 install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 sed -e 's:php-fpm.service:%{?scl_prefix}php-fpm.service:' \
     -i $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
+%endif
 
 # make the cli commands available in standard root for SCL build
 %if 0%{?scl:1}
@@ -1728,7 +1732,9 @@ fi
 %config(noreplace) %{_sysconfdir}/php-fpm.conf
 %config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf
 %config(noreplace) %{_root_sysconfdir}/logrotate.d/%{?scl_prefix}php-fpm
+%if 0%{?fedora} < 26
 %config(noreplace) %{_sysconfdir}/sysconfig/php-fpm
+%endif
 # {_prefix}/lib/tmpfiles.d/php-fpm.conf
 %if %{with_systemd}
 %{_unitdir}/%{?scl_prefix}php-fpm.service
