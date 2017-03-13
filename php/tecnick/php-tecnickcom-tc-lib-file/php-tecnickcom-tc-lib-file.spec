@@ -28,7 +28,12 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 # For tests
-BuildRequires:  php-composer(phpunit/phpunit)
+%if 0%{?fedora} >= 26
+%global phpunit %{_bindir}/phpunit6
+%else
+%global phpunit %{_bindir}/phpunit
+%endif
+BuildRequires:  %{phpunit}
 BuildRequires:  php(language) >= 5.4
 BuildRequires:  php-curl
 BuildRequires:  php-pcre
@@ -85,8 +90,11 @@ EOF
 
 sed -i 's:src:File:g' -i test/DirTest.php
 
+%{phpunit} --no-coverage --verbose
+
+#remirepo:12
 ret=0
-for cmd in php56 php; do
+for cmd in php56; do
    if which $cmd; then
       $cmd %{_bindir}/phpunit --no-coverage --verbose || ret=1
    fi
@@ -120,6 +128,7 @@ rm -rf %{buildroot}
 %changelog
 * Sun Feb 12 2017 Remi Collet <remi@remirepo.net> - 1.6.5-1
 - update to 1.6.5 (no change)
+- use phpunit6 on F26+
 
 * Mon Feb  6 2017 Remi Collet <remi@remirepo.net> - 1.6.4-1
 - update to 1.6.4 (no change)

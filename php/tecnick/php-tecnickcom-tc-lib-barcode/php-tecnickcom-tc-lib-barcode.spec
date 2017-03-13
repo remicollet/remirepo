@@ -28,7 +28,12 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 # For tests
-BuildRequires:  php-composer(phpunit/phpunit)
+%if 0%{?fedora} >= 26
+%global phpunit %{_bindir}/phpunit6
+%else
+%global phpunit %{_bindir}/phpunit
+%endif
+BuildRequires:  %{phpunit}
 BuildRequires:  php(language) >= 5.4
 BuildRequires:  php-composer(%{c_vendor}/tc-lib-color) >= 1.12.1
 BuildRequires:  php-bcmath
@@ -109,8 +114,11 @@ require '%{php_project}/../Color/autoload.php';
 require __DIR__ . '/../test/TestStrings.php';
 EOF
 
+%{phpunit} --no-coverage --verbose
+
+#remirepo:12
 ret=0
-for cmd in php56 php; do
+for cmd in php56; do
    if which $cmd; then
       $cmd %{_bindir}/phpunit --verbose || ret=1
    fi
@@ -140,8 +148,9 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Sun Feb 12 2017 Remi Collet <remi@fedoraproject.org> - 1.15.6-1
+* Sun Feb 12 2017 Remi Collet <remi@remirepo.net.org> - 1.15.6-1
 - update to 1.15.6 (no change)
+- use phpunit6 on F26+
 
 * Mon Feb  6 2017 Remi Collet <remi@fedoraproject.org> - 1.15.5-1
 - update to 1.15.5 (no change)

@@ -28,7 +28,12 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 # For tests
-BuildRequires:  php-composer(phpunit/phpunit)
+%if 0%{?fedora} >= 26
+%global phpunit %{_bindir}/phpunit6
+%else
+%global phpunit %{_bindir}/phpunit
+%endif
+BuildRequires:  %{phpunit}
 BuildRequires:  php(language) >= 5.4
 Requires:       php-pcre
 %endif
@@ -87,14 +92,13 @@ require '%{buildroot}%{php_project}/autoload.php';
 EOF
 
 ret=0
-for cmd in php56 php; do
+for cmd in "php %{phpunit}" \
+    "php56 %{_bindir}/phpunit" \
+    "php70 %{_bindir}/phpunit" \
+    "php70 %{_bindir}/phpunit6" \
+    "php71 %{_bindir}/phpunit6"; do
    if which $cmd; then
-      $cmd %{_bindir}/phpunit --verbose || ret=1
-   fi
-done
-for cmd in php70 php71; do
-   if which $cmd; then
-      $cmd %{_bindir}/phpunit6 --verbose || ret=1
+      $cmd --no-coverage --verbose || ret=1
    fi
 done
 exit $ret
@@ -121,6 +125,7 @@ rm -rf %{buildroot}
 %changelog
 * Sun Feb 12 2017 Remi Collet <remi@fedoraproject.org> - 1.12.6-1
 - update to 1.12.6 (no change)
+- use phpunit6 on F26+
 
 * Mon Feb  6 2017 Remi Collet <remi@fedoraproject.org> - 1.12.4-1
 - update to 1.12.4 (no change)

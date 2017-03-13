@@ -1,8 +1,6 @@
 =================
  TODO
 =================
-php-tecnickcom-tc-lib-color 1.12.6 (waiting for phpunit6)
-php-tecnickcom-tc-lib-barcode 1.15.6
 php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 
 =================
@@ -109,6 +107,8 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 =================
  March, 2017
 =================
+13/3	13/3	php-tecnickcom-tc-lib-color-1.12.6-1.fc27
+13/3	13/3	php-tecnickcom-tc-lib-barcode-1.15.6-1.fc27
 13/3	13/3	php-phpunit-mock-objects4-4.0.1-3.fc27
 13/3	13/3	php-sebastian-recursion-context3-3.0.0-2.fc27
 13/3	13/3	php-sebastian-exporter3-3.0.0-2.fc27
