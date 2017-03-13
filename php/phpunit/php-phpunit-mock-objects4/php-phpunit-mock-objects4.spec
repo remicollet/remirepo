@@ -110,7 +110,6 @@ EOF
 
 
 %install
-rm -rf     %{buildroot}
 mkdir -p   %{buildroot}%{php_home}/%{ns_vendor}/%{ns_top}
 cp -pr src %{buildroot}%{php_home}/%{ns_vendor}/%{ns_top}/%{ns_project}
 

@@ -36,7 +36,6 @@ Source0:        https://github.com/%{gh_vendor}/%{gh_project}/archive/%{gh_commi
 # Fix command for autoload
 Patch0:         %{name}-rpm.patch
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 7.0
 BuildRequires:  php-composer(phpunit/php-file-iterator) >= 1.4
@@ -202,7 +201,6 @@ EOF
 
 
 %install
-rm -rf         %{buildroot}
 mkdir -p       %{buildroot}%{php_home}
 cp -pr src     %{buildroot}%{php_home}/%{ns_vendor}
 
@@ -223,7 +221,6 @@ for cmd in php70 php71 php; do
   fi
 done
 exit $ret
-
 
 
 %files
