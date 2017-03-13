@@ -12,8 +12,8 @@
 
 %global github_owner     Seldaek
 %global github_name      monolog
-%global github_version   1.22.0
-%global github_commit    bad29cb8d18ab0315e6c477751418a82c850d558
+%global github_version   1.22.1
+%global github_commit    1e044bc4b34e91743943479f1be7a1d5eb93add0
 
 %global composer_vendor  monolog
 %global composer_project monolog
@@ -206,6 +206,10 @@ rm -f tests/Monolog/Handler/MongoDBHandlerTest.php
 : Remove GitProcessorTest because it requires a git repo
 rm -f tests/Monolog/Processor/GitProcessorTest.php
 
+: Remove know to fail with PHP 7.1 and fixed in upstream master
+sed -e 's/testUseMicrosecondTimestamps/SKIP_testUseMicrosecondTimestamps/' \
+    -i tests/Monolog/LoggerTest.php
+
 : Skip tests known to fail
 %if 0%{?rhel} > 0
 sed 's/function testThrowsOnInvalidEncoding/function SKIP_testThrowsOnInvalidEncoding/' \
@@ -240,13 +244,16 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc *.mdown
+%doc *.md
 %doc doc
 %doc composer.json
 %{phpdir}/Monolog
 
 
 %changelog
+* Mon Mar 13 2017 Remi Collet <remi@remirepo.net> - 1.22.1-1
+- Update to 1.22.1
+
 * Sat Nov 26 2016 Remi Collet <remi@fedoraproject.org> - 1.22.0-1
 - update to 1.22.0
 - switch from symfony/class-loader to fedora/autoloader

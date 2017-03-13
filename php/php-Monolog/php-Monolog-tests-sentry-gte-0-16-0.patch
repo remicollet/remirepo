@@ -4,7 +4,7 @@ index 0000000..07434e4
 --- /dev/null
 +++ b/tests/Monolog/Handler/MockRavenClient-gte-0-16-0.php
 @@ -0,0 +1,27 @@
-+<?php declare(strict_types=1);
++<?php
 +
 +/*
 + * This file is part of the Monolog package.
