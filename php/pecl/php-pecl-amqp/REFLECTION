@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #72 amqp version 1.8.0 ] {
+Extension [ <persistent> extension #72 amqp version 1.9.0beta1 ] {
 
   - INI {
     Entry [ amqp.host <ALL> ]
@@ -82,7 +82,7 @@ Extension [ <persistent> extension #72 amqp version 1.8.0 ] {
     Constant [ integer PHP_AMQP_MAX_CHANNELS ] { 256 }
   }
 
-  - Classes [11] {
+  - Classes [14] {
     Class [ <internal:amqp> class AMQPConnection ] {
 
       - Constants [0] {
@@ -1141,6 +1141,88 @@ Extension [ <persistent> extension #72 amqp version 1.8.0 ] {
       }
     }
 
+    Class [ <internal:amqp> final class AMQPTimestamp ] {
+
+      - Constants [2] {
+        Constant [ string MAX ] { 18446744073709551616 }
+        Constant [ string MIN ] { 0 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [1] {
+        Property [ <default> private $timestamp ]
+      }
+
+      - Methods [3] {
+        Method [ <internal:amqp, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $timestamp ]
+          }
+        }
+
+        Method [ <internal:amqp> public method getTimestamp ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:amqp> final class AMQPDecimal ] {
+
+      - Constants [4] {
+        Constant [ integer EXPONENT_MIN ] { 0 }
+        Constant [ integer EXPONENT_MAX ] { 255 }
+        Constant [ integer SIGNIFICAND_MIN ] { 0 }
+        Constant [ integer SIGNIFICAND_MAX ] { 4294967295 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [2] {
+        Property [ <default> private $exponent ]
+        Property [ <default> private $significand ]
+      }
+
+      - Methods [3] {
+        Method [ <internal:amqp, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $exponent ]
+            Parameter #1 [ <required> $significand ]
+          }
+        }
+
+        Method [ <internal:amqp> public method getExponent ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method getSignificand ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
     Class [ <internal:amqp> class AMQPException extends Exception implements Throwable ] {
 
       - Constants [0] {
@@ -1370,6 +1452,63 @@ Extension [ <persistent> extension #72 amqp version 1.8.0 ] {
     }
 
     Class [ <internal:amqp> class AMQPExchangeException extends AMQPException implements Throwable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:amqp> class AMQPValueException extends AMQPException implements Throwable ] {
 
       - Constants [0] {
       }

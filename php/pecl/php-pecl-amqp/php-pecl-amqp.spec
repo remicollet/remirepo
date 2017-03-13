@@ -22,22 +22,25 @@
 %else
 %global ini_name    40-%{pecl_name}.ini
 %endif
-#global prever      beta2
+%global prever      beta1
 
 %global buildver %(pkg-config --silence-errors --modversion librabbitmq 2>/dev/null || echo 65536)
 
 Summary:       Communicate with any AMQP compliant server
 Name:          %{?sub_prefix}php-pecl-amqp
-Version:       1.8.0
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:       1.9.0
+Release:       0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
+Patch0:        %{pecl_name}-pr274.patch
+
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 5.3.0
 BuildRequires: %{?scl_prefix}php-pear
+#BuildRequires: php-debuginfo valgrind gdb
 # Upstream requires 0.5.2, set 0.8.0 to ensure "last" is used.
 %if 0%{?fedora} >= 23
 BuildRequires: librabbitmq-devel   >= 0.8.0
@@ -114,6 +117,7 @@ sed -e 's/role="test"/role="src"/' \
 mv %{pecl_name}-%{version}%{?prever} NTS
 
 cd NTS
+%patch0 -p1 -b .pr274
 sed -e 's/CFLAGS="-I/CFLAGS="-fPIC -I/' -i config.m4
 
 # Upstream often forget to change this
@@ -308,6 +312,10 @@ fi
 
 
 %changelog
+* Mon Mar 13 2017 Remi Collet <remi@remirepo.net> - 1.9.0-0.1.beta1
+- Update to 1.9.0beta1
+- add patch from https://github.com/pdezwart/php-amqp/pull/274
+
 * Sun Feb 19 2017 Remi Collet <remi@remirepo.net> - 1.8.0-2
 - ensure proper librabbitmq version is used
 
