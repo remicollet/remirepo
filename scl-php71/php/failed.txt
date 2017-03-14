@@ -1,18 +1,27 @@
-===== 7.1.3RC1 (2017-03-02)
+===== 7.1.3 (2017-03-16)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl71*/build.log
 
 /var/lib/mock/scl70el6x/build.log:Tests failed    :     0
-/var/lib/mock/scl70el7x/build.log:Tests failed    :     1
-/var/lib/mock/scl70fc22x/build.log:Tests failed    :    1
-/var/lib/mock/scl70fc23x/build.log:Tests failed    :    1
-/var/lib/mock/scl70fc24x/build.log:Tests failed    :    1
-/var/lib/mock/scl70fc25x/build.log:Tests failed    :    1
+/var/lib/mock/scl70el7x/build.log:Tests failed    :     0
+/var/lib/mock/scl70fc23x/build.log:Tests failed    :    0
+/var/lib/mock/scl70fc24x/build.log:Tests failed    :    0
+/var/lib/mock/scl70fc25x/build.log:Tests failed    :    0
+/var/lib/mock/scl70fc26x/build.log:Tests failed    :    9
 
 
-el7x, fc22x, fc23x, fc24x, fc25x:
-	**	Bug #74093 (Maximum execution time of n+2 seconds exceed not written in error_log) [Zend/tests/bug74093.phpt]
+fc26x
+		Bug #20382 [2] (strtotime ("Monday", $date) produces wrong result on DST changeover) [ext/date/tests/bug20382-2.phpt]
+		Bug #27780 (strtotime(+1 xxx) returns a wrong date/time) [ext/date/tests/bug27780.phpt]
+		Bug #32086 (strtotime don't work in DST) [ext/date/tests/bug32086.phpt]
+		Bug #33414 [1] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-1.phpt]
+		Bug #33414 [2] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-2.phpt]
+		Bug #33415 [1] (Possibly invalid non-one-hour DST or timezone shifts) [ext/date/tests/bug33415-1.phpt]
+		Bug #33415 [2] (Possibly invalid non-one-hour DST or timezone shifts) [ext/date/tests/bug33415-2.phpt]
+		date_modify() function [1] [ext/date/tests/date_modify-1.phpt]
+		sni_server [ext/openssl/tests/sni_server.phpt]
 
 
 *	proc_open give erratic test results :(
-**	fixed upstream
+***	f26 failures related to tzdata 2016j vs 2017a and sni_server is a known issue with openssl 1.1
+

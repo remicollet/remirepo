@@ -120,8 +120,8 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver         RC1
-%global rpmrel        2
+#global rcver         RC1
+%global rpmrel        1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -177,7 +177,6 @@ Patch47: php-5.6.3-phpinfo.patch
 Patch91: php-5.6.3-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch100: php-upstream.patch
 
 # Security fixes (200+)
 
@@ -1027,7 +1026,6 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch100 -p1 -b .upstream
 
 # security patches
 
@@ -1649,13 +1647,13 @@ mv $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d/www.conf.default .
 # LogRotate
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
 install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
+
 # Environment file
-%if 0%{?fedora} >= 26
-sed -e '/EnvironmentFile/d' -i $RPM_BUILD_ROOT%{_unitdir}/%{?scl_prefix}php-fpm.service
-%else
+%if 0%{?fedora} < 26
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
 install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 %endif
+
 %if %{with_systemd}
 install -m 755 -d $RPM_BUILD_ROOT/run/php-fpm
 # tmpfiles.d
@@ -1675,6 +1673,11 @@ sed -i -e 's:/run:/var/run:' $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
 install -m 755 -d $RPM_BUILD_ROOT%{_initrddir}
 install -m 755 %{SOURCE99} $RPM_BUILD_ROOT%{_initrddir}/php-fpm
 %endif
+
+%if 0%{?fedora} >= 26
+sed -e '/EnvironmentFile/d' -i $RPM_BUILD_ROOT%{_unitdir}/php-fpm.service
+%endif
+
 %if %{with_nginx}
 # Nginx configuration
 install -D -m 644 %{SOURCE13} $RPM_BUILD_ROOT%{_sysconfdir}/nginx/conf.d/php-fpm.conf
@@ -2055,6 +2058,9 @@ fi
 
 
 %changelog
+* Tue Mar 14 2017 Remi Collet <remi@fedoraproject.org> - 7.1.3-1
+- Update to 7.1.3 - http://www.php.net/releases/7_1_3.php
+
 * Fri Mar 10 2017 Remi Collet <remi@fedoraproject.org> 7.1.3-0.2.RC1
 - fix interbase build on F26
 
