@@ -12,8 +12,8 @@
 
 %global github_owner     paragonie
 %global github_name      random_compat
-%global github_version   2.0.9
-%global github_commit    6968531206671f94377b01dc7888d5d1b858a01b
+%global github_version   2.0.10
+%global github_commit    634bae8e911eefa89c1abfbf1b66da679ac8f54d
 
 %global composer_vendor  paragonie
 %global composer_project random_compat
@@ -125,6 +125,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 13 2017 Remi Collet <remi@remirepo.net> - 2.0.10-1
+- Update to 2.0.10
+
 * Sun Mar 05 2017 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.0.9-1
 - Updated to 2.0.9 (RHBZ #1385987)
 
