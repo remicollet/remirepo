@@ -1442,7 +1442,7 @@ sed -e 's:/run:%{_localstatedir}/run:' \
 
 # Environment file
 %if 0%{?fedora} >= 26
-sed -e '/EnvironmentFile/d' -i $RPM_BUILD_ROOT%{_root_initddir}/%{?scl_prefix}php-fpm
+sed -e '/EnvironmentFile/d' -i $RPM_BUILD_ROOT%{_unitdir}/%{?scl_prefix}php-fpm.service
 %else
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
 install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm

@@ -1,12 +1,10 @@
-===== 7.0.17RC1 (2017-03-02)
+===== 7.0.17 (2017-03-16)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
 /var/lib/mock/el6i/build.log:Tests failed    :     0
 /var/lib/mock/el6x/build.log:Tests failed    :     0
-/var/lib/mock/el7x/build.log:Tests failed    :     0
-/var/lib/mock/fc22i/build.log:Tests failed    :    0
-/var/lib/mock/fc22x/build.log:Tests failed    :    1
+/var/lib/mock/el7x/build.log:Tests failed    :     1
 /var/lib/mock/fc23i/build.log:Tests failed    :    0
 /var/lib/mock/fc23x/build.log:Tests failed    :    0
 /var/lib/mock/fc24i/build.log:Tests failed    :    0
@@ -14,8 +12,10 @@ $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 /var/lib/mock/fc25i/build.log:Tests failed    :    0
 /var/lib/mock/fc25x/build.log:Tests failed    :    0
 
-fc22x, fc24x
+el7x
 	*	Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
+fc24x
+	*	Bug #69900 Commandline input/output weird behaviour with STDIO [ext/standard/tests/streams/proc_open_bug69900.phpt]
 
 
 

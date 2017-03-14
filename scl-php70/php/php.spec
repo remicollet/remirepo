@@ -123,8 +123,8 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver        RC1
-%global rpmrel       2
+#global rcver        RC1
+%global rpmrel       1
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1448,7 +1448,7 @@ sed -e 's:/run:%{_localstatedir}/run:' \
 
 # Environment file
 %if 0%{?fedora} >= 26
-sed -e '/EnvironmentFile/d' -i $RPM_BUILD_ROOT%{_root_initddir}/%{?scl_prefix}php-fpm
+sed -e '/EnvironmentFile/d' -i $RPM_BUILD_ROOT%{_unitdir}/%{?scl_prefix}php-fpm.service
 %else
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
 install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
@@ -1834,6 +1834,9 @@ fi
 
 
 %changelog
+* Tue Mar 14 2017 Remi Collet <remi@fedoraproject.org> 7.0.17-1
+- Update to 7.0.17 - http://www.php.net/releases/7_0_17.php
+
 * Fri Mar 10 2017 Remi Collet <remi@fedoraproject.org> 7.0.17-0.2.RC1
 - add patch for firebird configuration
 - add patch for OpenSSL 1.1 on F26
