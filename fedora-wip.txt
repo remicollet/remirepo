@@ -10,6 +10,7 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 =================
  Testing
 =================
+14/3	php-phpunit-comparator-1.2.4-1.el7.1
 13/3	phpunit6-6.0.8-2.fc26
 13/3	php-phpunit-mock-objects4-4.0.1-2.fc26
 13/3	libsodium-1.0.12-1.fc26

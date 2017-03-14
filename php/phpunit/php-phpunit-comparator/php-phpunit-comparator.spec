@@ -22,7 +22,7 @@
 
 Name:           php-phpunit-comparator
 Version:        1.2.4
-Release:        1%{?dist}
+Release:        1%{?dist}.1
 Summary:        Compare PHP values for equality
 
 Group:          Development/Libraries
@@ -74,6 +74,8 @@ Autoloader: %{php_home}/%{ns_vendor}/%{ns_project}/autoload.php
 phpab --template fedora --output src/autoload.php src
 
 # Rely on include_path as in PHPUnit dependencies
+sed -e 's:/usr/share/php/::' -i src/autoload.php
+
 cat <<EOF | tee -a src/autoload.php
 
 // Dependencies' autoloaders
@@ -131,6 +133,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar 14 2017 Remi Collet <remi@fedoraproject.org> - 1.2.4-1.1
+- fix autoloader to rely on include_path for fedora/autoloader
+
 * Sun Jan 29 2017 Remi Collet <remi@fedoraproject.org> - 1.2.4-1
 - update to 1.2.4
 
