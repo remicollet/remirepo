@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    f9901d12b618f24af84d8bdbfd1632b81853c72e
+%global gh_commit    15d8fe489495c039f1107d7a1f894fcf678f08e7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-platesrenderer
@@ -21,8 +21,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.2.1
-Release:        2%{?dist}
+Version:        1.3.1
+Release:        1%{?dist}
 Summary:        Plates integration for %{library}
 
 Group:          Development/Libraries
@@ -47,7 +47,12 @@ BuildRequires:  php-spl
 #        "malukenho/docheader": "^0.1.5",
 #        "phpunit/phpunit": "^6.0.8 || ^5.7.15",
 #        "zendframework/zend-coding-standard": "~1.0.0"
-BuildRequires:  php-composer(phpunit/phpunit)                        >= 5.7.15
+%if 0%{?fedora} >= 26
+%global phpunit %{_bindir}/phpunit6
+%else
+%global phpunit %{_bindir}/phpunit
+%endif
+BuildRequires:  %{phpunit}
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
 # For dependencies autoloader
@@ -58,7 +63,7 @@ BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 #        "php": "^5.6 || ^7.0",
 #        "container-interop/container-interop": "^1.2",
 #        "league/plates": "^3.3",
-#        "zendframework/zend-expressive-helpers": "^^2.2 || ^3.0.1",
+#        "zendframework/zend-expressive-helpers": "^^2.2 || ^3.0.1 || ^4.0",
 #        "zendframework/zend-expressive-router": "^1.3.2 || ^2.1"
 #        "zendframework/zend-expressive-template": "^1.0.4",
 Requires:       php(language) >= 5.6
@@ -67,7 +72,7 @@ Requires:       php-composer(container-interop/container-interop)    <  2
 Requires:       php-composer(league/plates)                          >= 3.3
 Requires:       php-composer(league/plates)                          <  4
 Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    >= 2.2
-Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    <  4
+Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    <  5
 Requires:       php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
 Requires:       php-composer(%{gh_owner}/zend-expressive-router)     <  3
 Requires:       php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0.4
@@ -155,7 +160,7 @@ if which php71; then
    run=1
 fi
 if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose
+%{phpunit} --verbose
 # remirepo:2
 fi
 exit $ret
@@ -179,6 +184,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar 14 2017 Remi Collet <remi@remirepo.net> - 1.3.1-1
+- Update to 1.3.1
+- use phpunit6 on F26+
+
 * Fri Mar  3 2017 Remi Collet <remi@remirepo.net> - 1.2.1-2
 - fix typo in dependency version
 
