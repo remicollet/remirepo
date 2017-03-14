@@ -7,14 +7,9 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
+%scl_package       php-pecl-mosquitto
 %endif
-%endif
-
-%{?scl:          %scl_package        php-pecl-mosquitto}
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  mosquitto
@@ -27,14 +22,13 @@
 
 Summary:        Extension for libmosquitto
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        0.3.0
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        0.4.0
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{proj_name}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  mosquitto-devel 
@@ -47,8 +41,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
@@ -63,6 +59,14 @@ Obsoletes:     php55w-pecl-%{pecl_name}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name}
 Obsoletes:     php56w-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name}
+Obsoletes:     php70w-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name}
+Obsoletes:     php71w-pecl-%{pecl_name}
 %endif
 %endif
 
@@ -112,6 +116,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -130,7 +136,7 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
+%{?dtsenable}
 
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
@@ -188,12 +194,7 @@ cd ../ZTS
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{proj_name}
 %{pecl_xmldir}/%{name}.xml
@@ -208,6 +209,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar 14 2017 Remi Collet <remi@remirepo.net> - 0.4.0-1
+- Update to 0.4.0
+
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 0.3.0-2
 - adapt for F24
 

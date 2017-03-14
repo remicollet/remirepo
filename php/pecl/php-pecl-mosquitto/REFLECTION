@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #126 mosquitto version 0.3.0 ] {
+Extension [ <persistent> extension #109 mosquitto version 0.4.0 ] {
 
   - Constants [7] {
     Constant [ integer MOSQ_LOG_INFO ] { 1 }
@@ -208,7 +208,7 @@ Extension [ <persistent> extension #126 mosquitto version 0.3.0 ] {
       }
     }
 
-    Class [ <internal:mosquitto> class Mosquitto\Exception extends Exception ] {
+    Class [ <internal:mosquitto> class Mosquitto\Exception extends Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -239,28 +239,28 @@ Extension [ <persistent> extension #126 mosquitto version 0.3.0 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
