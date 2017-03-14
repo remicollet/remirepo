@@ -19,17 +19,13 @@
 
 Summary:        MySQL database access functions
 Name:           %{?sub_prefix}php-pecl-mysql-xdevapi
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-# From 7.1.0 official archive
-Source1:        php_json.h
-Source2:        php_json_parser.h
-Source3:        php_json_scanner.h
 
 # Workaround for out-of-tree build
 Patch0:         %{pecl_name}-build.patch
@@ -41,6 +37,7 @@ BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  protobuf-devel
 BuildRequires:  protobuf-c-devel
 BuildRequires:  boost-devel
+BuildRequires:  openssl-devel
 %if %{with_tests}
 BuildRequires:  community-mysql-server >= 5.7.12
 %endif
@@ -112,10 +109,6 @@ These are the files needed to compile programs using %{name}.
 %setup -qc
 mv %{pecl_name}-%{version} NTS
 
-mkdir -p NTS/ext/json
-# Temporary workaround waiting for 7.1.1
-cp %{SOURCE1} %{SOURCE3} %{SOURCE2} NTS/ext/json
-
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
@@ -151,6 +144,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 peclconf() {
 %configure \
     --enable-mysql-xdevapi \
@@ -171,6 +166,8 @@ make %{?_smp_mflags}
 
 
 %install
+%{?dtsenable}
+
 # Install the NTS stuff
 make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
@@ -311,6 +308,9 @@ fi
 
 
 %changelog
+* Tue Mar 14 2017 Remi Collet <remi@remirepo.net> - 1.0.1-1
+- Update to 1.0.1
+
 * Thu Dec  8 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package, version 1.0.0 (alpha)
 

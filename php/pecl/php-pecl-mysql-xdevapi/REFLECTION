@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #61 mysql_xdevapi version 1.0.0 ] {
+Extension [ <persistent> extension #61 mysql_xdevapi version 1.0.1 ] {
 
   - Dependencies {
     Dependency [ standard (Required) ]
@@ -34,20 +34,14 @@ Extension [ <persistent> extension #61 mysql_xdevapi version 1.0.0 ] {
   - Functions {
     Function [ <internal:mysql_xdevapi> function mysql_xdevapi\getSession ] {
 
-      - Parameters [4] {
-        Parameter #0 [ <required> string $hostname ]
-        Parameter #1 [ <required> string $username ]
-        Parameter #2 [ <required> string $password ]
-        Parameter #3 [ <optional> integer $port ]
+      - Parameters [1] {
+        Parameter #0 [ <required> string $uri_string ]
       }
     }
     Function [ <internal:mysql_xdevapi> function mysql_xdevapi\getNodeSession ] {
 
-      - Parameters [4] {
-        Parameter #0 [ <required> string $hostname ]
-        Parameter #1 [ <required> string $username ]
-        Parameter #2 [ <required> string $password ]
-        Parameter #3 [ <optional> integer $port ]
+      - Parameters [1] {
+        Parameter #0 [ <required> string $uri_string ]
       }
     }
     Function [ <internal:mysql_xdevapi> function mysql_xdevapi\expression ] {
@@ -58,7 +52,7 @@ Extension [ <persistent> extension #61 mysql_xdevapi version 1.0.0 ] {
     }
   }
 
-  - Classes [35] {
+  - Classes [41] {
     Interface [ <internal:mysql_xdevapi> interface mysql_xdevapi\DatabaseObject ] {
 
       - Constants [0] {
@@ -467,7 +461,7 @@ Extension [ <persistent> extension #61 mysql_xdevapi version 1.0.0 ] {
     Class [ <internal:mysql_xdevapi> final class mysql_xdevapi\Driver ] {
 
       - Constants [1] {
-        Constant [ public string version ] { 1.0.0 }
+        Constant [ public string version ] { 1.0.1 }
       }
 
       - Static properties [0] {
@@ -876,7 +870,7 @@ Extension [ <persistent> extension #61 mysql_xdevapi version 1.0.0 ] {
         Property [ <default> public $name ]
       }
 
-      - Methods [11] {
+      - Methods [14] {
         Method [ <internal:mysql_xdevapi, ctor> private method __construct ] {
         }
 
@@ -942,6 +936,28 @@ Extension [ <persistent> extension #61 mysql_xdevapi version 1.0.0 ] {
           - Parameters [0] {
           }
         }
+
+        Method [ <internal:mysql_xdevapi> public method createView ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> string $view_name ]
+            Parameter #1 [ <required> integer $replace_existing ]
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method alterView ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> string $view_name ]
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method dropView ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> string $view_name ]
+          }
+        }
       }
     }
 
@@ -960,7 +976,7 @@ Extension [ <persistent> extension #61 mysql_xdevapi version 1.0.0 ] {
         Property [ <default> public $name ]
       }
 
-      - Methods [10] {
+      - Methods [12] {
         Method [ <internal:mysql_xdevapi, ctor> private method __construct ] {
         }
 
@@ -1021,10 +1037,86 @@ Extension [ <persistent> extension #61 mysql_xdevapi version 1.0.0 ] {
             Parameter #0 [ <optional> string $search_condition ]
           }
         }
+
+        Method [ <internal:mysql_xdevapi> public method createIndex ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> string $index_name ]
+            Parameter #1 [ <required> integer $is_unique ]
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method dropIndex ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> string $index_name ]
+          }
+        }
       }
     }
 
     Class [ <internal:mysql_xdevapi> class mysql_xdevapi\NodeCollectionAdd implements mysql_xdevapi\Executable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:mysql_xdevapi, ctor> private method __construct ] {
+        }
+
+        Method [ <internal:mysql_xdevapi, prototype mysql_xdevapi\Executable> public method execute ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mysql_xdevapi> class mysql_xdevapi\NodeCollectionCreateIndex implements mysql_xdevapi\Executable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:mysql_xdevapi, ctor> private method __construct ] {
+        }
+
+        Method [ <internal:mysql_xdevapi> public method field ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> string $doc_path ]
+            Parameter #1 [ <optional> string $column_type ]
+            Parameter #2 [ <optional> integer $is_required ]
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi, prototype mysql_xdevapi\Executable> public method execute ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mysql_xdevapi> class mysql_xdevapi\NodeCollectionDropIndex implements mysql_xdevapi\Executable ] {
 
       - Constants [0] {
       }
@@ -1064,7 +1156,7 @@ Extension [ <persistent> extension #61 mysql_xdevapi version 1.0.0 ] {
       - Properties [0] {
       }
 
-      - Methods [8] {
+      - Methods [9] {
         Method [ <internal:mysql_xdevapi, ctor> private method __construct ] {
         }
 
@@ -1076,6 +1168,13 @@ Extension [ <persistent> extension #61 mysql_xdevapi version 1.0.0 ] {
         }
 
         Method [ <internal:mysql_xdevapi> public method groupBy ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $sort_expr ]
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method having ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $sort_expr ]
@@ -1175,7 +1274,7 @@ Extension [ <persistent> extension #61 mysql_xdevapi version 1.0.0 ] {
         Method [ <internal:mysql_xdevapi> public method unset ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> array $variables ]
+            Parameter #0 [ <required> $variables ]
           }
         }
 
@@ -1261,6 +1360,175 @@ Extension [ <persistent> extension #61 mysql_xdevapi version 1.0.0 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> integer $rows ]
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi, prototype mysql_xdevapi\Executable> public method execute ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mysql_xdevapi> class mysql_xdevapi\ViewCreate implements mysql_xdevapi\Executable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [8] {
+        Method [ <internal:mysql_xdevapi, ctor> private method __construct ] {
+        }
+
+        Method [ <internal:mysql_xdevapi> public method definer ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> string $definer ]
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method algorithm ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> string $algorithm ]
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method security ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> string $security ]
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method withCheckOption ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> string $check_option ]
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method columns ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $columns ]
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method definedAs ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> object $defined_as ]
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi, prototype mysql_xdevapi\Executable> public method execute ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mysql_xdevapi> class mysql_xdevapi\ViewAlter implements mysql_xdevapi\Executable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [8] {
+        Method [ <internal:mysql_xdevapi, ctor> private method __construct ] {
+        }
+
+        Method [ <internal:mysql_xdevapi> public method definer ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> string $definer ]
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method algorithm ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> string $algorithm ]
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method security ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> string $security ]
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method withCheckOption ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> string $check_option ]
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method columns ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $columns ]
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method definedAs ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> object $defined_as ]
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi, prototype mysql_xdevapi\Executable> public method execute ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mysql_xdevapi> class mysql_xdevapi\ViewDrop implements mysql_xdevapi\Executable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:mysql_xdevapi, ctor> private method __construct ] {
+        }
+
+        Method [ <internal:mysql_xdevapi> public method ifExists ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> boolean $if_exists ]
           }
         }
 
@@ -1646,6 +1914,98 @@ Extension [ <persistent> extension #61 mysql_xdevapi version 1.0.0 ] {
       }
     }
 
+    Class [ <internal:mysql_xdevapi> class mysql_xdevapi\ColumnResult ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [13] {
+        Method [ <internal:mysql_xdevapi, ctor> private method __construct ] {
+        }
+
+        Method [ <internal:mysql_xdevapi> public method getSchemaName ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method getTableName ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method getTableLabel ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method getColumnName ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method getColumnLabel ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method getLength ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method getFractionalDigits ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method isNumberSigned ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method getCollationName ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method getCharacterSetName ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method getType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method isPadded ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
     Class [ <internal:mysql_xdevapi> class mysql_xdevapi\NodeTable implements mysql_xdevapi\SchemaObject, mysql_xdevapi\DatabaseObject ] {
 
       - Constants [0] {
@@ -1661,7 +2021,7 @@ Extension [ <persistent> extension #61 mysql_xdevapi version 1.0.0 ] {
         Property [ <default> public $name ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:mysql_xdevapi, ctor> private method __construct ] {
         }
 
@@ -1672,6 +2032,12 @@ Extension [ <persistent> extension #61 mysql_xdevapi version 1.0.0 ] {
         }
 
         Method [ <internal:mysql_xdevapi, prototype mysql_xdevapi\DatabaseObject> public method getName ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mysql_xdevapi> public method isView ] {
 
           - Parameters [0] {
           }

@@ -1,29 +1,13 @@
-diff -up mysql_xdevapi-1.0.0/config.m4.old mysql_xdevapi-1.0.0/config.m4
---- mysql_xdevapi-1.0.0/config.m4.old	2016-12-08 16:59:44.000000000 +0100
-+++ mysql_xdevapi-1.0.0/config.m4	2016-12-08 17:01:29.000000000 +0100
-@@ -170,15 +170,8 @@ if test "$PHP_MYSQL_XDEVAPI" != "no" ||
+diff -up ./config.m4.old ./config.m4
+--- ./config.m4.old	2017-03-14 08:58:13.000000000 +0100
++++ ./config.m4	2017-03-14 08:58:19.000000000 +0100
+@@ -22,6 +22,9 @@ PHP_ARG_ENABLE(mysql-xdevapi-message-cla
+ 	[  --enable-mysql-xdevapi-message-classes
+ 						Enable support for the experimental message classes in mysql-xdevapi], yes, no)
  
- 
- 	AC_DEFINE([MYSQL_XDEVAPI_SSL_SUPPORTED], 1, [Enable core xmysqlnd SSL code])
-+	AC_DEFINE(MYSQL_XDEVAPI_HAVE_SSL,1,[Enable mysql_xdevapi code that uses OpenSSL directly])
- 
--	test -z "$PHP_OPENSSL" && PHP_OPENSSL=no
--
--	if test "$PHP_OPENSSL" != "no" || test "$PHP_OPENSSL_DIR" != "no"; then
--		AC_CHECK_LIB(ssl, DSA_get_default_method, AC_DEFINE(HAVE_DSA_DEFAULT_METHOD, 1, [OpenSSL 0.9.7 or later]))
--		AC_CHECK_LIB(crypto, X509_free, AC_DEFINE(HAVE_DSA_DEFAULT_METHOD, 1, [OpenSSL 0.9.7 or later]))
--
--		PHP_SETUP_OPENSSL(MYSQL_XDEVAPI_SHARED_LIBADD, [AC_DEFINE(MYSQL_XDEVAPI_HAVE_SSL,1,[Enable mysql_xdevapi code that uses OpenSSL directly])])
--	fi
- 
- 	if test "$PHP_MYSQLND" != "yes" && test "$PHP_MYSQLND_ENABLED" != "yes" && test "$PHP_MYSQLI" != "yes" && test "$PHP_MYSQLI" != "mysqlnd"; then
- 		dnl Enable mysqlnd build in case it wasn't passed explicitly in cmd-line
-@@ -194,8 +187,6 @@ if test "$PHP_MYSQL_XDEVAPI" != "no" ||
- 
- 	PHP_SUBST(MYSQL_XDEVAPI_SHARED_LIBADD)
- 
--	PHP_ADD_BUILD_DIR($ext_builddir/messages)
--	PHP_ADD_BUILD_DIR($ext_builddir/proto_gen)
- 
- 	this_ext_sources="$xmysqlnd_protobuf_sources $xmysqlnd_expr_parser $xmysqlnd_sources $mysqlx_base_sources $mysqlx_messages"
- 	PHP_NEW_EXTENSION(mysql_xdevapi, $this_ext_sources, $ext_shared,, -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1)
++PHP_ARG_WITH(openssl, for OpenSSL support,
++[  --with-openssl[=DIR]      Include OpenSSL support (requires OpenSSL >= 1.0.1)])
++
+ dnl If some extension uses mysql-xdevapi it will get compiled in PHP core
+ if test "$PHP_MYSQL_XDEVAPI" != "no" || test "$PHP_MYSQL_XDEVAPI_ENABLED" = "yes"; then
+ 	PHP_REQUIRE_CXX
