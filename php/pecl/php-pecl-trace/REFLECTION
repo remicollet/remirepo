@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #134 trace version 1.0.0 ] {
+Extension [ <persistent> extension #139 trace version 1.0.1-beta ] {
 
   - INI {
     Entry [ trace.enable <SYSTEM> ]
