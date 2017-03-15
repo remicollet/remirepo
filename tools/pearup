@@ -3,27 +3,31 @@
 vendor="Remi Collet <remi@remirepo.net>"
 rpmdate=$(LC_ALL="C" date +"%a %b %d %Y")
 rpmdate=${rpmdate/ 0/  }
-name=$(basename $PWD)
 
 if [ $# -lt 2 ]; then
-    echo "usage $0 old new"
+    echo "usage $0 old new [ spec ]"
     exit 1
 fi
+if [ -n "$3" ]; then
+  name=$3
+else
+  name=$(basename $PWD).spec
+fi
 
-if ! grep -q pecl_name $name.spec; then
+if ! grep -q pecl_name $name; then
 sed -e '/^Release:/s/[0-9].*$/1%{?dist}/' \
     -i *spec
 else echo "Release inchangée"
 fi
-if ! grep -q "^Version:.*$2"  $name.spec; then
+if ! grep -q "^Version:.*$2"  $name; then
 sed -e "/^Version:/s/$1/$2/" \
     -e "s/%changelog/%changelog\n* $rpmdate $vendor - $2-1\n- Update to $2\n/" \
     -e 's/\$RPM_BUILD_ROOT/%{buildroot}/' \
-    -i $name.spec
+    -i $name
 else echo "Version déjà modifiée"
 fi
 
-spectool -g -S $name.spec
+spectool -g -S $name
 
 tar xf *-$1.tgz package.xml && mv package.xml package-$1.xml
 comp=$(tar xvf *-$1.tgz '*/composer.json')
