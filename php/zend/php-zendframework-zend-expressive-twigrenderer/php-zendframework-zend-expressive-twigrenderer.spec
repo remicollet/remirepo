@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    a1583749cc55b79b81939175281e56a5c9449213
+%global gh_commit    2e6eca456d1449813102c84bdd04e43e7108e4b9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-twigrenderer
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.3.0
+Version:        1.4.0
 Release:        1%{?dist}
 Summary:        Twig integration for %{library}
 
@@ -49,7 +49,12 @@ BuildRequires:  php-spl
 #        "malukenho/docheader": "^0.1.5",
 #        "phpunit/phpunit": "^6.0.7 || ^5.7.14",
 #        "zendframework/zend-coding-standard": "~1.0.0"
-BuildRequires:  php-composer(phpunit/phpunit)                        >= 5.7
+%if 0%{?fedora} >= 26
+%global phpunit %{_bindir}/phpunit6
+%else
+%global phpunit %{_bindir}/phpunit
+%endif
+BuildRequires:  %{phpunit}
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
 # For dependencies autoloader
@@ -60,7 +65,7 @@ BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 #        "php": "^5.6 || ^7.0",
 #        "container-interop/container-interop": "^1.2",
 #        "twig/twig": "^1.32 || ^2.1",
-#        "zendframework/zend-expressive-helpers": "^1.4 || ^2.2 || ^3.0.1",
+#        "zendframework/zend-expressive-helpers": "^1.4 || ^2.2 || ^3.0.1 || ^4.0",
 #        "zendframework/zend-expressive-router": "^1.3.2 || ^2.1",
 #        "zendframework/zend-expressive-template": "^1.0.4"
 Requires:       php(language) >= 5.6
@@ -69,7 +74,7 @@ Requires:       php-composer(container-interop/container-interop)    <  2
 Requires:       php-composer(twig/twig)                              >= 1.32
 Requires:       php-composer(twig/twig)                              <  3
 Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    >= 1.4
-Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    <  4
+Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    <  5
 Requires:       php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
 Requires:       php-composer(%{gh_owner}/zend-expressive-router)     <  3
 Requires:       php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0.4
@@ -149,7 +154,7 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-# remirepo:11
+# remirepo:10
 run=0
 ret=0
 if which php56; then
@@ -160,10 +165,8 @@ if which php71; then
    php71 %{_bindir}/phpunit6 --verbose || ret=1
    run=1
 fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose
-# remirepo:2
-fi
+%{phpunit} --verbose
+# remirepo:1
 exit $ret
 %else
 : Test suite disabled
@@ -185,6 +188,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 15 2017 Remi Collet <remi@remirepo.net> - 1.4.0-1
+- Update to 1.4.0
+- use phpunit6 on F26+
+
 * Thu Mar  2 2017 Remi Collet <remi@remirepo.net> - 1.3.0-1
 - Update to 1.3.0
 - allow twig 2
