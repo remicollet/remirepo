@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    47ee3fa1bca5c50f1d25105201eb20df777bd7b6
+%global gh_commit    9bd36d990884d8fb3313232e0002ed4cdf79f428
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_vendor    sebastianbergmann
@@ -20,8 +20,8 @@
 %global php_home     %{_datadir}/php
 %global ver_major    6
 %global ver_minor    0
-%global ver_patch    8
-%global specrel      2
+%global ver_patch    9
+%global specrel      1
 
 Name:           %{pk_project}%{ver_major}
 Version:        %{ver_major}.%{ver_minor}.%{ver_patch}
@@ -38,24 +38,36 @@ Patch0:         %{name}-rpm.patch
 
 BuildArch:      noarch
 BuildRequires:  php(language) >= 7.0
-BuildRequires:  php-composer(phpunit/php-file-iterator) >= 1.4
-BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
+BuildRequires:  php-composer(myclabs/deep-copy) <  2
+BuildRequires:  php-composer(myclabs/deep-copy) >= 1.3
+BuildRequires:  php-composer(phpspec/prophecy) <  2
+BuildRequires:  php-composer(phpspec/prophecy) >= 1.7
 BuildRequires:  php-composer(phpunit/php-code-coverage) <  6
 BuildRequires:  php-composer(phpunit/php-code-coverage) >= 5.0
+BuildRequires:  php-composer(phpunit/php-file-iterator) <  2
+BuildRequires:  php-composer(phpunit/php-file-iterator) >= 1.4
+BuildRequires:  php-composer(phpunit/php-text-template) <  2
+BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
+BuildRequires:  php-composer(phpunit/php-timer) <  2
 BuildRequires:  php-composer(phpunit/php-timer) >= 1.0.6
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) <  5
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 4
-BuildRequires:  php-composer(phpspec/prophecy) >= 1.6.2
-BuildRequires:  php-composer(sebastian/comparator) >= 1.2.4
+BuildRequires:  php-composer(sebastian/comparator) <  3
+BuildRequires:  php-composer(sebastian/comparator) >= 2.0
+BuildRequires:  php-composer(sebastian/diff) <  2
 BuildRequires:  php-composer(sebastian/diff) >= 1.2
-BuildRequires:  php-composer(sebastian/environment) >= 1.3.4
-BuildRequires:  php-composer(sebastian/exporter) >= 2.0
-BuildRequires:  php-composer(sebastian/recursion-context) >= 2.0
+BuildRequires:  php-composer(sebastian/environment) <  3
+BuildRequires:  php-composer(sebastian/environment) >= 2.0
+BuildRequires:  php-composer(sebastian/exporter) <  4
+BuildRequires:  php-composer(sebastian/exporter) >= 3.0
+BuildRequires:  php-composer(sebastian/global-state) <  3
 BuildRequires:  php-composer(sebastian/global-state) >= 1.1
-BuildRequires:  php-composer(sebastian/object-enumerator) >= 2.0
+BuildRequires:  php-composer(sebastian/object-enumerator) <  4
+BuildRequires:  php-composer(sebastian/object-enumerator) >= 3.0.2
+BuildRequires:  php-composer(sebastian/resource-operations) <  2
 BuildRequires:  php-composer(sebastian/resource-operations) >= 1.0
-BuildRequires:  php-composer(sebastian/version) >= 1.0
-BuildRequires:  php-composer(myclabs/deep-copy) >= 1.3
+BuildRequires:  php-composer(sebastian/version) <  3
+BuildRequires:  php-composer(sebastian/version) >= 2.0
 BuildRequires:  php-dom
 BuildRequires:  php-json
 BuildRequires:  php-mbstring
@@ -73,18 +85,18 @@ BuildRequires:  php-fedora-autoloader-devel
 #        "ext-mbstring": "*",
 #        "ext-xml": "*",
 #        "myclabs/deep-copy": "^1.3",
-#        "phpspec/prophecy": "^1.6.2",
+#        "phpspec/prophecy": "^1.7",
 #        "phpunit/php-code-coverage": "^5.0",
 #        "phpunit/php-file-iterator": "^1.4",
 #        "phpunit/php-text-template": "^1.2",
 #        "phpunit/php-timer": "^1.0.6",
 #        "phpunit/phpunit-mock-objects": "^4.0",
-#        "sebastian/comparator": "^1.2.4 || ^2.0",
+#        "sebastian/comparator": "^2.0",
 #        "sebastian/diff": "^1.2",
 #        "sebastian/environment": "^2.0",
-#        "sebastian/exporter": "^2.0 || ^3.0",
+#        "sebastian/exporter": "^3.0",
 #        "sebastian/global-state": "^1.1 || ^2.0",
-#        "sebastian/object-enumerator": "^2.0 || ^3.0",
+#        "sebastian/object-enumerator": "^3.0.2",
 #        "sebastian/resource-operations": "^1.0",
 #        "sebastian/version": "^2.0",
 Requires:       php(language) >= 7.0
@@ -94,36 +106,36 @@ Requires:       php-json
 Requires:       php-libxml
 Requires:       php-mbstring
 Requires:       php-xml
-Requires:       php-composer(phpunit/php-file-iterator) >= 1.4
-Requires:       php-composer(phpunit/php-file-iterator) <  2
-Requires:       php-composer(phpunit/php-text-template) >= 1.2
-Requires:       php-composer(phpunit/php-text-template) <  2
-Requires:       php-composer(phpunit/php-code-coverage) >= 5.0
-Requires:       php-composer(phpunit/php-code-coverage) <  6
-Requires:       php-composer(phpunit/php-timer) >= 1.0.6
-Requires:       php-composer(phpunit/php-timer) <  2
-Requires:       php-composer(phpunit/phpunit-mock-objects) >= 4.0
-Requires:       php-composer(phpunit/phpunit-mock-objects) <  5
-Requires:       php-composer(phpspec/prophecy) >= 1.6.2
+Requires:       php-composer(myclabs/deep-copy) <  2
+Requires:       php-composer(myclabs/deep-copy) >= 1.3
 Requires:       php-composer(phpspec/prophecy) <  2
-Requires:       php-composer(sebastian/comparator) >= 1.2.4
+Requires:       php-composer(phpspec/prophecy) >= 1.7
+Requires:       php-composer(phpunit/php-code-coverage) <  6
+Requires:       php-composer(phpunit/php-code-coverage) >= 5.0
+Requires:       php-composer(phpunit/php-file-iterator) <  2
+Requires:       php-composer(phpunit/php-file-iterator) >= 1.4
+Requires:       php-composer(phpunit/php-text-template) <  2
+Requires:       php-composer(phpunit/php-text-template) >= 1.2
+Requires:       php-composer(phpunit/php-timer) <  2
+Requires:       php-composer(phpunit/php-timer) >= 1.0.6
+Requires:       php-composer(phpunit/phpunit-mock-objects) <  5
+Requires:       php-composer(phpunit/phpunit-mock-objects) >= 4.0
 Requires:       php-composer(sebastian/comparator) <  3
-Requires:       php-composer(sebastian/diff) >= 1.2
+Requires:       php-composer(sebastian/comparator) >= 2.0
 Requires:       php-composer(sebastian/diff) <  2
+Requires:       php-composer(sebastian/diff) >= 1.2
 Requires:       php-composer(sebastian/environment) >= 2.0
 Requires:       php-composer(sebastian/environment) <  3
-Requires:       php-composer(sebastian/exporter) >= 2.0
 Requires:       php-composer(sebastian/exporter) <  4
-Requires:       php-composer(sebastian/global-state) >= 1.1
+Requires:       php-composer(sebastian/exporter) >= 3.0
 Requires:       php-composer(sebastian/global-state) <  3
-Requires:       php-composer(sebastian/object-enumerator) >= 2.0
+Requires:       php-composer(sebastian/global-state) >= 1.1
 Requires:       php-composer(sebastian/object-enumerator) <  4
-Requires:       php-composer(sebastian/resource-operations) >= 1.0
+Requires:       php-composer(sebastian/object-enumerator) >= 3.0.2
 Requires:       php-composer(sebastian/resource-operations) <  2
-Requires:       php-composer(sebastian/version) >= 2.0
+Requires:       php-composer(sebastian/resource-operations) >= 1.0
 Requires:       php-composer(sebastian/version) <  3
-Requires:       php-composer(myclabs/deep-copy) >= 1.3
-Requires:       php-composer(myclabs/deep-copy) <  2
+Requires:       php-composer(sebastian/version) >= 2.0
 # From composer.json, "suggest": {
 #        "phpunit/php-invoker": "^1.1",
 #        "ext-xdebug": "*"
@@ -167,6 +179,11 @@ It is an instance of the xUnit architecture for unit testing frameworks.
   --template fedora \
   --output   src/autoload.php \
   src
+
+# Rely on include_path as in PHPUnit dependencies
+# TODO use template2 with fedora/autoloader 1.0.0
+sed -e 's:/usr/share/php/::' -i src/autoload.php
+
 cat << 'EOF' | tee -a src/autoload.php
 /* dependencies */
 require_once 'File/Iterator/Autoload.php';
@@ -175,12 +192,12 @@ require_once 'SebastianBergmann/CodeCoverage5/autoload.php';
 require_once 'PHP/Timer/Autoload.php';
 require_once '%{ns_vendor}/Framework/MockObject/autoload.php';
 require_once 'Prophecy/autoload.php';
-require_once (stream_resolve_include_path('SebastianBergmann/Comparator2/autoload.php') ?: 'SebastianBergmann/Comparator/autoload.php');
+require_once 'SebastianBergmann/Comparator2/autoload.php';
 require_once 'SebastianBergmann/Diff/autoload.php';
 require_once 'SebastianBergmann/Environment/autoload.php';
-require_once (stream_resolve_include_path('SebastianBergmann/Exporter3/autoload.php') ?: 'SebastianBergmann/Exporter/autoload.php');
+require_once 'SebastianBergmann/Exporter3/autoload.php';
 require_once (stream_resolve_include_path('SebastianBergmann/GlobalState2/autoload.php') ?: 'SebastianBergmann/GlobalState/autoload.php');
-require_once (stream_resolve_include_path('SebastianBergmann/ObjectEnumerator3/autoload.php') ?: 'SebastianBergmann/ObjectEnumerator/autoload.php');
+require_once 'SebastianBergmann/ObjectEnumerator3/autoload.php';
 require_once 'SebastianBergmann/ResourceOperations/autoload.php';
 require_once 'SebastianBergmann/Version/autoload.php';
 require_once 'DeepCopy/autoload.php';
@@ -191,7 +208,7 @@ require_once 'PHP/Invoker/Autoload.php';
     '%{php_home}/%{ns_vendor}/DbUnit/autoload.php',
 ]);
 EOF
-
+cat src/autoload.php
 
 %{_bindir}/phpab \
   --output   tests/autoload.php \
@@ -236,6 +253,15 @@ exit $ret
 
 
 %changelog
+* Wed Mar 15 2017 Remi Collet <remi@remirepo.net> - 6.0.9-1
+- Update to 6.0.9
+- raise dependency on phpspec/prophecy 1.7
+- raise dependency on sebastian/comparator 2.0
+- raise dependency on sebastian/exporter 3.0
+- raise dependency on sebastian/object-enumerator 3.0.2
+- more explicit dependencies
+- fix autoloader to only rely on include_path
+
 * Fri Mar  3 2017 Remi Collet <remi@remirepo.net> - 6.0.8-2
 - fix autoloader for dep. with multiple versions
 

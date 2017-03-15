@@ -48,16 +48,18 @@ diff -up ./phpunit.rpm ./phpunit
 +    PHPUnit\TextUI\Command::main(); // PHPUnit v6 or newer
 +}
 
---- ./tests/bootstrap.php.rpm	2017-02-07 16:15:02.226336155 +0100
-+++ ./tests/bootstrap.php	2017-02-07 16:15:06.656354953 +0100
-@@ -1,6 +1,9 @@
- <?php
- // Needed for isolated tests
--require __DIR__ . '/../vendor/autoload.php';
+diff -up tests/bootstrap.php.rpm tests/bootstrap.php
+--- tests/bootstrap.php.rpm	2017-03-15 19:45:42.004596546 +0100
++++ tests/bootstrap.php	2017-03-15 19:47:16.561034373 +0100
+@@ -6,7 +6,10 @@ if (!defined('TEST_FILES_PATH')) {
+ ini_set('precision', 14);
+ ini_set('serialize_precision', 14);
+ 
+-require_once __DIR__ . '/../vendor/autoload.php';
 +require_once '@PATH@/autoload.php';
 +require_once __DIR__ . '/_files/CoveredFunction.php';
 +require_once '@PATH@/Framework/Assert/Functions.php';
 +require_once __DIR__ . '/autoload.php';
  
- ini_set('precision', 14);
- ini_set('serialize_precision', 14);
+ // TODO: Figure out why (some of) these are required (the classes should be autoloaded instead)
+ require_once TEST_FILES_PATH . 'BeforeAndAfterTest.php';
