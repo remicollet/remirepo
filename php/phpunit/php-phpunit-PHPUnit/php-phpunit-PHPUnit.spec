@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b99112aecc01f62acf3d81a3f59646700a1849e5
+%global gh_commit    dafc78e2a7d12139b0e97078d1082326bd09363d
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,8 +17,8 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.7
-%global minor        15
-%global specrel      2
+%global minor        16
+%global specrel      1
 
 Name:           php-phpunit-PHPUnit
 Version:        %{major}.%{minor}
@@ -45,23 +45,35 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.6
 BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-composer(phpunit/php-file-iterator) <  2
 BuildRequires:  php-composer(phpunit/php-file-iterator) >= 1.4
+BuildRequires:  php-composer(phpunit/php-text-template) <  2
 BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
 BuildRequires:  php-composer(phpunit/php-code-coverage) <  5
 BuildRequires:  php-composer(phpunit/php-code-coverage) >= 4.0.4
+BuildRequires:  php-composer(phpunit/php-timer) <  2
 BuildRequires:  php-composer(phpunit/php-timer) >= 1.0.6
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) <  4
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 3.2
 BuildRequires:  php-composer(phpspec/prophecy) >= 1.6.2
+BuildRequires:  php-composer(sebastian/comparator) <  2
 BuildRequires:  php-composer(sebastian/comparator) >= 1.2.4
 BuildRequires:  php-composer(sebastian/diff) >= 1.2
+BuildRequires:  php-composer(sebastian/environment) <  3
 BuildRequires:  php-composer(sebastian/environment) >= 1.3.4
+BuildRequires:  php-composer(sebastian/exporter) < 3
 BuildRequires:  php-composer(sebastian/exporter) >= 2.0
+BuildRequires:  php-composer(sebastian/recursion-context) <  3
 BuildRequires:  php-composer(sebastian/recursion-context) >= 2.0
+BuildRequires:  php-composer(sebastian/global-state) <  2
 BuildRequires:  php-composer(sebastian/global-state) >= 1.1
+BuildRequires:  php-composer(sebastian/object-enumerator) <  3
 BuildRequires:  php-composer(sebastian/object-enumerator) >= 2.0
+BuildRequires:  php-composer(sebastian/resource-operations) <  2
 BuildRequires:  php-composer(sebastian/resource-operations) >= 1.0
+BuildRequires:  php-composer(sebastian/version) <  3
 BuildRequires:  php-composer(sebastian/version) >= 1.0.3
+BuildRequires:  php-composer(myclabs/deep-copy) <  2
 BuildRequires:  php-composer(myclabs/deep-copy) >= 1.3
 BuildRequires:  php-composer(symfony/yaml) <  3
 BuildRequires:  php-composer(symfony/yaml) >= 2.1
@@ -234,6 +246,9 @@ fi
 
 
 %changelog
+* Wed Mar 15 2017 Remi Collet <remi@remirepo.net> - 5.7.16-1
+- Update to 5.7.16
+
 * Sat Mar  4 2017 Remi Collet <remi@remirepo.net> - 5.7.15-2
 - fix dependency on sebastian/recursion-context
 
