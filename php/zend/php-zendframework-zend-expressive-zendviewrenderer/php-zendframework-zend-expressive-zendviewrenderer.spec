@@ -176,6 +176,7 @@ rm -rf %{buildroot}
 %changelog
 * Wed Mar 15 2017 Remi Collet <remi@remirepo.net> - 1.4.0-1
 - Update to 1.4.0
+- use phpunit6 on F26+
 
 * Fri Mar  3 2017 Remi Collet <remi@remirepo.net> - 1.3.0-1
 - Update to 1.3.0

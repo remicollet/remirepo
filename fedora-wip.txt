@@ -10,6 +10,12 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 =================
  Testing
 =================
+14/3	php-7.1.3-1.fc26
+14/3	php-7.0.17-1.fc25
+14/3	php-zendframework-zend-expressive-zendviewrenderer-1.4.0-1.fc26
+14/3	php-zendframework-zend-expressive-twigrenderer-1.4.0-1.fc26
+14/3	php-nette-php-generator-2.6.1-1.fc26
+14/3	php-nette-php-generator-2.6.1-1.fc25
 14/3	php-zendframework-zend-expressive-platesrenderer-1.3.1-1.fc26
 14/3	php-phpunit-comparator-1.2.4-1.el7.1
 13/3	phpunit6-6.0.8-2.fc26
@@ -17,10 +23,7 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 13/3	libsodium-1.0.12-1.fc26
 13/3	libsodium-1.0.12-1.fc25
 13/3	libsodium-1.0.12-1.fc24
-11/3	ImageMagick-6.9.3.0-6.fc26
-11/3	ImageMagick-6.9.3.0-6.fc25
 11/3	roundcubemail-1.1.8-1.el7
-11/3	roundcubemail-1.2.4-1.fc26
 11/3	roundcubemail-1.2.4-1.fc25
 11/3	roundcubemail-1.2.4-1.fc24
 10/3	composer-1.4.1-1.fc25
@@ -29,19 +32,13 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 9/3	php-pear-Net-Socket-1.1.0-2.fc25
 8/3	php-pear-XML-RSS-1.1.0-1.fc25
 7/3	php-pear-Auth-SASL-1.1.0-1.fc25
-7/3	php-zendframework-zend-ldap-2.8.0-1.fc25
 7/3	php-zendframework-zend-ldap-2.8.0-1.fc24
-7/3	php-pear-Net-DNS2-1.4.3-1.fc25
-7/3	wordpress-4.7.3-1.fc25
 7/3	wordpress-4.7.3-1.fc24
 7/3	wordpress-4.7.3-1.el7
 7/3	wordpress-4.7.3-1.el6
 7/3	wordpress-4.7.3-1.el5
-6/3	php-phpmyadmin-motranslator-3.0-1.fc24
 6/3	php-phpmyadmin-motranslator-3.0-1.el7
-6/3	php-phpmyadmin-shapefile-2.0-1.fc24
 6/3	php-phpmyadmin-shapefile-2.0-1.el7
-6/3	php-nikic-php-parser3-3.0.5-1.fc24
 3/3	php-horde-Horde-Core-2.27.8-1.el7
 3/3	php-horde-Horde-Core-2.27.8-1.el6
 2/3	php-pear-PHP-CodeSniffer-2.8.1-1.el7
@@ -50,18 +47,31 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 1/3	php-horde-Horde-Test-2.6.2-1.el6.1
 1/3	php-deepend-Mockery-0.9.9-1.el7
 ** 28/2	php-7.0.17-0.1.RC1.fc25
-27/2	php-horde-Horde-Vfs-2.4.0-1.el7
-27/2	php-horde-Horde-Translation-2.2.2-1.el7
-27/2	php-horde-Horde-Test-2.6.2-1.el7
-27/2	php-horde-Horde-Support-2.2.0-1.el7
-27/2	php-horde-Horde-Share-2.1.2-1.el7
-27/2	php-horde-Horde-SessionHandler-2.2.9-1.el7
-27/2	php-horde-Horde-Service-Weather-2.5.4-1.el7
 =================
  Stable
 =================
  March, 2017
 =================
+14/3	14/3	php-7.1.3-1.fc27
+14/3	11/3	ImageMagick-6.9.3.0-6.fc25
+14/3	14/3	php-zendframework-zend-expressive-zendviewrenderer-1.4.0-1.fc27
+14/3	14/3	php-zendframework-zend-expressive-twigrenderer-1.4.0-1.fc27
+14/3	14/3	php-nette-php-generator-2.6.1-1.fc27
+15/3	11/3	roundcubemail-1.2.4-1.fc26
+15/3	7/3	php-zendframework-zend-ldap-2.8.0-1.fc25
+15/3	7/3	php-pear-Net-DNS2-1.4.3-1.fc25
+15/3	7/3	wordpress-4.7.3-1.fc25
+15/3	6/3	php-phpmyadmin-shapefile-2.0-1.fc24
+15/3	6/3	php-phpmyadmin-motranslator-3.0-1.fc24
+15/3	6/3	php-nikic-php-parser3-3.0.5-1.fc24
+15/3	27/2	php-horde-Horde-Vfs-2.4.0-1.el7
+15/3	27/2	php-horde-Horde-Translation-2.2.2-1.el7
+15/3	27/2	php-horde-Horde-Test-2.6.2-1.el7
+15/3	27/2	php-horde-Horde-Support-2.2.0-1.el7
+15/3	27/2	php-horde-Horde-Share-2.1.2-1.el7
+15/3	27/2	php-horde-Horde-SessionHandler-2.2.9-1.el7
+15/3	27/2	php-horde-Horde-Service-Weather-2.5.4-1.el7
+15/3	11/3	ImageMagick-6.9.3.0-6.fc26
 14/3	14/3	php-zendframework-zend-expressive-platesrenderer-1.3.1-1.fc27
 14/3	3/3	php-horde-Horde-Core-2.27.8-1.fc25
 14/3	3/3	php-horde-Horde-Core-2.27.8-1.fc24
