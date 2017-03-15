@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e0e33ce4eaf59ba77ead9ce45256692aa29ecb38
+%global gh_commit    c7de769d7b44f2c9de68e1f678b65efd8126f60b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150717
 %global gh_owner     FriendsOfPHP
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-cs-fixer
-Version:        2.1.1
+Version:        2.1.2
 Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A tool to automatically fix PHP code style
 
@@ -54,7 +54,7 @@ BuildRequires:  php-xml
 # From composer.json,     "require-dev": {
 #        "gecko-packages/gecko-php-unit": "^2.0",
 #        "justinrainbow/json-schema": "^5.0",
-#        "phpunit/phpunit": "^4.5|^5",
+#        "phpunit/phpunit": "^4.5 || ^5.0",
 #        "satooshi/php-coveralls": "^1.0",
 #        "symfony/phpunit-bridge": "^3.2"
 BuildRequires:  php-composer(gecko-packages/gecko-php-unit) >= 2.0
@@ -190,6 +190,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 15 2017 Remi Collet <remi@remirepo.net> - 2.1.2-1
+- Update to 2.1.2
+
 * Fri Mar  3 2017 Remi Collet <remi@remirepo.net> - 2.1.1-1
 - Update to 2.1.1
 
