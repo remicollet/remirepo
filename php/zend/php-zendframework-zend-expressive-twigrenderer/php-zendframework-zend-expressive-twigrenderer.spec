@@ -154,16 +154,13 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-# remirepo:10
-run=0
+# remirepo:7
 ret=0
 if which php56; then
    php56 %{_bindir}/phpunit --verbose || ret=1
-   run=1
 fi
 if which php71; then
    php71 %{_bindir}/phpunit6 --verbose || ret=1
-   run=1
 fi
 %{phpunit} --verbose
 # remirepo:1

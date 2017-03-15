@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    3fd3a7453fe254a2b0f3f32ad15d83ca88791eac
+%global gh_commit    0757034f2f97e4b966afcfb2937e9884204a062c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-zendviewrenderer
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.3.0
+Version:        1.4.0
 Release:        1%{?dist}
 Summary:        zend-view PhpRenderer integration for Expressive
 
@@ -54,7 +54,12 @@ BuildRequires:  php-composer(%{gh_owner}/zend-diactoros)
 #        "malukenho/docheader": "^0.1.5",
 #        "phpunit/phpunit": "^6.0.8 || ^5.7.15",
 #        "zendframework/zend-coding-standard": "~1.0.0"
-BuildRequires:  php-composer(phpunit/phpunit)                        >= 5.7.15
+%if 0%{?fedora} >= 26
+%global phpunit %{_bindir}/phpunit6
+%else
+%global phpunit %{_bindir}/phpunit
+%endif
+BuildRequires:  %{phpunit}
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
 # For dependencies autoloader
@@ -65,7 +70,7 @@ BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 #        "php": "^5.6 || ^7.0",
 #        "container-interop/container-interop": "^1.2",
 #        "psr/http-message": "^1.0.1",
-#        "zendframework/zend-expressive-helpers": "^1.4 || ^2.2 || ^3.0.1",
+#        "zendframework/zend-expressive-helpers": "^1.4 || ^2.2 || ^3.0.1 || ^4.0",
 #        "zendframework/zend-expressive-router": "^1.3.2 || ^2.1",
 #        "zendframework/zend-expressive-template": "^1.0.4",
 #        "zendframework/zend-servicemanager": "^2.7.8 || ^3.3",
@@ -76,7 +81,7 @@ Requires:       php-composer(container-interop/container-interop)    <  2
 Requires:       php-composer(psr/http-message)                       >= 1.0.1
 Requires:       php-composer(psr/http-message)                       <  2
 Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    >= 1.4
-Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    <  4
+Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    <  5
 Requires:       php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
 Requires:       php-composer(%{gh_owner}/zend-expressive-router)     <  3
 Requires:       php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0.4
@@ -139,21 +144,16 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-# remirepo:11
-run=0
+# remirepo:7
 ret=0
 if which php56; then
    php56 %{_bindir}/phpunit || ret=1
-   run=1
 fi
 if which php71; then
    php71 %{_bindir}/phpunit6 || ret=1
-   run=1
 fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose
-# remirepo:2
-fi
+%{phpunit} --verbose
+# remirepo:1
 exit $ret
 %else
 : Test suite disabled
@@ -174,6 +174,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 15 2017 Remi Collet <remi@remirepo.net> - 1.4.0-1
+- Update to 1.4.0
+
 * Fri Mar  3 2017 Remi Collet <remi@remirepo.net> - 1.3.0-1
 - Update to 1.3.0
 - raise dependency on container-interop/container-interop 1.2
