@@ -44,6 +44,18 @@
 %global with_gslib 1
 %endif
 
+%if 0%{?fedora} < 22 && 0%{?rhel} < 7
+%global with_raqm 0
+%else
+%global with_raqm 1
+%endif
+
+%if 0%{?fedora}
+%global with_lqr 1
+%else
+%global with_lqr 0
+%endif
+
 %global with_gvc   1
 
 %ifarch x86_64
@@ -62,7 +74,7 @@ Name:           %{libname}
 Name:           %{libname}7
 %endif
 Version:        %{VER}.%{Patchlevel}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
@@ -98,6 +110,12 @@ BuildRequires:  openjpeg2-devel >= 2.1.0
 %endif
 %if %{with_gvc}
 BuildRequires:  graphviz-devel >= 2.9.0
+%endif
+%if %{with_raqm}
+BuildRequires:  libraqm-devel
+%endif
+%if %{with_lqr}
+BuildRequires:  liblqr-1-devel
 %endif
 
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
@@ -295,10 +313,15 @@ cp -p Magick++/demo/*.cpp Magick++/demo/*.miff Magick++/examples
            --with-x \
            --with-threads \
            --with-magick_plus_plus \
+%if %{with_raqm}
+           --with-raqm \
+%else
+           --without-raqm \
+%endif
 %if %{with_gslib}
            --with-gslib \
 %else
-           --with-gslib=no \
+           --without-gslib \
 %endif
            --with-wmf \
            --with-lcms \
@@ -307,12 +330,23 @@ cp -p Magick++/demo/*.cpp Magick++/demo/*.miff Magick++/examples
            --with-xml \
 %if %{with_webp}
            --with-webp \
+%else
+           --without-webp \
 %endif
 %if %{with_jbig}
            --with-jbig \
+%else
+           --without-jbig \
 %endif
 %if %{with_jp2}
            --with-openjp2 \
+%else
+           --without-openjp2 \
+%endif
+%if %{with_lqr}
+           --with-lqr \
+%else
+           --without-lqr \
 %endif
 %if %{with_gvc}
            --with-gvc \
@@ -494,6 +528,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 16 2017 Remi Collet <remi@remirepo.net> - 7.0.5.2-2
+- cleanup build options
+- build --with-raqm when available
+- build --with-lqr when available
+
 * Sun Mar 12 2017 Remi Collet <remi@remirepo.net> - 7.0.5.2-1
 - update to version 7.0.5 patch level 2
 
