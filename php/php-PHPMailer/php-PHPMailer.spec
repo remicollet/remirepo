@@ -9,14 +9,14 @@
 #
 %global github_user  PHPMailer
 %global github_app   PHPMailer
-%global github_tag   b18cb98131bd83103ccb26a888fdfe3177b8a663
+%global github_tag   7115df4a6f76281109ebe352900c42403b728bb4
 %global github_short %(c=%{github_tag}; echo ${c:0:7})
 
 %global		arch_name	%{github_app}-%{github_tag}
 
 Name:		php-PHPMailer
 Summary:	PHP email transport class with a lot of features
-Version:	5.2.22
+Version:	5.2.23
 Release:	1%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
@@ -152,6 +152,9 @@ rm -rf "${RPM_BUILD_ROOT}"
 
 
 %changelog
+* Thu Mar 16 2017 Remi Collet <remi@remirepo.net> - 5.2.23-1
+- Update to 5.2.23
+
 * Mon Jan  9 2017 Remi Collet <remi@fedoraproject.org> - 5.2.22-1
 - update to 5.2.22
 - fix local file disclosure vulnerability CVE-2017-5223

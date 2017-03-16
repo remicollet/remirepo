@@ -1,7 +1,10 @@
 =================
  TODO
 =================
-php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
+php-cs-fixer 2.1.2 (waiting justinrainbow/json-schema 5)
+php-phpunit-PHPUnit 5.7.16
+phpunit6 6.0.9 (waiting php-sebastian-comparator2, php-sebastian-object-enumerator3)
+php-pecl-mongodb 1.2.7
 
 =================
  Pending
@@ -10,6 +13,11 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 =================
  Testing
 =================
+15/3	php-PHPMailer-5.2.23-1.fc26
+15/3	php-PHPMailer-5.2.23-1.fc25
+15/3	php-PHPMailer-5.2.23-1.fc24
+15/3	php-PHPMailer-5.2.23-1.el7
+15/3	php-PHPMailer-5.2.23-1.el6
 14/3	php-7.1.3-1.fc26
 14/3	php-7.0.17-1.fc25
 14/3	php-zendframework-zend-expressive-zendviewrenderer-1.4.0-1.fc26
@@ -24,16 +32,12 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 13/3	libsodium-1.0.12-1.fc25
 13/3	libsodium-1.0.12-1.fc24
 11/3	roundcubemail-1.1.8-1.el7
-11/3	roundcubemail-1.2.4-1.fc25
 11/3	roundcubemail-1.2.4-1.fc24
 10/3	composer-1.4.1-1.fc25
 10/3	composer-1.4.1-1.fc24
 10/3	composer-1.4.1-1.el7
 9/3	php-pear-Net-Socket-1.1.0-2.fc25
 8/3	php-pear-XML-RSS-1.1.0-1.fc25
-7/3	php-pear-Auth-SASL-1.1.0-1.fc25
-7/3	php-zendframework-zend-ldap-2.8.0-1.fc24
-7/3	wordpress-4.7.3-1.fc24
 7/3	wordpress-4.7.3-1.el7
 7/3	wordpress-4.7.3-1.el6
 7/3	wordpress-4.7.3-1.el5
@@ -52,6 +56,11 @@ php-cs-fixer 2.1.1 (waiting justinrainbow/json-schema 5)
 =================
  March, 2017
 =================
+15/3	15/3	php-PHPMailer-5.2.23-1.fc27
+14/3	7/3	php-pear-Auth-SASL-1.1.0-1.fc25
+14/3	7/3	php-zendframework-zend-ldap-2.8.0-1.fc24
+14/3	7/3	wordpress-4.7.3-1.fc24
+14/3	11/3	roundcubemail-1.2.4-1.fc25
 14/3	14/3	php-7.1.3-1.fc27
 14/3	11/3	ImageMagick-6.9.3.0-6.fc25
 14/3	14/3	php-zendframework-zend-expressive-zendviewrenderer-1.4.0-1.fc27
