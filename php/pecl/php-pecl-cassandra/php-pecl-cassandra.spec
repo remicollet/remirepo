@@ -31,8 +31,8 @@
 
 Summary:      DataStax PHP Driver for Apache Cassandra
 Name:         %{?sub_prefix}php-pecl-%{pecl_name}
-Version:      1.2.2
-Release:      4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:      1.3.0
+Release:      1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      ASL 2.0
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -44,9 +44,9 @@ Source0:      https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 
-BuildRequires: %{?scl_prefix}php-devel >= 5.5
+BuildRequires: %{?scl_prefix}php-devel >= 5.6
 BuildRequires: %{?scl_prefix}php-pear
-BuildRequires: cassandra-cpp-driver-devel
+BuildRequires: cassandra-cpp-driver-devel >= 2.6.0
 BuildRequires: libuv-devel
 BuildRequires: gmp-devel
 
@@ -70,10 +70,8 @@ Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
-%endif
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
@@ -119,7 +117,7 @@ sed -e 's/role="test"/role="src"/' \
 
 cd NTS
 # Sanity check, really often broken
-extver=$(sed -n '/#define PHP_CASSANDRA_VERSION /{s/.* "//;s/".*$//;p}' version.h)
+extver=$(sed -n '/#define PHP_DRIVER_VERSION /{s/.* "//;s/".*$//;p}' version.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
@@ -251,6 +249,11 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Thu Mar 16 2017 Remi Collet <remi@remirepo.net> - 1.3.0-1
+- Update to 1.3.0
+- raise dependency on PHP 5.6
+- raise dependency on cassandra-cpp-driver >= 2.6.0
+
 * Wed Jan  4 2017 Remi Collet <remi@fedoraproject.org> - 1.2.2-4
 - rebuild against new libuv (EL-7)
 
