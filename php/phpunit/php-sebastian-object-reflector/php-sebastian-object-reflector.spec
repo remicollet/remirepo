@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    2201553542d60d25db9c5b2c54330df776648008
+%global gh_commit    afd5797e7af7c9f529879ad5e8e8abe126c89dab
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   object-reflector
@@ -24,7 +24,7 @@
 %endif
 
 Name:           php-%{pk_vendor}-%{pk_project}%{major}
-Version:        1.0.0
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        Allows reflection of object attributes
 
@@ -104,5 +104,8 @@ exit $ret
 
 
 %changelog
+* Thu Mar 16 2017 Remi Collet <remi@remirepo.net> - 1.1.0-1
+- Update to 1.1.0
+
 * Sun Mar 12 2017 Remi Collet <remi@remirepo.net> - 1.0.0-1
 - initial package
