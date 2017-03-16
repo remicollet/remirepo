@@ -37,15 +37,12 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.9.7
+Version:        1.9.8
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-Patch0:         %{pecl_name}-pr1148.patch
-Patch1:         9aade9eafcd0d5be04366ed7b0f42e0dd0694082.patch
 
 BuildRequires:  %{?scl_prefix}php-devel >= 5.3.10
 BuildRequires:  %{?scl_prefix}php-pear
@@ -144,9 +141,6 @@ sed -e 's/role="test"/role="src"/' \
 
 
 cd NTS
-%patch0 -p1 -b .pr1148
-%patch1 -p1 -b .upstream
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_SWOOLE_VERSION/{s/.* "//;s/".*$//;p}' php_swoole.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
@@ -291,6 +285,10 @@ cd ../ZTS
 
 
 %changelog
+* Thu Mar 16 2017 Remi Collet <remi@remirepo.net> - 1.9.8-1
+- Update to 1.9.8
+- drop patch merged upstream
+
 * Thu Mar 16 2017 Remi Collet <remi@remirepo.net> - 1.9.7-1
 - Update to 1.9.7
 - open https://github.com/swoole/swoole-src/issues/1147
