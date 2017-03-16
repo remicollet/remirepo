@@ -1,3 +1,12 @@
+# remirepo spec file for php-paragonie-constant-time-encoding, from:
+#
+# Fedora spec file for php-paragonie-constant-time-encoding
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 %global composer_vendor         paragonie
 %global composer_project        constant_time_encoding
 %global composer_namespace      ParagonIE/ConstantTime
@@ -65,15 +74,27 @@ cat << 'EOF' | tee vendor/autoload.php
 require_once '%{buildroot}%{_datadir}/php/%{composer_namespace}/autoload.php';
 require_once '%{_datadir}/php/random_compat/autoload.php';
 EOF
-phpunit --no-coverage --verbose
+
+ret=0
+for cmd in php php56 php70 php71; do
+  if which $cmd; then
+    $cmd %{_bindir}/phpunit --no-coverage --verbose || ret=1
+  fi
+done
+exit $ret
+
 
 %files
 %dir %{_datadir}/php/ParagonIE
 %{_datadir}/php/%{composer_namespace}
 %doc README.md composer.json
+%{!?_licensedir:%global license %%doc}
 %license LICENSE.txt
 
 %changelog
+* Thu Mar 16 2017 Remi Collet <remi@remirepo.net> - 1.0.1-4
+- backport for remi repository
+
 * Wed Mar 15 2017 François Kooman <fkooman@tuxed.net> - 1.0.1-4
 - own parent directory
 - remove Requires paragonie/random_compat, only needed for build
