@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5f12a3cfbae585618f5b02992c8810c7679457d0
+%global gh_commit    eadb20b627f97a7ce5bf3353e86f9820e34fa61c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     etsy
 #global gh_date      20150820
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           %{gh_project}
-Version:        0.8.3
+Version:        0.9.1
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A static analyzer for PHP
 
@@ -30,8 +30,8 @@ Patch0:         %{name}-autoload.patch
 
 BuildArch:      noarch
 %if %{with_tests}
-BuildRequires:  php(language) >= 7.0
-BuildRequires:  php-ast
+BuildRequires:  php(language) >= 7.1
+BuildRequires:  php-ast >= 0.1.4
 BuildRequires:  php-composer(symfony/console) >= 2.8
 BuildRequires:  php-reflection
 BuildRequires:  php-pcntl
@@ -41,20 +41,18 @@ BuildRequires:  php-spl
 BuildRequires:  php-sysvmsg
 BuildRequires:  php-sysvsem
 # For tests, from composer.json "require-dev": {
-#        "phpdocumentor/phpdocumentor": "^2.9.0",
-#        "phpunit/phpunit": "^5.7.2",
-#        "squizlabs/php_codesniffer": "^2.7.1"
+#        "phpunit/phpunit": "^5.7.2"
 BuildRequires:  php-composer(phpunit/phpunit) >= 5.7.2
 %endif
 # For autoloader
 BuildRequires:  php-composer(fedora/autoloader)
 
 # From composer.json, "require": {
-#        "php": "~7.0.0",
-#        "ext-ast": "*",
+#        "php": "~7.1.0",
+#        "ext-ast": "^0.1.4",
 #        "symfony/console": "~2.3|~3.0"
-Requires:       php(language) >= 7.0
-Requires:       php-ast
+Requires:       php(language) >= 7.1
+Requires:       php-ast >= 0.1.4
 Requires:       php-composer(symfony/console) >= 2.3
 # From phpcompatinfo report for 0.8.0
 Requires:       php-cli
@@ -115,16 +113,7 @@ require '%{buildroot}%{_datadir}/php/%{psr0}/Bootstrap.php';
 \Fedora\Autoloader\Autoload::addPsr4('Phan\\Tests\\', __DIR__ . '/Phan');
 EOF
 
-# remirepo:6
-run=0
-ret=0
-if which php71; then
-   php71 %{_bindir}/phpunit -d memory_limit=1G --bootstrap tests/autoload.php
-   run=1
-fi
 %{_bindir}/phpunit -d memory_limit=1G --bootstrap tests/autoload.php --verbose
-# remirepo:1
-exit $ret
 
 
 %else
@@ -147,6 +136,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 16 2017 Remi Collet <remi@remirepo.net> - 0.9.1-1
+- Update to 0.9.1
+- raise dependency on PHP 7.1
+- raise dependency on ast 0.1.4
+
 * Fri Jan 27 2017 Remi Collet <remi@remirepo.net> - 0.8.3-1
 - update to 0.8.3
 
