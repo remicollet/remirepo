@@ -31,7 +31,7 @@
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}2
 Version:        2.0.7
-Release:        1%{?dist}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -279,6 +279,9 @@ cd ../ZTS
 
 
 %changelog
+* Fri Mar 17 2017 Remi Collet <remi@remirepo.net> - 2.0.7-2
+- fix release
+
 * Fri Mar 17 2017 Remi Collet <remi@remirepo.net> - 2.0.7-1
 - Update to 2.0.7
 - rename to php-pecl-swoole2
