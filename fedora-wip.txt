@@ -11,6 +11,10 @@ phpunit6 6.0.9 (waiting php-sebastian-comparator2, php-sebastian-object-enumerat
 =================
  Testing
 =================
+17/3	php-bartlett-PHP-CompatInfo-5.0.5-1.fc26
+17/3	php-bartlett-PHP-CompatInfo-5.0.5-1.fc25
+17/3	php-bartlett-PHP-CompatInfo-5.0.5-1.fc24
+17/3	php-bartlett-PHP-CompatInfo-5.0.5-1.el7
 17/3	php-bartlett-php-compatinfo-db-1.19.0-1.fc26
 17/3	php-bartlett-php-compatinfo-db-1.19.0-1.fc25
 17/3	php-bartlett-php-compatinfo-db-1.19.0-1.fc24
@@ -51,6 +55,7 @@ phpunit6 6.0.9 (waiting php-sebastian-comparator2, php-sebastian-object-enumerat
 =================
  March, 2017
 =================
+17/3	17/3	php-bartlett-PHP-CompatInfo-5.0.5-1.fc27
 17/3	13/3	phpunit6-6.0.8-2.fc26
 17/3	13/3	php-phpunit-mock-objects4-4.0.1-2.fc26
 17/3	2/3	php-pear-PHP-CodeSniffer-2.8.1-1.el7

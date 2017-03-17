@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
-%global gh_commit    8a49d050f417cf39325bc9170f101ed2a2fb9f2a
+%global gh_commit    cbd03899c8a48eb2f9274035c0770d83821905ab
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20151005
 %global gh_owner     llaville
@@ -16,9 +16,9 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        5.0.4
+Version:        5.0.5
 %global specrel 1
-Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
+Release:        %{?gh_date:1%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
@@ -139,21 +139,13 @@ install -D -p -m 755 %{SOURCE1}                  %{buildroot}%{_datadir}/%{name}
 mkdir vendor
 ln -s %{buildroot}%{_datadir}/php/Bartlett/CompatInfo/autoload.php vendor/
 
-# remirepo:11
-run=0
+
 ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --include-path %{buildroot}%{_datadir}/php --verbose
-# remirepo:2
-fi
+for cmd in php php56 php70 php71; do
+  if which $cmd; then
+    $cmd %{_bindir}/phpunit --include-path %{buildroot}%{_datadir}/php --verbose || ret=1
+  fi
+done
 exit $ret
 %endif
 
@@ -177,6 +169,9 @@ fi
 
 
 %changelog
+* Fri Mar 17 2017 Remi Collet <remi@remirepo.net> - 5.0.5-1
+- Update to 5.0.5
+
 * Tue Jan 17 2017 Remi Collet <remi@fedoraproject.org> - 5.0.4-1
 - update to 5.0.4
 
