@@ -1,4 +1,4 @@
-# remirepo spec file for libzip-last
+# remirepo spec file for libzip5
 # renamed for parallel installation, from:
 #
 # Fedora spec file for libzip
