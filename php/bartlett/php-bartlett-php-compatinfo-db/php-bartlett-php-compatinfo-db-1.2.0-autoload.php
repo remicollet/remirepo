@@ -1,6 +1,6 @@
 <?php
 /**
- * Autoloader php-bartlett/php-compatinfo-db/php-compatinfo and its dependencies
+ * Autoloader php-bartlett-php-compatinfo-db and its dependencies
  */
 
 require_once '/usr/share/php/Fedora/Autoloader/autoload.php';

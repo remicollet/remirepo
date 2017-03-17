@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # See https://github.com/llaville/php-compatinfo-db/releases
-%global gh_commit    4e11b397994a314fc49c3176fee59bd269f07b53
+%global gh_commit    87fcfd99b5ad894affa07d307817d963eb62098e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20151031
 %global gh_owner     llaville
@@ -27,9 +27,9 @@
 %endif
 
 Name:           php-%{c_vendor}-%{c_project}
-Version:        1.18.0
+Version:        1.19.0
 %global specrel 1
-Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
+Release:        %{?gh_date:1%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Reference Database to be used with php-compatinfo library
 
 Group:          Development/Libraries
@@ -41,7 +41,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 Source1:        %{name}-1.2.0-autoload.php
 
 # Autoload and sqlite database path
-Patch0:         %{name}-1.2.0-rpm.patch
+Patch0:         %{name}-1.19.0-rpm.patch
 # CURL_SSLVERSION constants have been backported
 Patch1:         %{name}-curltls.patch
 
@@ -188,6 +188,10 @@ export BARTLETT_COMPATINFO_DB=%{buildroot}%{_datadir}/%{name}/compatinfo.sqlite
 
 
 %changelog
+* Fri Mar 17 2017 Remi Collet <remi@remirepo.net> - 1.19.0-1
+- Update to 1.19.0
+- adapt patch fixing DB location
+
 * Fri Feb 24 2017 Remi Collet <remi@fedoraproject.org> - 1.18.0-1
 - update to 1.18.0
 
