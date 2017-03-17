@@ -30,7 +30,7 @@
 %global oci8ver     2.0.12
 
 # Use for first build of PHP (before pecl/zip and pecl/jsonc)
-%global php_bootstrap   1
+%global php_bootstrap   0
 
 # Adds -z now to the linker flags
 %global _hardened_build 1
@@ -138,7 +138,7 @@
 %endif
 
 #global rcver  RC1
-%global rpmrel 0
+%global rpmrel 4
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
@@ -878,6 +878,7 @@ support for using the enchant library to PHP.
 
 %patch1 -p1 -b .fb_config
 %if 0%{?fedora} >= 26
+sed -e 's/\r//' -i ext/openssl/tests/bug66501.phpt
 %patch2 -p1 -b .openssl11
 %endif
 %patch5 -p1 -b .includedir

@@ -717,7 +717,7 @@ index da60bb9..2932e16 100644
  		RETVAL_FALSE;
  		efree(buf);
 -		EVP_CIPHER_CTX_cleanup(&ctx);
-+		EVP_CIPHER_CTX_cleanup(ctx);
++		EVP_CIPHER_CTX_free(ctx);
  		goto clean_exit;
  	}
  
