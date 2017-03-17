@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    99b528e01276054458da9553b587cfb959dfa436
+%global gh_commit    b71641582297eab52753b72cd4eb45a5ded4485c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-validator
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.8.2
+Version:        2.9.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -34,7 +34,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.5
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-ctype
 BuildRequires:  php-date
 BuildRequires:  php-fileinfo
@@ -42,7 +42,7 @@ BuildRequires:  php-hash
 BuildRequires:  php-intl
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
-BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)             >= 2.7
+BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)             >= 2.7.6
 BuildRequires:  php-composer(container-interop/container-interop) >= 1.1
 # From composer, "require-dev": {
 #        "zendframework/zend-cache": "^2.6.1",
@@ -55,8 +55,8 @@ BuildRequires:  php-composer(container-interop/container-interop) >= 1.1
 #        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
 #        "zendframework/zend-session": "^2.6.2",
 #        "zendframework/zend-uri": "^2.5",
-#        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "^4.0"
+#        "phpunit/PHPUnit": "^6.0.8 || ^5.7.15",
+#        "zendframework/zend-coding-standard": "~1.0.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-cache)            >= 2.6.1
 BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-db)               >= 2.7
@@ -67,29 +67,34 @@ BuildRequires:  php-composer(%{gh_owner}/zend-math)             >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
 BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.6.2
 BuildRequires:  php-composer(%{gh_owner}/zend-uri)              >= 2.5
-BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
+%if 0%{?fedora} >= 26
+%global phpunit %{_bindir}/phpunit6
+%else
+%global phpunit %{_bindir}/phpunit
+%endif
+BuildRequires:  %{phpunit}
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": "^5.5 || ^7.0",
-#        "zendframework/zend-stdlib": "^2.7 || ^3.0",
+#        "php": "^5.6 || ^7.0",
+#        "zendframework/zend-stdlib": "^2.7.6 || ^3.1",
 #        "container-interop/container-interop": "^1.1"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-stdlib)             >= 2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)             >= 2.7.6
 Requires:       php-composer(%{gh_owner}/zend-stdlib)             <  4
 Requires:       php-composer(container-interop/container-interop) >= 1.1
 Requires:       php-composer(container-interop/container-interop) <  2
 # From composer, "suggest": {
-#        "zendframework/zend-db": "Zend\\Db component",
+#        "zendframework/zend-db": "Zend\\Db component, required by the (No)RecordExists validator",
 #        "zendframework/zend-filter": "Zend\\Filter component, required by the Digits validator",
-#        "zendframework/zend-i18n": "Zend\\I18n component to allow translation of validation error messages as well as to use the various Date validators",
-#        "zendframework/zend-math": "Zend\\Math component",
+#        "zendframework/zend-i18n": "Zend\\I18n component to allow translation of validation error messages",
+#        "zendframework/zend-math": "Zend\\Math component, required by the Csrf validator",
 #        "zendframework/zend-i18n-resources": "Translations of validator messages",
 #        "zendframework/zend-servicemanager": "Zend\\ServiceManager component to allow using the ValidatorPluginManager and validator chains",
-#        "zendframework/zend-session": "Zend\\Session component",
+#        "zendframework/zend-session": "Zend\\Session component, required by the Csrf validator",
 #        "zendframework/zend-uri": "Zend\\Uri component, required by the Uri and Sitemap\\Loc validators"
 %if 0%{?fedora} >= 21
 Suggests:       php-composer(%{gh_owner}/zend-db)
@@ -156,21 +161,16 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-# remirepo:11
-run=0
+# remirepo:7
 ret=0
 if which php56; then
    php56 %{_bindir}/phpunit || ret=1
-   run=1
 fi
 if which php71; then
-   php71 %{_bindir}/phpunit || ret=1
-   run=1
+   php71 %{_bindir}/phpunit6 || ret=1
 fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose
-# remirepo:2
-fi
+%{phpunit} --verbose
+# remirepo:1
 exit $ret
 %else
 : Test suite disabled
@@ -191,6 +191,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar 17 2017 Remi Collet <remi@remirepo.net> - 2.9.0-1
+- Update to 2.9.0
+- raise dependency on PHP 5.6
+- raise dependency on zend-stdlib 2.7.6
+- use phpunit6 on F26+
+
 * Sun Jan 29 2017 Remi Collet <remi@fedoraproject.org> - 2.8.2-1
 - Update to 2.8.2
 
