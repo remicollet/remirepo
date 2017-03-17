@@ -30,7 +30,7 @@
 %global oci8ver     2.0.12
 
 # Use for first build of PHP (before pecl/zip and pecl/jsonc)
-%global php_bootstrap   0
+%global php_bootstrap   1
 
 # Adds -z now to the linker flags
 %global _hardened_build 1
@@ -138,7 +138,7 @@
 %endif
 
 #global rcver  RC1
-%global rpmrel 3
+%global rpmrel 0
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
@@ -173,6 +173,8 @@ Source50: opcache.ini
 Source51: opcache-default.blacklist
 
 # Build fixes
+Patch1: php-5.6.30-interbase.patch
+Patch2: php-5.6.30-openssl11.patch
 Patch5: php-5.6.3-includedir.patch
 Patch6: php-5.6.3-embed.patch
 Patch7: php-5.3.0-recode.patch
@@ -874,6 +876,10 @@ support for using the enchant library to PHP.
 
 %setup -q -n php-%{version}%{?rcver}
 
+%patch1 -p1 -b .fb_config
+%if 0%{?fedora} >= 26
+%patch2 -p1 -b .openssl11
+%endif
 %patch5 -p1 -b .includedir
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
@@ -1165,8 +1171,8 @@ build --libdir=%{_libdir}/php \
       --with-pdo-oci=shared,instantclient,%{_root_prefix},%{oraclever} \
 %endif
 %if %{with_interbase}
-      --with-interbase=shared,%{_libdir}/firebird \
-      --with-pdo-firebird=shared,%{_libdir}/firebird \
+      --with-interbase=shared \
+      --with-pdo-firebird=shared \
 %endif
       --enable-dom=shared \
       --with-pgsql=shared \
@@ -1826,6 +1832,10 @@ fi
 
 
 %changelog
+* Fri Mar 17 2017 Remi Collet <remi@remirepo.net> - 5.6.30-4
+- add patch for firebird configuration
+- add patch for OpenSSL 1.1 on F26
+
 * Fri Jan 20 2017 Remi Collet <remi@fedoraproject.org> 5.6.30-3
 - disable dtrace by default, this may be enabled again using
   environment variable USE_ZEND_DTRACE=1, backported from PHP 7

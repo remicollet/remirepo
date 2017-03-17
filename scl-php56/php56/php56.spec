@@ -2,6 +2,10 @@
 %global scl_name_version 56
 %global scl              %{scl_name_base}%{scl_name_version}
 %global macrosdir        %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_root_sysconfdir}/rpm; echo $d)
+%global install_scl      1
+%if 0%{?fedora} >= 26
+%global rh_layout        1
+%endif
 %if 0%{?fedora} >= 20
 # Requires scl-utils v2 for SCL integration
 %global with_modules     1
@@ -16,8 +20,8 @@
 
 Summary:       Package that installs PHP 5.6
 Name:          %scl_name
-Version:       2.1
-Release:       5%{?dist}
+Version:       2.2
+Release:       1%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
 
@@ -32,9 +36,9 @@ BuildRequires: help2man
 BuildRequires: iso-codes
 BuildRequires: environment-modules
 
-Requires:      %{?scl_prefix}php-common%{?_isa} >= 5.6.15
+Requires:      %{?scl_prefix}php-common%{?_isa} >= 5.6.30
 Requires:      %{?scl_prefix}php-cli%{?_isa}
-Requires:      %{?scl_prefix}php-pear           >= 1:1.10
+Requires:      %{?scl_prefix}php-pear           >= 1:1.10.3
 Requires:      %{?scl_name}-runtime%{?_isa}      = %{version}-%{release}
 
 %description
@@ -112,6 +116,10 @@ EOF
 # copy the license file so %%files section sees it
 cp %{SOURCE2} .
 
+: prefix in %{_prefix}
+: config in %{_sysconfdir}
+: data in %{_localstatedir}
+
 
 %build
 # generate a helper script that will be used by help2man
@@ -155,9 +163,17 @@ fi
 
 %post runtime
 # Simple copy of context from system root to SCL root.
-semanage fcontext -a -e / %{?_scl_root}  &>/dev/null || :
+semanage fcontext -a -e /                      %{?_scl_root}     &>/dev/null || :
+%if 0%{?fedora} >= 26
+semanage fcontext -a -e %{_root_sysconfdir}    %{_sysconfdir}    &>/dev/null || :
+semanage fcontext -a -e %{_root_localstatedir} %{_localstatedir} &>/dev/null || :
+%endif
 selinuxenabled && load_policy || :
-restorecon -R %{?_scl_root}  &>/dev/null || :
+restorecon -R %{?_scl_root}     &>/dev/null || :
+%if 0%{?fedora} >= 26
+restorecon -R %{_sysconfdir}    &>/dev/null || :
+restorecon -R %{_localstatedir} &>/dev/null || :
+%endif
 
 
 %{!?_licensedir:%global license %%doc}
@@ -193,6 +209,9 @@ restorecon -R %{?_scl_root}  &>/dev/null || :
 
 
 %changelog
+* Fri Mar 17 2017 Remi Collet <remi@remirepo.net> - 2.2-1
+- use rh_layout on F26
+
 * Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> 2.1-5
 - add module file for EL
 
