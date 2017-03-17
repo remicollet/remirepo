@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #144 v8js version 1.3.5 ] {
+Extension [ <persistent> extension #145 v8js version 1.3.6 ] {
 
   - INI {
     Entry [ v8js.flags <ALL> ]
