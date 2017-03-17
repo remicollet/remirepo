@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #131 swoole version 2.0.6 ] {
+Extension [ <persistent> extension #132 swoole version 2.0.7 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -10,15 +10,15 @@ Extension [ <persistent> extension #131 swoole version 2.0.6 ] {
     Entry [ swoole.use_namespace <SYSTEM> ]
       Current = 'On'
     }
-    Entry [ swoole.message_queue_key <ALL> ]
-      Current = '0'
+    Entry [ swoole.fast_serialize <ALL> ]
+      Current = 'Off'
     }
     Entry [ swoole.unixsock_buffer_size <ALL> ]
       Current = '8388608'
     }
   }
 
-  - Constants [67] {
+  - Constants [68] {
     Constant [ integer SWOOLE_BASE ] { 4 }
     Constant [ integer SWOOLE_THREAD ] { 2 }
     Constant [ integer SWOOLE_PROCESS ] { 3 }
@@ -63,7 +63,7 @@ Extension [ <persistent> extension #131 swoole version 2.0.6 ] {
     Constant [ integer SWOOLE_DTLSv1_CLIENT_METHOD ] { 17 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 2.0.6 }
+    Constant [ string SWOOLE_VERSION ] { 2.0.7 }
     Constant [ integer SWOOLE_REDIS_MODE_MULTI ] { 0 }
     Constant [ integer SWOOLE_REDIS_MODE_PIPELINE ] { 1 }
     Constant [ integer SWOOLE_REDIS_TYPE_NOT_FOUND ] { 0 }
@@ -86,6 +86,7 @@ Extension [ <persistent> extension #131 swoole version 2.0.6 ] {
     Constant [ integer WEBSOCKET_STATUS_HANDSHAKE ] { 2 }
     Constant [ integer WEBSOCKET_STATUS_FRAME ] { 3 }
     Constant [ integer WEBSOCKET_STATUS_ACTIVE ] { 3 }
+    Constant [ integer SWOOLE_FAST_PACK ] { 1 }
   }
 
   - Functions {
@@ -269,7 +270,7 @@ Extension [ <persistent> extension #131 swoole version 2.0.6 ] {
     }
   }
 
-  - Classes [32] {
+  - Classes [35] {
     Class [ <internal:swoole> class Swoole\Server ] {
 
       - Constants [0] {
@@ -1849,7 +1850,13 @@ Extension [ <persistent> extension #131 swoole version 2.0.6 ] {
       - Static properties [0] {
       }
 
-      - Static methods [5] {
+      - Static methods [7] {
+        Method [ <internal:swoole> static public method create ] {
+        }
+
+        Method [ <internal:swoole> static public method cli_wait ] {
+        }
+
         Method [ <internal:swoole> static public method suspend ] {
         }
 
@@ -2760,7 +2767,13 @@ Extension [ <persistent> extension #131 swoole version 2.0.6 ] {
       - Properties [0] {
       }
 
-      - Methods [9] {
+      - Methods [10] {
+        Method [ <internal:swoole> public method initHeader ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:swoole> public method cookie ] {
 
           - Parameters [7] {
@@ -3324,7 +3337,7 @@ Extension [ <persistent> extension #131 swoole version 2.0.6 ] {
       - Properties [0] {
       }
 
-      - Methods [6] {
+      - Methods [8] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [0] {
@@ -3345,11 +3358,25 @@ Extension [ <persistent> extension #131 swoole version 2.0.6 ] {
           }
         }
 
+        Method [ <internal:swoole> public method escape ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $string ]
+            Parameter #1 [ <optional> $flags ]
+          }
+        }
+
         Method [ <internal:swoole> public method query ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $sql ]
             Parameter #1 [ <required> $callback ]
+          }
+        }
+
+        Method [ <internal:swoole> public method getBuffer ] {
+
+          - Parameters [0] {
           }
         }
 
@@ -3440,14 +3467,7 @@ Extension [ <persistent> extension #131 swoole version 2.0.6 ] {
       - Properties [0] {
       }
 
-      - Methods [1] {
-        Method [ <internal:swoole> public method __call ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $func ]
-            Parameter #1 [ <required> $params ]
-          }
-        }
+      - Methods [0] {
       }
     }
 
@@ -3523,6 +3543,251 @@ Extension [ <persistent> extension #131 swoole version 2.0.6 ] {
           - Parameters [0] {
           }
         }
+      }
+    }
+
+    Class [ <internal:swoole> class Swoole\Http2\Client extends Swoole\Client ] {
+
+      - Constants [4] {
+        Constant [ integer MSG_OOB ] { 1 }
+        Constant [ integer MSG_PEEK ] { 2 }
+        Constant [ integer MSG_DONTWAIT ] { 64 }
+        Constant [ integer MSG_WAITALL ] { 256 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> public $errCode ]
+        Property [ <default> public $sock ]
+        Property [ <default> public $reuse ]
+        Property [ <default> public $reuseCount ]
+      }
+
+      - Methods [30] {
+        Method [ <internal:swoole, overwrites Swoole\Client, ctor> public method __construct ] {
+        }
+
+        Method [ <internal:swoole, overwrites Swoole\Client, prototype Swoole\Client, dtor> public method __destruct ] {
+        }
+
+        Method [ <internal:swoole> public method setHeaders ] {
+        }
+
+        Method [ <internal:swoole> public method setCookies ] {
+        }
+
+        Method [ <internal:swoole> public method get ] {
+        }
+
+        Method [ <internal:swoole> public method post ] {
+        }
+
+        Method [ <internal:swoole> public method onConnect ] {
+        }
+
+        Method [ <internal:swoole> public method onError ] {
+        }
+
+        Method [ <internal:swoole> public method onReceive ] {
+        }
+
+        Method [ <internal:swoole> public method onClose ] {
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method set ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $settings ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method connect ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $host ]
+            Parameter #1 [ <optional> $port ]
+            Parameter #2 [ <optional> $timeout ]
+            Parameter #3 [ <optional> $sock_flag ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method recv ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $size ]
+            Parameter #1 [ <optional> $flag ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method send ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $data ]
+            Parameter #1 [ <optional> $flag ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method pipe ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $dst_socket ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method sendfile ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $filename ]
+            Parameter #1 [ <optional> $offset ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method sendto ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $ip ]
+            Parameter #1 [ <required> $port ]
+            Parameter #2 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method sleep ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method pause ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method resume ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method enableSSL ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $callback ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method getPeerCert ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method verifyPeerCert ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method isConnected ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method getsockname ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method getpeername ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method close ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $force ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method on ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $event_name ]
+            Parameter #1 [ <required> $callback ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits Swoole\Client> public method getSocket ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:swoole> class Swoole\Http2\Response ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:swoole> class Swoole\Serialize ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [2] {
+        Method [ <internal:swoole> static public method pack ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $data ]
+            Parameter #1 [ <optional> $flag ]
+          }
+        }
+
+        Method [ <internal:swoole> static public method unpack ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $string ]
+            Parameter #1 [ <optional> $args ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
       }
     }
 

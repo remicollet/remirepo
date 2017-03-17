@@ -1,4 +1,4 @@
-# remirepo spec file for php-pecl-swoole
+# remirepo spec file for php-pecl-swoole2
 #
 # Copyright (c) 2013-2017 Remi Collet
 # License: CC-BY-SA
@@ -29,15 +29,13 @@
 %global with_hiredis  1
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
-Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        2.0.6
-Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}2
+Version:        2.0.7
+Release:        1%{?dist}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-Patch0:         %{pecl_name}-upstream.patch
 
 BuildRequires:  %{?scl_prefix}php-devel >= 5.5
 BuildRequires:  %{?scl_prefix}php-pear
@@ -63,31 +61,35 @@ Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 %if "%{?scl_prefix}" != "%{?sub_prefix}"
-Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
-Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}2         = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}2%{?_isa} = %{version}-%{release}
 %endif
+
+# Single version can be installed
+Conflicts:      %{?sub_prefix}php-pecl-%{pecl_name} < 2
+Conflicts:      %{?scl_prefix}php-pecl-%{pecl_name} < 2
+# Package have been renamed
+Obsoletes:      %{?sub_prefix}php-pecl-%{pecl_name} > 2
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
-Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
-Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
-%endif
+Obsoletes:     php53-pecl-%{pecl_name}2  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name2} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}2  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name}2 <= %{version}
+Obsoletes:     php55u-pecl-%{pecl_name}2 <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name}2 <= %{version}
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56u-pecl-%{pecl_name}2 <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name}2 <= %{version}
 %endif
 %if "%{php_version}" > "7.0"
-Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70u-pecl-%{pecl_name}2 <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name}2 <= %{version}
 %endif
 %if "%{php_version}" > "7.1"
-Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71u-pecl-%{pecl_name}2 <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name}2 <= %{version}
 %endif
 %endif
 
@@ -134,7 +136,6 @@ sed -e 's/role="test"/role="src"/' \
 
 
 cd NTS
-%patch0 -p1 -b .upstream
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_SWOOLE_VERSION/{s/.* "//;s/".*$//;p}' php_swoole.h)
@@ -158,7 +159,7 @@ extension=%{pecl_name}.so
 ;swoole.aio_thread_num = 2
 ;swoole.display_errors = On
 ;swoole.use_namespace = On
-;swoole.message_queue_key = 0
+;swoole.fast_serialize = Off
 ;swoole.unixsock_buffer_size = 8388608
 EOF
 
@@ -278,6 +279,10 @@ cd ../ZTS
 
 
 %changelog
+* Fri Mar 17 2017 Remi Collet <remi@remirepo.net> - 2.0.7-1
+- Update to 2.0.7
+- rename to php-pecl-swoole2
+
 * Mon Mar  6 2017 Remi Collet <remi@remirepo.net> - 2.0.6-3
 - add upstream patch for
   https://github.com/swoole/swoole-src/issues/1118
