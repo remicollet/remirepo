@@ -531,7 +531,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in 25 23 24
+  for i in 25 23 24 26
   do
     echo -n "$(date +%X) scl56 fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}xscl56 rebuild $1 && echo " Ok." || echo " Error !"
