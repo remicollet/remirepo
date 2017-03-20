@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        7.0.5
-%global Patchlevel 2
+%global Patchlevel 3
 %global incsuffixe -7
 %global libsuffixe -7.Q16HDRI
 %global with_tests 0%{!?_without_tests:1}
@@ -74,7 +74,7 @@ Name:           %{libname}
 Name:           %{libname}7
 %endif
 Version:        %{VER}.%{Patchlevel}
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
@@ -528,6 +528,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 20 2017 Remi Collet <remi@remirepo.net> - 7.0.5.3-1
+- update to version 7.0.5 patch level 3
+
 * Thu Mar 16 2017 Remi Collet <remi@remirepo.net> - 7.0.5.2-2
 - cleanup build options
 - build --with-raqm when available
