@@ -1,3 +1,12 @@
+# remirepo spec file for php-mikealmond-musicbrainz
+#
+# Fedora spec file for php-mikealmond-musicbrainz
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 Name:       php-mikealmond-musicbrainz
 Version:    0.2.2
 Release:    1%{?dist}
@@ -58,6 +67,7 @@ phpunit --no-coverage --bootstrap %{buildroot}/%{_datadir}/php/MusicBrainz/autol
 
 
 %files
+%{!?_licensedir:%global license %%doc}
 %license LICENSE.md
 %doc composer.json
 %doc README.md
@@ -65,5 +75,8 @@ phpunit --no-coverage --bootstrap %{buildroot}/%{_datadir}/php/MusicBrainz/autol
 
 
 %changelog
+* Thu Mar  9 2017 Remi Collet <remi@remirepo.net> - 0.2.2-1
+- backport for #remirepo
+
 * Sat Mar 04 2017 Randy Barlow <bowlofeggs@fedoraproject.org> - 0.2.2-1
 - Initial release.

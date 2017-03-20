@@ -1,0 +1,37 @@
+{
+    "name": "mikealmond/musicbrainz",
+    "type": "library",
+    "description": "A PHP library for accessing the MusicBrainz API",
+    "keywords": ["musicbrainz", "library", "php", "api"],
+    "homepage": "https://github.com/mikealmond/musicbrainz",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mike Almond",
+            "email": "mike.almond@gmail.com",
+            "homepage": "http://mikealmond.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.8"
+    },
+    "require-dev": {
+        "guzzle/guzzle": "~3.8.0",
+        "phpunit/phpunit": "3.7.*"
+    },
+    "suggest": {
+        "guzzle/guzzle": "Allows you to use the GuzzleHttpAdapter. You must install one of the supported adapters.",
+        "rmccue/requests": "Allows you to use the RequestsHttpAdapter. You must install one of the supported adapters."
+    },
+    "autoload": {
+        "psr-0": {
+            "MusicBrainz": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.2.x-dev"
+        }
+    }
+}
