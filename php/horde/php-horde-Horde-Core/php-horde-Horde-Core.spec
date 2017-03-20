@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-Horde-Core
-Version:        2.28.0
+Version:        2.28.1
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -298,6 +298,9 @@ fi
 
 
 %changelog
+* Mon Mar 20 2017 Remi Collet <remi@remirepo.net> - 2.18.1-1
+- Update to 2.18.1
+
 * Mon Mar 20 2017 Remi Collet <remi@remirepo.net> - 2.28.0-1
 - Update to 2.28.0
 
