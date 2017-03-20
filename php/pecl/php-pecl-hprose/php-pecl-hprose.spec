@@ -22,8 +22,8 @@
 
 Summary:        Hprose for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.6.5
-Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.6.6
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -127,6 +127,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -148,6 +150,7 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
+%{?dtsenable}
 
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
@@ -243,6 +246,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 20 2017 Remi Collet <remi@remirepo.net> - 1.6.6-1
+- Update to 1.6.6
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.6.5-3
 - rebuild with PHP 7.1.0 GA
 

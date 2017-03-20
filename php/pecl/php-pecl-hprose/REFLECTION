@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #104 hprose version 1.6.5 ] {
+Extension [ <persistent> extension #94 hprose version 1.6.6 ] {
 
   - Functions {
     Function [ <internal:hprose> function hprose_serialize ] {
@@ -23,7 +23,7 @@ Extension [ <persistent> extension #104 hprose version 1.6.5 ] {
   }
 
   - Classes [7] {
-    Class [ <internal:hprose> class HproseTags ] {
+    Class [ <internal:hprose> class Hprose\Tags ] {
 
       - Constants [34] {
         Constant [ string TagInteger ] { i }
@@ -75,7 +75,7 @@ Extension [ <persistent> extension #104 hprose version 1.6.5 ] {
       }
     }
 
-    Class [ <internal:hprose> class HproseBytesIO ] {
+    Class [ <internal:hprose> class Hprose\BytesIO ] {
 
       - Constants [0] {
       }
@@ -209,7 +209,7 @@ Extension [ <persistent> extension #104 hprose version 1.6.5 ] {
       }
     }
 
-    Class [ <internal:hprose> class HproseClassManager ] {
+    Class [ <internal:hprose> class Hprose\ClassManager ] {
 
       - Constants [0] {
       }
@@ -248,7 +248,7 @@ Extension [ <persistent> extension #104 hprose version 1.6.5 ] {
       }
     }
 
-    Class [ <internal:hprose> class HproseWriter ] {
+    Class [ <internal:hprose> class Hprose\Writer ] {
 
       - Constants [0] {
       }
@@ -472,7 +472,7 @@ Extension [ <persistent> extension #104 hprose version 1.6.5 ] {
       }
     }
 
-    Class [ <internal:hprose> class HproseRawReader ] {
+    Class [ <internal:hprose> class Hprose\RawReader ] {
 
       - Constants [0] {
       }
@@ -501,7 +501,7 @@ Extension [ <persistent> extension #104 hprose version 1.6.5 ] {
       }
     }
 
-    Class [ <internal:hprose> class HproseReader extends HproseRawReader ] {
+    Class [ <internal:hprose> class Hprose\Reader extends Hprose\RawReader ] {
 
       - Constants [0] {
       }
@@ -516,7 +516,7 @@ Extension [ <persistent> extension #104 hprose version 1.6.5 ] {
       }
 
       - Methods [36] {
-        Method [ <internal:hprose, overwrites HproseRawReader, ctor> public method __construct ] {
+        Method [ <internal:hprose, overwrites Hprose\RawReader, ctor> public method __construct ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> HproseBytesIO $stream ]
@@ -732,7 +732,7 @@ Extension [ <persistent> extension #104 hprose version 1.6.5 ] {
           }
         }
 
-        Method [ <internal:hprose, inherits HproseRawReader> public method readRaw ] {
+        Method [ <internal:hprose, inherits Hprose\RawReader> public method readRaw ] {
 
           - Parameters [0] {
           }
@@ -740,7 +740,7 @@ Extension [ <persistent> extension #104 hprose version 1.6.5 ] {
       }
     }
 
-    Class [ <internal:hprose> class HproseFormatter ] {
+    Class [ <internal:hprose> class Hprose\Formatter ] {
 
       - Constants [0] {
       }
