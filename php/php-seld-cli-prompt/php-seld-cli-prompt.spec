@@ -6,14 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    8cbe10923cae5bcd7c5a713f6703fc4727c8c1b4
+%global gh_commit    a19a7376a4689d4d94cab66ab4f3c816019ba8dd
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     Seldaek
 %global gh_project   cli-prompt
 
 Name:           php-seld-cli-prompt
-Version:        1.0.2
-Release:        2%{?dist}
+Version:        1.0.3
+Release:        1%{?dist}
 Summary:        Allows you to prompt for user input on the command line
 
 Group:          Development/Libraries
@@ -94,6 +94,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 20 2017 Remi Collet <remi@remirepo.net> - 1.0.3-1
+- Update to 1.0.3
+
 * Fri Oct 21 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-2
 - switch from symfony/class-loader to fedora/autoloader
 
