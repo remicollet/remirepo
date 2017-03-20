@@ -3,6 +3,14 @@
 =================
 php-cs-fixer 2.1.2 (waiting justinrainbow/json-schema 5)
 phpunit6 6.0.9 (waiting php-sebastian-comparator2, php-sebastian-object-enumerator3)
+pecl.php.net hprose  1.6.5 (stable) 1.6.6 (stable) 42kB
+ php-league-flysystem .............................          1.0.35          1.0.36      2017-03-18 (Just released)
+ php-nette-di                                                 2.4.7           2.4.8      2017-03-14 (5 days)
+ php-nette-http                                               2.4.4           2.4.5      2017-03-16 (3 days)
+ php-nette-php-generator ..........................           2.6.1           2.6.2      2017-03-18 (Just released)
+ php-seld-cli-prompt ..............................           1.0.2           1.0.3      2017-03-18 (Just released)
+ psysh ............................................           0.8.2           0.8.3      2017-03-19 (Just released)
+ phpunit6 .........................................           6.0.9          6.0.10      2017-03-19 (Just released)
 
 =================
  Pending
@@ -11,6 +19,9 @@ phpunit6 6.0.9 (waiting php-sebastian-comparator2, php-sebastian-object-enumerat
 =================
  Testing
 =================
+20/3	php-phpunit-PHPUnit-5.7.17-1.fc26
+20/3	php-phpunit-PHPUnit-5.7.17-1.fc25
+20/3	php-phpunit-PHPUnit-5.7.17-1.fc24
 17/3	php-zendframework-zend-validator-2.9.0-1.fc26
 17/3	php-zendframework-zend-validator-2.9.0-1.fc25
 17/3	php-bartlett-PHP-CompatInfo-5.0.5-1.fc26
@@ -21,42 +32,43 @@ phpunit6 6.0.9 (waiting php-sebastian-comparator2, php-sebastian-object-enumerat
 17/3	php-bartlett-php-compatinfo-db-1.19.0-1.fc25
 17/3	php-bartlett-php-compatinfo-db-1.19.0-1.fc24
 17/3	php-bartlett-php-compatinfo-db-1.19.0-1.el7
-16/3	php-phpunit-PHPUnit-5.7.16-1.fc26
-16/3	php-phpunit-PHPUnit-5.7.16-1.fc25
-16/3	php-phpunit-PHPUnit-5.7.16-1.fc24
-16/3	php-pecl-mongodb-1.2.7-1.fc26
-16/3	php-PHPMailer-5.2.23-1.fc26
 16/3	php-PHPMailer-5.2.23-1.fc25
 16/3	php-PHPMailer-5.2.23-1.fc24
 16/3	php-PHPMailer-5.2.23-1.el7
 16/3	php-PHPMailer-5.2.23-1.el6
-14/3	php-7.1.3-1.fc26
-14/3	php-7.0.17-1.fc25
-14/3	php-zendframework-zend-expressive-zendviewrenderer-1.4.0-1.fc26
-14/3	php-zendframework-zend-expressive-twigrenderer-1.4.0-1.fc26
-14/3	php-nette-php-generator-2.6.1-1.fc26
 14/3	php-nette-php-generator-2.6.1-1.fc25
-14/3	php-zendframework-zend-expressive-platesrenderer-1.3.1-1.fc26
 14/3	php-phpunit-comparator-1.2.4-1.el7.1
 13/3	libsodium-1.0.12-1.fc25
 13/3	libsodium-1.0.12-1.fc24
 11/3	roundcubemail-1.1.8-1.el7
-11/3	roundcubemail-1.2.4-1.fc24
-10/3	composer-1.4.1-1.fc25
-10/3	composer-1.4.1-1.fc24
 10/3	composer-1.4.1-1.el7
 7/3	wordpress-4.7.3-1.el7
 7/3	wordpress-4.7.3-1.el6
 7/3	wordpress-4.7.3-1.el5
 6/3	php-phpmyadmin-motranslator-3.0-1.el7
 6/3	php-phpmyadmin-shapefile-2.0-1.el7
-3/3	php-horde-Horde-Core-2.27.8-1.el7
-3/3	php-horde-Horde-Core-2.27.8-1.el6
 =================
  Stable
 =================
  March, 2017
 =================
+20/3	20/3	php-phpunit-PHPUnit-5.7.17-1.fc27
+obso	16/3	php-phpunit-PHPUnit-5.7.16-1.fc26
+obso	16/3	php-phpunit-PHPUnit-5.7.16-1.fc25
+obso	16/3	php-phpunit-PHPUnit-5.7.16-1.fc24
+20/3	16/3	php-pecl-mongodb-1.2.7-1.fc26
+20/3	16/3	php-PHPMailer-5.2.23-1.fc26
+20/3	14/3	php-zendframework-zend-expressive-zendviewrenderer-1.4.0-1.fc26
+20/3	14/3	php-zendframework-zend-expressive-twigrenderer-1.4.0-1.fc26
+20/3	14/3	php-nette-php-generator-2.6.1-1.fc26
+20/3	14/3	php-zendframework-zend-expressive-platesrenderer-1.3.1-1.fc26
+20/3	3/3	php-horde-Horde-Core-2.27.8-1.el7
+20/3	3/3	php-horde-Horde-Core-2.27.8-1.el6
+20/3	11/3	roundcubemail-1.2.4-1.fc24
+20/3	10/3	composer-1.4.1-1.fc25
+20/3	10/3	composer-1.4.1-1.fc24
+20/3	14/3	php-7.1.3-1.fc26
+18/3	14/3	php-7.0.17-1.fc25
 17/3	17/3	php-zendframework-zend-validator-2.9.0-1.fc27
 17/3	17/3	php-bartlett-PHP-CompatInfo-5.0.5-1.fc27
 17/3	13/3	phpunit6-6.0.8-2.fc26

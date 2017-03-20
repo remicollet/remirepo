@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    dafc78e2a7d12139b0e97078d1082326bd09363d
+%global gh_commit    68752b665d3875f9a38a357e3ecb35c79f8673bf
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.7
-%global minor        16
+%global minor        17
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -246,6 +246,9 @@ fi
 
 
 %changelog
+* Mon Mar 20 2017 Remi Collet <remi@remirepo.net> - 5.7.17-1
+- Update to 5.7.17
+
 * Wed Mar 15 2017 Remi Collet <remi@remirepo.net> - 5.7.16-1
 - Update to 5.7.16
 
