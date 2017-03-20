@@ -13,7 +13,7 @@
 
 Name:           php-horde-Horde-Test
 Version:        2.6.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde testing base classes
 
 Group:          Development/Libraries
@@ -113,6 +113,9 @@ fi
 
 
 %changelog
+* Mon Mar 20 2017 Remi Collet <remi@remirepo.net> - 2.6.2-2
+- EL-6 rebuild
+
 * Mon Feb 27 2017 Remi Collet <remi@fedoraproject.org> - 2.6.2-1
 - Update to 2.6.2
 
