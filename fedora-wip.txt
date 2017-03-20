@@ -3,9 +3,11 @@
 =================
 php-cs-fixer 2.1.2 (waiting justinrainbow/json-schema 5)
 phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumerator3)
-pear.horde.org Horde_Cli  2.0.7 (stable)  2.1.0 (stable)  28kB
 pear.horde.org Horde_Core 2.27.8 (stable) 2.28.0 (stable) 1621kB
 pear.horde.org Horde_Form 2.0.15 (stable) 2.0.16 (stable) 193kB
+pear.horde.org Horde_Image     2.3.6 (stable)  2.4.0 (stable)  754kB
+pear.horde.org Horde_Text_Diff 2.1.2 (stable)  2.2.0 (stable)  29kB
+pear.horde.org horde           5.2.13 (stable) 5.2.14 (stable) 2869kB
 
 =================
  Pending
@@ -14,6 +16,11 @@ pear.horde.org Horde_Form 2.0.15 (stable) 2.0.16 (stable) 193kB
 =================
  Testing
 =================
+20/3	php-horde-Horde-Cli-2.1.0-1.fc26
+20/3	php-horde-Horde-Cli-2.1.0-1.fc25
+20/3	php-horde-Horde-Cli-2.1.0-1.fc24
+20/3	php-horde-Horde-Cli-2.1.0-1.el7
+20/3	php-horde-Horde-Cli-2.1.0-1.el6
 20/3	php-nette-php-generator-2.6.2-1.fc26
 20/3	php-nette-php-generator-2.6.2-1.fc25
 20/3	php-nette-http-2.4.5-1.fc26
@@ -60,6 +67,7 @@ pear.horde.org Horde_Form 2.0.15 (stable) 2.0.16 (stable) 193kB
 =================
  March, 2017
 =================
+20/3	20/3	php-horde-Horde-Cli-2.1.0-1.fc27
 20/3	20/3	php-nette-php-generator-2.6.2-1.fc27
 20/3	20/3	php-nette-http-2.4.5-1.fc27
 20/3	20/3	php-nette-di-2.4.8-1.fc27
