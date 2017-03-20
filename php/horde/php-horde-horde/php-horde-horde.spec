@@ -13,8 +13,8 @@
 %global with_sysjs   0
 
 Name:           php-horde-horde
-Version:        5.2.13
-Release:        2%{?dist}
+Version:        5.2.14
+Release:        1%{?dist}
 Summary:        Horde Application Framework
 
 Group:          Development/Libraries
@@ -73,7 +73,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Form) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Form) >= 2.0.16
 Requires:       php-pear(%{pear_channel}/Horde_Form) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Group) <  3.0.0
@@ -299,6 +299,9 @@ fi
 
 
 %changelog
+* Mon Mar 20 2017 Remi Collet <remi@remirepo.net> - 5.2.14-1
+- Update to 5.2.14
+
 * Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 5.2.13-2
 - Update to 5.2.13
 - use upstream locale files
