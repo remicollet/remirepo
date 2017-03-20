@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9bd36d990884d8fb3313232e0002ed4cdf79f428
+%global gh_commit    8a536f409ebae632b92b7e7288e068248fe365ed
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_vendor    sebastianbergmann
@@ -20,7 +20,7 @@
 %global php_home     %{_datadir}/php
 %global ver_major    6
 %global ver_minor    0
-%global ver_patch    9
+%global ver_patch    10
 %global specrel      1
 
 Name:           %{pk_project}%{ver_major}
@@ -253,6 +253,9 @@ exit $ret
 
 
 %changelog
+* Mon Mar 20 2017 Remi Collet <remi@remirepo.net> - 6.0.10-1
+- Update to 6.0.10
+
 * Wed Mar 15 2017 Remi Collet <remi@remirepo.net> - 6.0.9-1
 - Update to 6.0.9
 - raise dependency on phpspec/prophecy 1.7

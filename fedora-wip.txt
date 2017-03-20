@@ -2,7 +2,7 @@
  TODO
 =================
 php-cs-fixer 2.1.2 (waiting justinrainbow/json-schema 5)
-phpunit6 6.0.9 (waiting php-sebastian-comparator2, php-sebastian-object-enumerator3)
+phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumerator3)
 pecl.php.net hprose  1.6.5 (stable) 1.6.6 (stable) 42kB
  php-league-flysystem .............................          1.0.35          1.0.36      2017-03-18 (Just released)
  php-nette-di                                                 2.4.7           2.4.8      2017-03-14 (5 days)
@@ -10,7 +10,6 @@ pecl.php.net hprose  1.6.5 (stable) 1.6.6 (stable) 42kB
  php-nette-php-generator ..........................           2.6.1           2.6.2      2017-03-18 (Just released)
  php-seld-cli-prompt ..............................           1.0.2           1.0.3      2017-03-18 (Just released)
  psysh ............................................           0.8.2           0.8.3      2017-03-19 (Just released)
- phpunit6 .........................................           6.0.9          6.0.10      2017-03-19 (Just released)
 
 =================
  Pending
