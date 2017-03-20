@@ -4,7 +4,6 @@
 php-cs-fixer 2.1.2 (waiting justinrainbow/json-schema 5)
 phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumerator3)
 pear.horde.org Horde_Core      2.27.8 (stable) 2.28.1 (stable) 1621kB
-pear.horde.org turba           4.2.18 (stable) 4.2.19 (stable) 1935kB
 
 =================
  Pending
@@ -13,6 +12,11 @@ pear.horde.org turba           4.2.18 (stable) 4.2.19 (stable) 1935kB
 =================
  Testing
 =================
+20/3	php-horde-turba-4.2.19-1.fc26
+20/3	php-horde-turba-4.2.19-1.fc25
+20/3	php-horde-turba-4.2.19-1.fc24
+20/3	php-horde-turba-4.2.19-1.el7
+20/3	php-horde-turba-4.2.19-1.el6
 20/3	php-horde-nag-4.2.14-1.fc26
 20/3	php-horde-nag-4.2.14-1.fc25
 20/3	php-horde-nag-4.2.14-1.fc24
@@ -114,6 +118,7 @@ pear.horde.org turba           4.2.18 (stable) 4.2.19 (stable) 1935kB
 =================
  March, 2017
 =================
+20/3	20/3	php-horde-turba-4.2.19-1.fc27
 20/3	20/3	php-horde-nag-4.2.14-1.fc27
 20/3	20/3	php-horde-mnemo-4.2.13-1.fc27
 20/3	20/3	php-horde-kronolith-4.2.20-1.fc27
