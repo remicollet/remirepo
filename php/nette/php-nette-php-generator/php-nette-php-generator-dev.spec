@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    361f671c269e389c078da9cd2cd6a80164d9813d
+%global gh_commit    3a69f606db7f1e9995347c7d84b9d2a0507c0b38
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.1
+Version:        2.6.2
 %global specrel 1
 Release:        %{?gh_date:1%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette PHP Generator
@@ -132,6 +132,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 20 2017 Remi Collet <remi@remirepo.net> - 2.6.2-1
+- Update to 2.6.2
+
 * Wed Mar 15 2017 Remi Collet <remi@remirepo.net> - 2.6.1-1
 - Update to 2.6.1
 

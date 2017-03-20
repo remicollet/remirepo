@@ -3,9 +3,6 @@
 =================
 php-cs-fixer 2.1.2 (waiting justinrainbow/json-schema 5)
 phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumerator3)
- php-nette-di                                                 2.4.7           2.4.8      2017-03-14 (5 days)
- php-nette-http                                               2.4.4           2.4.5      2017-03-16 (3 days)
- php-nette-php-generator ..........................           2.6.1           2.6.2      2017-03-18 (Just released)
  psysh ............................................           0.8.2           0.8.3      2017-03-19 (Just released)
 
 =================
@@ -15,6 +12,12 @@ phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumera
 =================
  Testing
 =================
+20/3	php-nette-php-generator-2.6.2-1.fc26
+20/3	php-nette-php-generator-2.6.2-1.fc25
+20/3	php-nette-http-2.4.5-1.fc26
+20/3	php-nette-http-2.4.5-1.fc25
+20/3	php-nette-di-2.4.8-1.fc26
+20/3	php-nette-di-2.4.8-1.fc25
 20/3	php-seld-cli-prompt-1.0.3-1.fc26
 20/3	php-seld-cli-prompt-1.0.3-1.fc25
 20/3	php-seld-cli-prompt-1.0.3-1.fc24
@@ -55,6 +58,9 @@ phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumera
 =================
  March, 2017
 =================
+20/3	20/3	php-nette-php-generator-2.6.2-1.fc27
+20/3	20/3	php-nette-http-2.4.5-1.fc27
+20/3	20/3	php-nette-di-2.4.8-1.fc27
 20/3	20/3	php-seld-cli-prompt-1.0.3-1.fc27
 20/3	20/3	php-league-flysystem-1.0.36-1.fc27
 20/3	20/3	php-phpunit-PHPUnit-5.7.17-1.fc27
