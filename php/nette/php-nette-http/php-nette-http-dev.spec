@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    7727507129934e18c59bdc4060fd32730b0d9e87
+%global gh_commit    ef812049a89866eff5aa6b1a39f1a4d8c9adc607
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,9 +17,9 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.4.4
+Version:        2.4.5
 %global specrel 1
-Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
+Release:        %{?gh_date:1%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette HTTP Component
 
 Group:          Development/Libraries
@@ -43,8 +43,8 @@ BuildRequires:  php-pcre
 BuildRequires:  php-session
 BuildRequires:  php-spl
 # From composer.json, "require-dev": {
-#               "nette/di": "^2.4.6",
-#               "nette/tester": "~2.0",
+#               "nette/di": "^2.4.6 || ~3.0.0",
+#               "nette/tester": "^2.0",
 #               "tracy/tracy": "^2.4"
 BuildRequires:  php-composer(%{gh_owner}/di) >= 2.4.6
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
@@ -53,12 +53,13 @@ BuildRequires:  php-composer(tracy/tracy) >= 2.4
 
 # from composer.json, "require": {
 #               "php": ">=5.6.0",
-#               "nette/utils": "^2.4"
+#               "nette/utils": "^2.4 || ~3.0.0"
 Requires:       php(language) >= 5.6
 Requires:       php-composer(%{gh_owner}/utils) >= 2.4
-Requires:       php-composer(%{gh_owner}/utils) <  3
+Requires:       php-composer(%{gh_owner}/utils) <  4
 # from composer.json, "suggest": {
-#        "ext-fileinfo": "to detect type of uploaded files"
+#               "ext-fileinfo": "to detect type of uploaded files",
+#               "nette/security": "allows use Nette\\Http\\UserStorage"
 Requires:       php-fileinfo
 # from phpcompatinfo report for version 2.3.3
 Requires:       php-date
@@ -155,6 +156,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 20 2017 Remi Collet <remi@remirepo.net> - 2.4.5-1
+- Update to 2.4.5
+
 * Thu Jan 19 2017 Remi Collet <remi@fedoraproject.org> - 2.4.4-1
 - update to 2.4.4
 
