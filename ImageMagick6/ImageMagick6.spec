@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        6.9.8
-%global Patchlevel 0
+%global Patchlevel 2
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 %global with_tests 0%{!?_without_tests:1}
@@ -71,14 +71,12 @@ Name:           %{libname}
 Name:           %{libname}6
 %endif
 Version:        %{VER}.%{Patchlevel}
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
 Url:            http://www.imagemagick.org/
 Source0:        ftp://ftp.ImageMagick.org/pub/ImageMagick/ImageMagick-%{VER}-%{Patchlevel}.tar.xz
-
-Patch0:         ImageMagick-6.9.2-7-multiarch-implicit-pkgconfig-dir.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  bzip2-devel, freetype-devel, libjpeg-devel, libpng-devel
@@ -301,8 +299,6 @@ however.
 
 %prep
 %setup -q -n %{libname}-%{VER}-%{Patchlevel}
-
-%patch0 -p1 -b .multiarch-implicit-pkgconfig-dir
 
 # for %%doc
 mkdir Magick++/examples
@@ -555,6 +551,9 @@ fi
 
 
 %changelog
+* Mon Mar 20 2017 Remi Collet <remi@remirepo.net> - 6.9.8.2-1
+- update to version 6.9.8 patch level 2
+
 * Thu Mar 16 2017 Remi Collet <remi@remirepo.net> - 6.9.8.0-2
 - cleanup build options
 - build --with-raqm when available
