@@ -3,6 +3,7 @@
 =================
 php-cs-fixer 2.1.2 (waiting justinrainbow/json-schema 5)
 phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumerator3)
+mongodb 1.2.8
 
 =================
  Pending
