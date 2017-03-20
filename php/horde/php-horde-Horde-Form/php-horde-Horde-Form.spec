@@ -14,7 +14,7 @@
 # Note : test not ready (old .phpt)
 
 Name:           php-horde-Horde-Form
-Version:        2.0.15
+Version:        2.0.16
 Release:        1%{?dist}
 Summary:        Horde Form API
 
@@ -136,6 +136,9 @@ fi
 
 
 %changelog
+* Mon Mar 20 2017 Remi Collet <remi@remirepo.net> - 2.0.16-1
+- Update to 2.0.16
+
 * Wed Sep 07 2016 Remi Collet <remi@fedoraproject.org> - 2.0.15-1
 - Update to 2.0.15
 

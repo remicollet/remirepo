@@ -3,7 +3,6 @@
 =================
 php-cs-fixer 2.1.2 (waiting justinrainbow/json-schema 5)
 phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumerator3)
-pear.horde.org Horde_Form 2.0.15 (stable) 2.0.16 (stable) 193kB
 pear.horde.org Horde_Image     2.3.6 (stable)  2.4.0 (stable)  754kB
 pear.horde.org Horde_Text_Diff 2.1.2 (stable)  2.2.0 (stable)  29kB
 pear.horde.org horde           5.2.13 (stable) 5.2.14 (stable) 2869kB
@@ -11,6 +10,8 @@ pear.horde.org imp             6.2.17 (stable) 6.2.18 (stable) 4893kB
 pear.horde.org ingo            3.2.13 (stable) 3.2.14 (stable) 1472kB
 pear.horde.org kronolith       4.2.19 (stable) 4.2.20 (stable) 2555kB
 pear.horde.org mnemo           4.2.12 (stable) 4.2.13 (stable) 1152kB
+pear.horde.org nag             4.2.13 (stable) 4.2.14 (stable) 1600kB
+pear.horde.org turba           4.2.18 (stable) 4.2.19 (stable) 1935kB
 
 =================
  Pending
@@ -19,6 +20,11 @@ pear.horde.org mnemo           4.2.12 (stable) 4.2.13 (stable) 1152kB
 =================
  Testing
 =================
+20/3	php-horde-Horde-Form-2.0.16-1.fc26
+20/3	php-horde-Horde-Form-2.0.16-1.fc25
+20/3	php-horde-Horde-Form-2.0.16-1.fc24
+20/3	php-horde-Horde-Form-2.0.16-1.el7
+20/3	php-horde-Horde-Form-2.0.16-1.el6
 20/3	php-horde-Horde-Core-2.28.0-1.fc26
 20/3	php-horde-Horde-Core-2.28.0-1.fc25
 20/3	php-horde-Horde-Core-2.28.0-1.fc24
@@ -75,6 +81,7 @@ pear.horde.org mnemo           4.2.12 (stable) 4.2.13 (stable) 1152kB
 =================
  March, 2017
 =================
+20/3	20/3	php-horde-Horde-Form-2.0.16-1.fc27
 20/3	20/3	php-horde-Horde-Core-2.28.0-1.fc27
 20/3	20/3	php-horde-Horde-Cli-2.1.0-1.fc27
 20/3	20/3	php-nette-php-generator-2.6.2-1.fc27
