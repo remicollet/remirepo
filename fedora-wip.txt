@@ -3,7 +3,6 @@
 =================
 php-cs-fixer 2.1.2 (waiting justinrainbow/json-schema 5)
 phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumerator3)
- psysh ............................................           0.8.2           0.8.3      2017-03-19 (Just released)
 
 =================
  Pending

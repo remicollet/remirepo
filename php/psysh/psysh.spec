@@ -12,8 +12,8 @@
 
 %global github_owner     bobthecow
 %global github_name      psysh
-%global github_version   0.8.2
-%global github_commit    97113db4107a4126bef933b60fea6dbc9f615d41
+%global github_version   0.8.3
+%global github_commit    1dd4bbbc64d71e7ec075ffe82b42d9e096dc8d5e
 
 %global composer_vendor  psy
 %global composer_project psysh
@@ -238,6 +238,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 20 2017 Remi Collet <remi@remirepo.net> - 0.8.3-1
+- Update to 0.8.3
+
 * Sat Mar 04 2017 2017 Shawn Iwinski <shawn@iwin.ski> - 0.8.2-1
 - Update to 0.8.2 (RHBZ #1413429)
 - Test with SCLs if available

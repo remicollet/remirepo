@@ -47,14 +47,14 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 2.0.9)
+## phpcompatinfo (computed from version 2.0.10)
 BuildRequires: php-pcre
 BuildRequires: php-zlib
 %endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 2.0.9)
+# phpcompatinfo (computed from version 2.0.10)
 Requires:      php-pcre
 # Weak dependencies
 %if 0%{?fedora} >= 21
@@ -94,18 +94,16 @@ cp -rp lib/* %{buildroot}%{phpdir}/random_compat/
 
 %check
 %if %{with_tests}
-BOOTSTRAP=%{buildroot}%{phpdir}/random_compat/autoload.php
-
-%{_bindir}/phpunit --verbose --bootstrap $BOOTSTRAP
-
-: Upstream tests with SCLs if available
-SCL_RETURN_CODE=0
-for SCL in %{?rhel:php54 php55} php56 php70 php71; do
-    if which $SCL; then
-        $SCL %{_bindir}/phpunit --verbose --bootstrap $BOOTSTRAP || SCL_RETURN_CODE=1
+: Upstream tests
+RETURN_CODE=0
+for PHP_EXEC in php %{?rhel:php54 php55} php56 php70 php71; do
+    if which $PHP_EXEC; then
+        $PHP_EXEC %{_bindir}/phpunit --verbose \
+            --bootstrap %{buildroot}%{phpdir}/random_compat/autoload.php \
+            || RETURN_CODE=1
     fi
 done
-exit $SCL_RETURN_CODE
+exit $RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -125,6 +123,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar 17 2017 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.0.10-1
+- Updated to 2.0.10 (RHBZ #1432051)
+
 * Mon Mar 13 2017 Remi Collet <remi@remirepo.net> - 2.0.10-1
 - Update to 2.0.10
 
