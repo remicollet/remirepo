@@ -40,8 +40,8 @@
         "zendframework/zend-session": "^2.6.2",
         "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
         "zendframework/zend-uri": "^2.5",
-        "fabpot/php-cs-fixer": "1.7.*",
-        "phpunit/phpunit": "^4.5"
+        "phpunit/phpunit": "^4.6",
+        "zendframework/zend-coding-standard": "~1.0.0"
     },
     "suggest": {
         "zendframework/zend-authentication": "Zend\\Authentication component",
@@ -73,5 +73,16 @@
     },
     "bin": [
         "bin/templatemap_generator.php"
-    ]
+    ],
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@test"
+        ],
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
+        "upload-coverage": "coveralls -v"
+    }
 }

@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    71b4ebd0c4c9a2d0e0438f9d3a435e08dd769ff8
+%global gh_commit    3eed53e41ff8fb95b41b495021e293c4ae725ee5
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-view
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.8.1
-Release:        2%{?dist}
+Version:        2.8.2
+Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -65,8 +65,8 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 #        "zendframework/zend-session": "^2.6.2",
 #        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
 #        "zendframework/zend-uri": "^2.5",
-#        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "^4.5"
+#        "phpunit/phpunit": "^4.6",
+#        "zendframework/zend-coding-standard": "~1.0.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-authentication)   >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-cache)            >= 2.6.1
 BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.6
@@ -90,9 +90,11 @@ BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
 BuildRequires:  php-composer(%{gh_owner}/zend-uri)              >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.5
 # Not in composer.json
+%if 0%{?fedora} >= 26
 BuildRequires:  php-composer(%{gh_owner}/zend-mvc-plugin-flashmessenger)
 BuildRequires:  php-composer(%{gh_owner}/zend-mvc-i18n)
 BuildRequires:  php-composer(%{gh_owner}/zend-mvc-console)
+%endif
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
@@ -204,21 +206,12 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-# remirepo:11
-run=0
 ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
-   run=1
-fi
-if which php71; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
-# remirepo:2
-fi
+for cmd in php php56 php70 php71; do
+  if which $cmd; then
+    $cmd %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose || ret=1
+  fi
+done
 exit $ret
 %else
 : Test suite disabled
@@ -240,6 +233,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar 21 2017 Remi Collet <remi@remirepo.net> - 2.8.2-1
+- Update to 2.8.2
+
 * Tue Feb 21 2017 Remi Collet <remi@fedoraproject.org> - 2.8.1-2
 - add missing BR, fix FTBFS #1424088
 

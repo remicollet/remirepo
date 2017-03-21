@@ -4,7 +4,6 @@
 php-cs-fixer 2.1.2 (waiting justinrainbow/json-schema 5)
 phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumerator3)
 mongodb 1.2.8
-php-zendframework-zend-view
 
 =================
  Pending
@@ -13,6 +12,9 @@ php-zendframework-zend-view
 =================
  Testing
 =================
+21/3	php-zendframework-zend-view-2.8.2-1.fc26
+21/3	php-zendframework-zend-view-2.8.2-1.fc25
+21/3	php-zendframework-zend-view-2.8.2-1.fc24
 21/3	php-pecl-amqp-1.9.0-1.fc26
 21/3	php-pecl-amqp-1.9.0-1.fc25
 20/3	php-horde-Horde-Core-2.28.1-1.fc26
@@ -114,6 +116,7 @@ php-zendframework-zend-view
 =================
  March, 2017
 =================
+21/3	21/3	php-zendframework-zend-view-2.8.2-1.fc27
 21/3	21/3	php-pecl-amqp-1.9.0-1.fc27
 21/3	13/3	libsodium-1.0.12-1.fc25
 21/3	13/3	libsodium-1.0.12-1.fc24
