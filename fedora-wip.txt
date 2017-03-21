@@ -4,6 +4,7 @@
 php-cs-fixer 2.1.2 (waiting justinrainbow/json-schema 5)
 phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumerator3)
 mongodb 1.2.8
+php-zendframework-zend-view
 
 =================
  Pending
@@ -12,6 +13,8 @@ mongodb 1.2.8
 =================
  Testing
 =================
+21/3	php-pecl-amqp-1.9.0-1.fc26
+21/3	php-pecl-amqp-1.9.0-1.fc25
 20/3	php-horde-Horde-Core-2.28.1-1.fc26
 20/3	php-horde-Horde-Core-2.28.1-1.fc25
 20/3	php-horde-Horde-Core-2.28.1-1.fc24
@@ -88,13 +91,10 @@ mongodb 1.2.8
 20/3	php-phpunit-PHPUnit-5.7.17-1.fc26
 20/3	php-phpunit-PHPUnit-5.7.17-1.fc25
 20/3	php-phpunit-PHPUnit-5.7.17-1.fc24
-17/3	php-zendframework-zend-validator-2.9.0-1.fc26
 17/3	php-zendframework-zend-validator-2.9.0-1.fc25
-17/3	php-bartlett-PHP-CompatInfo-5.0.5-1.fc26
 17/3	php-bartlett-PHP-CompatInfo-5.0.5-1.fc25
 17/3	php-bartlett-PHP-CompatInfo-5.0.5-1.fc24
 17/3	php-bartlett-PHP-CompatInfo-5.0.5-1.el7
-17/3	php-bartlett-php-compatinfo-db-1.19.0-1.fc26
 17/3	php-bartlett-php-compatinfo-db-1.19.0-1.fc25
 17/3	php-bartlett-php-compatinfo-db-1.19.0-1.fc24
 17/3	php-bartlett-php-compatinfo-db-1.19.0-1.el7
@@ -104,20 +104,24 @@ mongodb 1.2.8
 16/3	php-PHPMailer-5.2.23-1.el6
 14/3	php-nette-php-generator-2.6.1-1.fc25
 14/3	php-phpunit-comparator-1.2.4-1.el7.1
-13/3	libsodium-1.0.12-1.fc25
-13/3	libsodium-1.0.12-1.fc24
 11/3	roundcubemail-1.1.8-1.el7
 10/3	composer-1.4.1-1.el7
 7/3	wordpress-4.7.3-1.el7
 7/3	wordpress-4.7.3-1.el6
 7/3	wordpress-4.7.3-1.el5
-6/3	php-phpmyadmin-motranslator-3.0-1.el7
-6/3	php-phpmyadmin-shapefile-2.0-1.el7
 =================
  Stable
 =================
  March, 2017
 =================
+21/3	21/3	php-pecl-amqp-1.9.0-1.fc27
+21/3	13/3	libsodium-1.0.12-1.fc25
+21/3	13/3	libsodium-1.0.12-1.fc24
+21/3	6/3	php-phpmyadmin-motranslator-3.0-1.el7
+21/3	6/3	php-phpmyadmin-shapefile-2.0-1.el7
+21/3	17/3	php-zendframework-zend-validator-2.9.0-1.fc26
+21/3	17/3	php-bartlett-PHP-CompatInfo-5.0.5-1.fc26
+21/3	17/3	php-bartlett-php-compatinfo-db-1.19.0-1.fc26
 20/3	20/3	php-horde-Horde-Core-2.28.1-1.fc27
 obso	20/3	php-horde-Horde-Core-2.28.0-1.fc26
 obso	20/3	php-horde-Horde-Core-2.28.0-1.fc25

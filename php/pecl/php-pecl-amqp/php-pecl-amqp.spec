@@ -22,14 +22,14 @@
 %else
 %global ini_name    40-%{pecl_name}.ini
 %endif
-%global prever      beta2
+#global prever      beta2
 
 %global buildver %(pkg-config --silence-errors --modversion librabbitmq 2>/dev/null || echo 65536)
 
 Summary:       Communicate with any AMQP compliant server
 Name:          %{?sub_prefix}php-pecl-amqp
 Version:       1.9.0
-Release:       0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
@@ -309,6 +309,9 @@ fi
 
 
 %changelog
+* Tue Mar 21 2017 Remi Collet <remi@remirepo.net> - 1.9.0-1
+- update to 1.9.0 (stable)
+
 * Mon Mar 13 2017 Remi Collet <remi@remirepo.net> - 1.9.0-0.2.beta2
 - Update to 1.9.0beta2
 - drop patch merged upstream
