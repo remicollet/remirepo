@@ -138,7 +138,7 @@
 %endif
 
 #global rcver  RC1
-%global rpmrel 4
+%global rpmrel 5
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
@@ -204,7 +204,7 @@ Patch91: php-5.6.3-oci8conf.patch
 # Fixes for tests (300+)
 # Factory is droped from system tzdata
 # Relax some tests with erratic results with system tzdata
-Patch300: php-5.6.24-datetests.patch
+Patch300: php-5.6.30-datetests.patch
 # Revert changes for pcre < 8.34
 Patch301: php-5.6.0-oldpcre.patch
 
@@ -1833,6 +1833,9 @@ fi
 
 
 %changelog
+* Tue Mar 21 2017 Remi Collet <remi@remirepo.net> - 5.6.30-5
+- add patch for tests with tzdata 2017.1
+
 * Fri Mar 17 2017 Remi Collet <remi@remirepo.net> - 5.6.30-4
 - add patch for firebird configuration
 - add patch for OpenSSL 1.1 on F26

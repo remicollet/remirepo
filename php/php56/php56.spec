@@ -144,7 +144,7 @@
 %endif
 
 #global rcver  RC1
-%global rpmrel 2
+%global rpmrel 3
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -215,7 +215,7 @@ Patch100: php-upstream.patch
 # Fixes for tests (300+)
 # Factory is droped from system tzdata
 # Relax some tests with erratic results with system tzdata
-Patch300: php-5.6.24-datetests.patch
+Patch300: php-5.6.30-datetests.patch
 # Revert changes for pcre < 8.34
 Patch301: php-5.6.0-oldpcre.patch
 
@@ -2001,6 +2001,9 @@ fi
 
 
 %changelog
+* Tue Mar 21 2017 Remi Collet <remi@remirepo.net> - 5.6.30-3
+- add patch for tests with tzdata 2017.1
+
 * Fri Jan 20 2017 Remi Collet <remi@fedoraproject.org> 5.6.30-2
 - disable dtrace by default, this may be enabled again using
   environment variable USE_ZEND_DTRACE=1, backported from PHP 7
