@@ -21,7 +21,7 @@
 
 Summary:        Tcpwrappers binding
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.1.3
+Version:        1.2.0
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
@@ -224,6 +224,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Tue Mar 21 2017 Remi Collet <remi@remirepo.net> - 1.2.0-1
+- Update to 1.2.0
+
 * Sat Dec 31 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - initial package
 - use fix from trunk, up to rev 341556
