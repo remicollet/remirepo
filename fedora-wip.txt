@@ -11,7 +11,7 @@ phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumera
 =================
  Testing
 =================
-21/3	php-zendframework-zend-view-2.8.2-1.fc26
+21/3	php-zendframework-zend-view-2.9.0-1.fc26
 21/3	php-zendframework-zend-view-2.8.2-1.fc25
 21/3	php-zendframework-zend-view-2.8.2-1.fc24
 21/3	php-pecl-amqp-1.9.0-1.fc26
@@ -115,6 +115,8 @@ phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumera
 =================
  March, 2017
 =================
+21/3	21/3	php-zendframework-zend-view-2.9.0-1.fc27
+obso	21/3	php-zendframework-zend-view-2.8.2-1.fc26
 21/3	21/3	php-pecl-mongodb-1.2.8-1.fc27
 21/3	21/3	php-zendframework-zend-view-2.8.2-1.fc27
 21/3	21/3	php-pecl-amqp-1.9.0-1.fc27

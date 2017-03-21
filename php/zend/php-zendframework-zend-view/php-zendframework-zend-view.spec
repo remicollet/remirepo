@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    3eed53e41ff8fb95b41b495021e293c4ae725ee5
+%global gh_commit    3b6342c381c4437a03fc81d0064c0bb8924914d3
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-view
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.8.2
+Version:        2.9.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -34,7 +34,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.5
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-date
 BuildRequires:  php-dom
 BuildRequires:  php-filter
@@ -44,8 +44,10 @@ BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 # From composer, "require-dev": {
+#        "phpunit/phpunit": "^5.7.15 || ^6.0.8",
 #        "zendframework/zend-authentication": "^2.5",
 #        "zendframework/zend-cache": "^2.6.1",
+#        "zendframework/zend-coding-standard": "~1.0.0",
 #        "zendframework/zend-config": "^2.6",
 #        "zendframework/zend-console": "^2.6",
 #        "zendframework/zend-escaper": "^2.5",
@@ -64,9 +66,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 #        "zendframework/zend-serializer": "^2.6.1",
 #        "zendframework/zend-session": "^2.6.2",
 #        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
-#        "zendframework/zend-uri": "^2.5",
-#        "phpunit/phpunit": "^4.6",
-#        "zendframework/zend-coding-standard": "~1.0.0"
+#        "zendframework/zend-uri": "^2.5"
 BuildRequires:  php-composer(%{gh_owner}/zend-authentication)   >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-cache)            >= 2.6.1
 BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.6
@@ -88,9 +88,20 @@ BuildRequires:  php-composer(%{gh_owner}/zend-serializer)       >= 2.6.1
 BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.6.2
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
 BuildRequires:  php-composer(%{gh_owner}/zend-uri)              >= 2.5
-BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.5
+%if 0%{?fedora} >= 26
+%global phpunit %{_bindir}/phpunit6
+%else
+%global phpunit %{_bindir}/phpunit
+%endif
+BuildRequires:  %{phpunit}
 # Not in composer.json
 %if 0%{?fedora} >= 26
+BuildRequires:  php-composer(%{gh_owner}/zend-mvc-plugin-flashmessenger)
+BuildRequires:  php-composer(%{gh_owner}/zend-mvc-i18n)
+BuildRequires:  php-composer(%{gh_owner}/zend-mvc-console)
+%endif
+# remirepo:5
+%if 0%{?fedora} == 25
 BuildRequires:  php-composer(%{gh_owner}/zend-mvc-plugin-flashmessenger)
 BuildRequires:  php-composer(%{gh_owner}/zend-mvc-i18n)
 BuildRequires:  php-composer(%{gh_owner}/zend-mvc-console)
@@ -100,11 +111,11 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": "^5.5 || ^7.0",
+#        "php": "^5.6 || ^7.0",
 #        "zendframework/zend-eventmanager": "^2.6.2 || ^3.0",
 #        "zendframework/zend-loader": "^2.5",
 #        "zendframework/zend-stdlib": "^2.7 || ^3.0"
-Requires:       php(language) >= 5.5
+Requires:       php(language) >= 5.6
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.2
 Requires:       php-composer(%{gh_owner}/zend-eventmanager)     <  4
@@ -206,12 +217,16 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
+# remirepo:7
 ret=0
-for cmd in php php56 php70 php71; do
-  if which $cmd; then
-    $cmd %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose || ret=1
-  fi
-done
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit6 || ret=1
+fi
+%{phpunit} --verbose
+# remirepo:1
 exit $ret
 %else
 : Test suite disabled
@@ -233,6 +248,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar 21 2017 Remi Collet <remi@remirepo.net> - 2.9.0-1
+- Update to 2.9.0
+- raise dependency on PHP 5.6
+- use phpunit6 on F26+
+
 * Tue Mar 21 2017 Remi Collet <remi@remirepo.net> - 2.8.2-1
 - Update to 2.8.2
 
