@@ -39,7 +39,7 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 
 License:        PHP
 Group:          Development/Languages
-URL:            http://pecl.php.net/package/APCu
+URL:            https://pecl.php.net/package/apcu_bc
 
 BuildRequires:  %{?scl_prefix}php-devel > 7
 BuildRequires:  %{?scl_prefix}php-pear
@@ -214,7 +214,7 @@ fi
 
 %postun
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
-    %{pecl_uninstall} %{pecl_name} >/dev/null || :
+    %{pecl_uninstall} %{proj_name} >/dev/null || :
 fi
 %endif
 
