@@ -135,7 +135,9 @@ Release: %{?rcver:0.}%{rpmrel}%{?rcver:.%{rcver}}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
-License: PHP and Zend and BSD
+# main/snprintf.c, main/spprintf.c and main/rfc1867.c are ASL 1.0
+# ext/date/lib is MIT
+License: PHP and Zend and BSD and MIT and ASL 1.0
 Group: Development/Languages
 URL: http://www.php.net/
 
@@ -276,10 +278,6 @@ The %{?scl_prefix}php-dbg package contains the interactive PHP debugger.
 %package fpm
 Group: Development/Languages
 Summary: PHP FastCGI Process Manager
-# All files licensed under PHP version 3.01, except
-# Zend is licensed under Zend
-# TSRM and fpm are licensed under BSD
-License: PHP and Zend and BSD
 BuildRequires: libacl-devel
 Requires(pre): %{_root_sbindir}/useradd
 Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
@@ -343,8 +341,7 @@ Summary: Common files for PHP
 # All files licensed under PHP version 3.01, except
 # fileinfo is licensed under PHP version 3.0
 # regex, libmagic are licensed under BSD
-# main/snprintf.c, main/spprintf.c and main/rfc1867.c are ASL 1.0
-License: PHP and BSD and ASL 1.0
+License: PHP and BSD
 # ABI/API check - Arch specific
 Provides: %{?scl_prefix}php(api) = %{apiver}%{isasuffix}
 Provides: %{?scl_prefix}php(zend-abi) = %{zendver}%{isasuffix}
@@ -922,6 +919,7 @@ cp ext/mbstring/ucgendat/OPENLDAP_LICENSE ucgendat_LICENSE
 cp ext/fileinfo/libmagic/LICENSE libmagic_LICENSE
 cp ext/phar/LICENSE phar_LICENSE
 cp ext/bcmath/libbcmath/COPYING.LIB libbcmath_COPYING
+cp ext/date/lib/LICENSE.rst timelib_LICENSE
 
 # Multiple builds for multiple SAPIs
 mkdir \
@@ -1662,9 +1660,10 @@ fi
 
 %files common -f files.common
 %doc CODING_STANDARDS CREDITS EXTENSIONS NEWS README*
-%license LICENSE Zend/ZEND_* TSRM_LICENSE
+%license LICENSE TSRM_LICENSE
 %license libmagic_LICENSE
 %license phar_LICENSE
+%license timelib_LICENSE
 %doc php.ini-*
 %config(noreplace) %{_sysconfdir}/php.ini
 %dir %{_sysconfdir}/php.d
