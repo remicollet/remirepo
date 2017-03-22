@@ -17,13 +17,16 @@
 %endif
 
 Name:          libcouchbase
-Version:       2.7.2
+Version:       2.7.3
 Release:       1%{?dist}
 Summary:       Couchbase client library
 Group:         System Environment/Libraries
 License:       ASL 2.0
 URL:           http://www.couchbase.com/communities/c/getting-started
 Source0:       http://packages.couchbase.com/clients/c/%{name}-%{version}.tar.gz
+
+# https://github.com/couchbase/libcouchbase/pull/25
+Patch0:        %{name}-pr25.patch
 
 BuildRequires: libtool
 BuildRequires: openssl-devel
@@ -74,6 +77,7 @@ a Couchbase Server.
 
 %prep
 %setup -q
+%patch0 -p1 -b .pr25
 
 
 %build
@@ -123,6 +127,9 @@ make check
 
 
 %changelog
+* Wed Mar 22 2017 Remi Collet <remi@remirepo.net> - 2.7.3-1
+- update to 2.7.3
+
 * Wed Feb 22 2017 Remi Collet <remi@remirepo.net> - 2.7.2-1
 - update to 2.7.2
 
