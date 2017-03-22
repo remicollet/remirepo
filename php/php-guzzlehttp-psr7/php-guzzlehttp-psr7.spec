@@ -12,8 +12,8 @@
 
 %global github_owner     guzzle
 %global github_name      psr7
-%global github_version   1.4.1
-%global github_commit    0d6c7ca039329247e4f0f8f8f6506810e8248855
+%global github_version   1.4.2
+%global github_commit    f5b8a8512e2b58b0071a7280e39f14f72e05d87c
 
 %global composer_vendor  guzzlehttp
 %global composer_project psr7
@@ -146,6 +146,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 22 2017 Remi Collet <remi@remirepo.net> - 1.4.2-1
+- Update to 1.4.2
+
 * Sat Mar 04 2017 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.1-1
 - Updated to 1.4.1 (RHBZ #1425429)
 - Switch autoloader to php-composer(fedora/autoloader)
