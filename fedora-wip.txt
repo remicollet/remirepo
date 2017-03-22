@@ -1,7 +1,6 @@
 =================
  TODO
 =================
-php-cs-fixer 2.1.2 (waiting justinrainbow/json-schema 5)
 phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumerator3)
 
 =================
@@ -11,6 +10,15 @@ phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumera
 =================
  Testing
 =================
+22/3	php-sebastian-object-reflector-1.1.0-1.fc26
+22/3	php-cs-fixer-2.1.2-1.fc26
+22/3	php-cs-fixer-2.1.2-1.fc25
+22/3	php-cs-fixer-2.1.2-1.fc24
+22/3	php-cs-fixer-2.1.2-1.el7
+22/3	php-justinrainbow-json-schema5-5.1.0-1.fc26
+22/3	php-justinrainbow-json-schema5-5.1.0-1.fc25
+22/3	php-justinrainbow-json-schema5-5.1.0-1.fc24
+22/3	php-justinrainbow-json-schema5-5.1.0-1.el7
 21/3	php-zendframework-zend-view-2.9.0-1.fc26
 21/3	php-zendframework-zend-view-2.8.2-1.fc25
 21/3	php-zendframework-zend-view-2.8.2-1.fc24
@@ -112,6 +120,9 @@ phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumera
 =================
  March, 2017
 =================
+22/3	22/3	php-sebastian-object-reflector-1.1.0-1.fc27
+22/3	22/3	php-cs-fixer-2.1.2-1.fc27
+22/3	22/3	php-justinrainbow-json-schema5-5.1.0-1.fc27
 22/3	7/3	wordpress-4.7.3-1.el7
 22/3	7/3	wordpress-4.7.3-1.el6
 22/3	7/3	wordpress-4.7.3-1.el5
