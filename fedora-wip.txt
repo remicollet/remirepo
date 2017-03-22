@@ -107,14 +107,14 @@ phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumera
 14/3	php-phpunit-comparator-1.2.4-1.el7.1
 11/3	roundcubemail-1.1.8-1.el7
 10/3	composer-1.4.1-1.el7
-7/3	wordpress-4.7.3-1.el7
-7/3	wordpress-4.7.3-1.el6
-7/3	wordpress-4.7.3-1.el5
 =================
  Stable
 =================
  March, 2017
 =================
+22/3	7/3	wordpress-4.7.3-1.el7
+22/3	7/3	wordpress-4.7.3-1.el6
+22/3	7/3	wordpress-4.7.3-1.el5
 21/3	21/3	php-zendframework-zend-view-2.9.0-1.fc27
 obso	21/3	php-zendframework-zend-view-2.8.2-1.fc26
 21/3	21/3	php-pecl-mongodb-1.2.8-1.fc27
