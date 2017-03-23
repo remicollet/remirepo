@@ -1,8 +1,0 @@
-Extension [ <persistent> extension #81 doublemetaphone version 1.0.1 ] {
-
-  - Functions {
-    Function [ <internal:doublemetaphone> function double_metaphone ] {
-    }
-  }
-}
-
