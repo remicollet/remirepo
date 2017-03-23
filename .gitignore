@@ -33,7 +33,6 @@ php/php-twig2
 glpi
 php/php-league-flysystem
 php/php-justinrainbow-json-schema5
-php/zend/php-zendframework-zend-navigation
 php/php-phalcon
 php/php-phalcon2
 php/php-phalcon3
@@ -46,3 +45,4 @@ scl-php56
 scl-php70
 scl-php71
 php/pecl
+php/zend
