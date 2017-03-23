@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ -z "$1" ]; then
-	echo "usage  $0  local_path  [ remote_path ]"
+	echo "Usage  $0  local_path  [ remote_path ]"
 	exit 1
 else
 	LOC=${1%/}
@@ -13,7 +13,14 @@ else
 fi
 
 
-[ -d $LOC ] || exit 1
+if [ ! -d $LOC ]; then
+	echo "** $LOC not found"
+	exit 1
+fi
+if [ -d $LOC/.git ]; then
+	echo "** $LOC already moved"
+	exit 1
+fi
 
 git status $LOC
 
