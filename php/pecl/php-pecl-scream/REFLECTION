@@ -1,9 +1,0 @@
-Extension [ <persistent> extension #124 scream version 0.1.0 ] {
-
-  - INI {
-    Entry [ scream.enabled <ALL> ]
-      Current = '0'
-    }
-  }
-}
-
