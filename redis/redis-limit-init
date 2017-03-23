@@ -1,6 +1,0 @@
-# If you need to change max open file limit
-# for example, when you change maxclient in configuration
-# you can change the value below
-# see "man limits.conf" for information
-redis soft nofile 10240
-redis hard nofile 10240
