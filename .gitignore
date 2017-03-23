@@ -31,3 +31,4 @@ composer-[0-9]*.json
 php/php-twig
 php/php-twig2
 glpi
+php/php-league-flysystem
