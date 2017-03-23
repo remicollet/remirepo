@@ -1,0 +1,33 @@
+From a72b6a337c7567fd8825e3b3fcd571a117dfc4f8 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 2 Mar 2017 08:44:42 +0100
+Subject: [PATCH] tag online tests to be able to easily skip them
+
+---
+ test/ReCaptchaTest.php | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/test/ReCaptchaTest.php b/test/ReCaptchaTest.php
+index f79937d..8fd4032 100644
+--- a/test/ReCaptchaTest.php
++++ b/test/ReCaptchaTest.php
+@@ -268,6 +268,9 @@ public function testVerifyWithMissingIp()
+         $this->reCaptcha->verify('challenge', 'response');
+     }
+ 
++    /**
++     * @group online
++     */
+     public function testVerifyWithMissingChallengeField()
+     {
+         $this->reCaptcha->setSecretKey($this->secretKey);
+@@ -276,6 +279,9 @@ public function testVerifyWithMissingChallengeField()
+         $this->assertFalse($response->getStatus());
+     }
+ 
++    /**
++     * @group online
++     */
+     public function testVerifyWithMissingResponseField()
+     {
+         $this->reCaptcha->setSecretKey($this->secretKey);
