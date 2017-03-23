@@ -2,10 +2,6 @@
  TODO
 =================
 phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumerator3)
- php-aws-sdk3 .....................................          3.24.5          3.24.6      2017-03-22 (Just released)
- php-league-flysystem .............................          1.0.36          1.0.37      2017-03-22 (Just released)
- php-zendframework-zend-navigation ................           2.8.1           2.8.2      2017-03-22 (Just released)
- php-justinrainbow-json-schema5 ...................           5.1.0           5.2.0      2017-03-22 (Just released)
 
 =================
  Pending
@@ -14,6 +10,16 @@ phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumera
 =================
  Testing
 =================
+23/3	php-zendframework-zend-navigation-2.8.2-1.fc26
+23/3	php-zendframework-zend-navigation-2.8.2-1.fc25
+23/3	php-zendframework-zend-navigation-2.8.2-1.fc24
+23/3	php-justinrainbow-json-schema5-5.2.0-1.fc26
+23/3	php-justinrainbow-json-schema5-5.2.0-1.fc25
+23/3	php-justinrainbow-json-schema5-5.2.0-1.fc24
+23/3	php-justinrainbow-json-schema5-5.2.0-1.el7
+23/3	php-league-flysystem-1.0.37-1.fc26
+23/3	php-league-flysystem-1.0.37-1.fc25
+23/3	php-league-flysystem-1.0.37-1.fc24
 23/3	php-twig-1.33.0-2.fc26
 23/3	php-twig2-2.3.0-1.fc26
 23/3	php-twig2-2.3.0-1.fc25
@@ -22,10 +28,6 @@ phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumera
 22/3	php-cs-fixer-2.1.2-1.fc25
 22/3	php-cs-fixer-2.1.2-1.fc24
 22/3	php-cs-fixer-2.1.2-1.el7
-22/3	php-justinrainbow-json-schema5-5.1.0-1.fc26
-22/3	php-justinrainbow-json-schema5-5.1.0-1.fc25
-22/3	php-justinrainbow-json-schema5-5.1.0-1.fc24
-22/3	php-justinrainbow-json-schema5-5.1.0-1.el7
 21/3	php-zendframework-zend-view-2.9.0-1.fc26
 21/3	php-zendframework-zend-view-2.8.2-1.fc25
 21/3	php-zendframework-zend-view-2.8.2-1.fc24
@@ -101,9 +103,6 @@ phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumera
 20/3	php-seld-cli-prompt-1.0.3-1.fc25
 20/3	php-seld-cli-prompt-1.0.3-1.fc24
 20/3	php-seld-cli-prompt-1.0.3-1.el7
-20/3	php-league-flysystem-1.0.36-1.fc26
-20/3	php-league-flysystem-1.0.36-1.fc25
-20/3	php-league-flysystem-1.0.36-1.fc24
 20/3	php-phpunit-PHPUnit-5.7.17-1.fc26
 20/3	php-phpunit-PHPUnit-5.7.17-1.fc25
 20/3	php-phpunit-PHPUnit-5.7.17-1.fc24
@@ -127,6 +126,16 @@ phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumera
 =================
  March, 2017
 =================
+23/3	23/3	php-zendframework-zend-navigation-2.8.2-1.fc27
+23/3	23/3	php-justinrainbow-json-schema5-5.2.0-1.fc27
+obso	22/3	php-justinrainbow-json-schema5-5.1.0-1.fc26
+obso	22/3	php-justinrainbow-json-schema5-5.1.0-1.fc25
+obso	22/3	php-justinrainbow-json-schema5-5.1.0-1.fc24
+obso	22/3	php-justinrainbow-json-schema5-5.1.0-1.el7
+23/3	23/3	php-league-flysystem-1.0.37-1.fc27
+obso	20/3	php-league-flysystem-1.0.36-1.fc26
+obso	20/3	php-league-flysystem-1.0.36-1.fc25
+obso	20/3	php-league-flysystem-1.0.36-1.fc24
 23/3	23/3	php-twig-1.33.0-2.fc27
 23/3	23/3	php-twig2-2.3.0-1.fc27
 22/3	22/3	php-sebastian-object-reflector-1.1.0-1.fc27

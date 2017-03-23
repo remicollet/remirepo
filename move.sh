@@ -7,6 +7,10 @@ fi
 
 [ -d $1 ] || exit 1
 
+git status $1
+
+echo -n "OK ?: "; read rien
+
 pushd /tmp
 
 rm -rf remirepo/
@@ -31,7 +35,7 @@ echo "--- cleanup"
 git rm -rf $1
 rm -rf $1
 echo $1 >>.gitignore
-git commit -m "$1 moved to git.remirepo.net" -a
+git commit -m "$1 moved to git.remirepo.net" $1
 
 echo "--- clone"
 cd $(dirname $1)
