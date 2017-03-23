@@ -1,9 +1,0 @@
-Extension [ <persistent> extension #90 env version 0.2.1 ] {
-
-  - INI {
-    Entry [ env.file <ALL> ]
-      Current = ''
-    }
-  }
-}
-
