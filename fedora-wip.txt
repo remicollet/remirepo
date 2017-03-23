@@ -2,6 +2,12 @@
  TODO
 =================
 phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumerator3)
+ php-aws-sdk3 .....................................          3.24.5          3.24.6      2017-03-22 (Just released)
+ php-league-flysystem .............................          1.0.36          1.0.37      2017-03-22 (Just released)
+ php-twig .........................................          1.32.0          1.33.0      2017-03-22 (Just released)
+ php-twig2 ........................................           2.2.0           2.3.0      2017-03-22 (Just released)
+ php-zendframework-zend-navigation ................           2.8.1           2.8.2      2017-03-22 (Just released)
+ php-justinrainbow-json-schema5 ...................           5.1.0           5.2.0      2017-03-22 (Just released)
 
 =================
  Pending
