@@ -1,5 +1,11 @@
 #!/bin/sh
 
+FORCE=false
+
+if [ "$1" = "-f" ]; then
+	FORCE=true
+	shift
+fi
 if [ -z "$1" ]; then
 	echo "Usage  $0  local_path  [ remote_path ]"
 	exit 1
@@ -24,7 +30,7 @@ fi
 
 git status $LOC
 
-echo -n "OK ?: "; read rien
+echo -n "OK ?: "; $FORCE || read rien
 
 pushd /tmp
 
@@ -34,14 +40,14 @@ cd remirepo/
 git filter-branch --prune-empty --subdirectory-filter $LOC
 ls -l
 
-echo -n "OK ?: "; read rien
+echo -n "OK ?: "; $FORCE || read rien
 
 ssh git@git.remirepo.net mkdir -p site/rpms/${GIT}.git \; cd site/rpms/${GIT}.git \; git init --bare
 ssh git@git.remirepo.net ./mkrepos.sh 
 git remote set-url origin git@git.remirepo.net:site/rpms/${GIT}.git
 git remote -v
 
-echo -n "OK ?: "; read rien
+echo -n "OK ?: "; $FORCE || read rien
 
 git push
 popd
