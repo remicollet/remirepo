@@ -1,9 +1,0 @@
---- modules-3.2.9/modulefiles/modules.in.orig	2010-11-11 19:23:19.000000000 +0100
-+++ modules-3.2.9/modulefiles/modules.in	2012-08-17 09:35:50.204227697 +0200
-@@ -26,5 +26,5 @@
- prepend-path    PATH   		@bindir@
- prepend-path    MANPATH		@mandir@
- 
--module		use		@VERSIONPATH@
-+module		use		@exec_prefix@
- 
