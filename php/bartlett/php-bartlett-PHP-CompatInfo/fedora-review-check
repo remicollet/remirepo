@@ -1,8 +1,0 @@
-#!/bin/sh
-
-if [ $# -eq 2 ]
-then exec /usr/bin/phpcompatinfo analyser:run $2 --output $1 --no-ansi
-
-else echo "usage  $0  logname  dirname"
-     exit 1
-fi
