@@ -1,7 +1,0 @@
-/var/log/roundcubemail/*.log {
-    missingok
-    su root apache
-    notifempty
-    size 30k
-    nocreate
-}
