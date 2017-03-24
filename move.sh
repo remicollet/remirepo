@@ -37,6 +37,10 @@ pushd /tmp
 rm -rf remirepo/
 git clone /home/rpmbuild/SPECS/remirepo
 cd remirepo/
+if [ ! -d $LOC ]; then
+	echo "** $LOC not found"
+	exit 1
+fi
 git filter-branch --prune-empty --subdirectory-filter $LOC
 ls -l
 
