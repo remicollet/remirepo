@@ -1,7 +1,0 @@
-{
-	"channel":"pear.symfony.com",
-	"blacklist":[],
-	"ignore":{
-		"HttpKernel":["Debug"]
-	}
-}
