@@ -1,8 +1,0 @@
-phpMyAdmin
-----------
-
-Diff from fedora packages
-
-- version 4.2.x
-- don't requires httpd
-- don't use httpd auth (so, works with php-fpm)
