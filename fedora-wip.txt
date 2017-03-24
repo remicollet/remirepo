@@ -113,11 +113,8 @@ phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumera
 17/3	php-bartlett-php-compatinfo-db-1.19.0-1.fc25
 17/3	php-bartlett-php-compatinfo-db-1.19.0-1.fc24
 17/3	php-bartlett-php-compatinfo-db-1.19.0-1.el7
-16/3	php-PHPMailer-5.2.23-1.fc25
-16/3	php-PHPMailer-5.2.23-1.fc24
 16/3	php-PHPMailer-5.2.23-1.el7
 16/3	php-PHPMailer-5.2.23-1.el6
-14/3	php-nette-php-generator-2.6.1-1.fc25
 14/3	php-phpunit-comparator-1.2.4-1.el7.1
 11/3	roundcubemail-1.1.8-1.el7
 10/3	composer-1.4.1-1.el7
@@ -126,6 +123,8 @@ phpunit6 6.0.10 (waiting php-sebastian-comparator2, php-sebastian-object-enumera
 =================
  March, 2017
 =================
+24/3	16/3	php-PHPMailer-5.2.23-1.fc25
+24/3	16/3	php-PHPMailer-5.2.23-1.fc24
 23/3	23/3	php-zendframework-zend-navigation-2.8.2-1.fc27
 23/3	23/3	php-justinrainbow-json-schema5-5.2.0-1.fc27
 obso	22/3	php-justinrainbow-json-schema5-5.1.0-1.fc26
@@ -175,6 +174,7 @@ obso	20/3	php-horde-Horde-Core-2.28.0-1.el6
 20/3	20/3	php-horde-Horde-Core-2.28.0-1.fc27
 20/3	20/3	php-horde-Horde-Cli-2.1.0-1.fc27
 20/3	20/3	php-nette-php-generator-2.6.2-1.fc27
+obso	14/3	php-nette-php-generator-2.6.1-1.fc25
 20/3	20/3	php-nette-http-2.4.5-1.fc27
 20/3	20/3	php-nette-di-2.4.8-1.fc27
 20/3	20/3	php-seld-cli-prompt-1.0.3-1.fc27

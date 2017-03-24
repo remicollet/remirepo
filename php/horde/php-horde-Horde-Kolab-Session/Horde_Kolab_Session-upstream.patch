@@ -1,0 +1,36 @@
+From f0f147704f2dcce9ba1f1488e03e16c5006cde23 Mon Sep 17 00:00:00 2001
+From: Jan Schneider <jan@horde.org>
+Date: Wed, 20 Apr 2016 07:22:42 +0000
+Subject: [PATCH] This class doesn't have a constructor.
+
+---
+ .../test/Horde/Kolab/Session/Unit/Storage/SessionTest.php           | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/framework/Kolab_Session/test/Horde/Kolab/Session/Unit/Storage/SessionTest.php b/framework/Kolab_Session/test/Horde/Kolab/Session/Unit/Storage/SessionTest.php
+index d600bfb..6a69ca8 100644
+--- a/framework/Kolab_Session/test/Horde/Kolab/Session/Unit/Storage/SessionTest.php
++++ b/framework/Kolab_Session/test/Horde/Kolab/Session/Unit/Storage/SessionTest.php
+@@ -40,19 +40,19 @@ public function tearDown()
+     public function testLoad()
+     {
+         $_SESSION['kolab_session'] = array('data');
+-        $storage = new Horde_Kolab_Session_Storage_Session($session);
++        $storage = new Horde_Kolab_Session_Storage_Session();
+         $this->assertEquals($storage->load(), array('data'));
+     }
+ 
+     public function testEmpty()
+     {
+-        $storage = new Horde_Kolab_Session_Storage_Session($session);
++        $storage = new Horde_Kolab_Session_Storage_Session();
+         $this->assertEquals($storage->load(), array());
+     }
+ 
+     public function testSave()
+     {
+-        $storage = new Horde_Kolab_Session_Storage_Session($session);
++        $storage = new Horde_Kolab_Session_Storage_Session();
+         $storage->save(array('data'));
+         $this->assertEquals($_SESSION['kolab_session'], array('data'));
+     }
