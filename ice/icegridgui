@@ -1,5 +1,0 @@
-#!/bin/sh
-
-exec java \
-    -cp `build-classpath Ice jgoodies-looks jgoodies-forms`:DIR/IceGridGUI.jar \
-    IceGridGUI.Main "$@"
