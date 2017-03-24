@@ -1,9 +1,0 @@
-diff -up comm-1.9.2/mozilla/toolkit/system/gnome/Makefile.in.mozcflags comm-1.9.2/mozilla/toolkit/system/gnome/Makefile.in
---- comm-1.9.2/mozilla/toolkit/system/gnome/Makefile.in.mozcflags	2010-07-26 12:52:38.000000000 +0200
-+++ comm-1.9.2/mozilla/toolkit/system/gnome/Makefile.in	2010-07-26 12:39:34.000000000 +0200
-@@ -93,4 +93,5 @@ CXXFLAGS += \
- 	$(MOZ_GNOMEVFS_CFLAGS) \
- 	$(GLIB_CFLAGS) \
- 	$(MOZ_LIBNOTIFY_CFLAGS) \
-+	$(MOZ_GTK2_CFLAGS) \
- 	$(NULL)
