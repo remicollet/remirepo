@@ -1,7 +1,0 @@
-Extension [ <persistent> extension #68 PDO_ODBC version 1.0.1 ] {
-
-  - Dependencies {
-    Dependency [ pdo (Required) ]
-  }
-}
-

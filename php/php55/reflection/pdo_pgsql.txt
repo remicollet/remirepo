@@ -1,7 +1,0 @@
-Extension [ <persistent> extension #69 pdo_pgsql version 1.0.2 ] {
-
-  - Dependencies {
-    Dependency [ pdo (Required) ]
-  }
-}
-

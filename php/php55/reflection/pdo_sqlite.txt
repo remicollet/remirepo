@@ -1,7 +1,0 @@
-Extension [ <persistent> extension #70 pdo_sqlite version 1.0.1 ] {
-
-  - Dependencies {
-    Dependency [ pdo (Required) ]
-  }
-}
-
