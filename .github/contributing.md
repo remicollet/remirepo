@@ -10,7 +10,7 @@ If you want to propose a fix
 * clone the repository
 * create your branch
 * commit your change
-* generate for patch using the `git format-patch command`
+* generate for patch using the `git format-patch` command
 * send the patch(es) by email
 
 **Notice**: you must also understand your contribution will be included in a licensed project,
