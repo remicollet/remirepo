@@ -6,9 +6,8 @@ No pull request, for patch proposal, see
 https://git.remirepo.net/cgit/?p=about
 
 
-Copyright (c) 2005-2017 Remi Collet
-License: CC-BY-SA
-https://creativecommons.org/licenses/by-sa/4.0/
+Copyright (c) 2005-2022 Remi Collet
+License: [CC-BY-SA](https://creativecommons.org/licenses/by-sa/4.0/)
 
 Web sites:
 
