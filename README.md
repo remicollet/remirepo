@@ -1,6 +1,4 @@
-===============================================================
- NEW OFFICIAL GIT REPOSITORY ON https://git.remirepo.net/cgit/
-===============================================================
+# NEW OFFICIAL GIT REPOSITORY ON https://git.remirepo.net/cgit/
 
 This repository is only used for issues.
 
@@ -20,7 +18,7 @@ Web sites:
 
 Support / Assistance:
 
-* [github issue](https://github.com/remicollet/remirepo/issues)
+* [github issues](https://github.com/remicollet/remirepo/issues)
 * [forum](https://forum.famillecollet.com/)
 * [Discord server](https://discord.gg/qwC6kM2dcE)
 * IRC: #remirepo channel on Libera.chat
