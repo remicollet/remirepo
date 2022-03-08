@@ -11,13 +11,13 @@ License: [CC-BY-SA](https://creativecommons.org/licenses/by-sa/4.0/)
 
 Web sites:
 
-* https://rpms.famillecollet.com/
-* https://blog.famillecollet.com/
-* https://forum.famillecollet.com/
+* https://rpms.remirepo.net/
+* https://blog.remirepo.net/
+* https://forum.remirepo.net/
 
 Support / Assistance:
 
 * [github issues](https://github.com/remicollet/remirepo/issues)
-* [forum](https://forum.famillecollet.com/)
+* [forum](https://forum.remirepo.net/)
 * [Discord server](https://discord.gg/qwC6kM2dcE)
 * IRC: #remirepo channel on Libera.chat
