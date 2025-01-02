@@ -18,6 +18,5 @@ Web sites:
 Support / Assistance:
 
 * [github issues](https://github.com/remicollet/remirepo/issues)
-* [forum](https://forum.remirepo.net/)
 * [Discord server](https://discord.gg/qwC6kM2dcE)
 * IRC: #remirepo channel on Libera.chat
